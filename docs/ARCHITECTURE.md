@@ -33,25 +33,17 @@ Configuration over code: products, the retest offer, trust claims and brand endo
 ## 2. Route structure
 
 ```
-/                               Home (built)
-/tests                          Compare the five tests (built)
-/tests/[slug]                   Product page: core | complete | hormones | performance | longevity (built)
-/find-my-test                   Recommendation quiz
-/checkout/[slug]                Collection method → details → clinical requirements → payment
-/order/[orderId]                Confirmation → Automatic Retesting offer → booking next steps
-/book/[orderId]                 Booking (or embedded in /order if Doorstep allows)
-/retesting                      How Automatic Retesting works (built): plans, steps, billing terms
-/account                        Your SIGNAL (dashboard)
-/account/retesting              Manage, reschedule or cancel Automatic Retesting
-/account/tests/[orderId]        A single test / booking
-/biomarkers                     SEO hub: what blood tests measure
-/biomarkers/[slug]              e.g. /biomarkers/ferritin
-/blood-tests/[topic]            e.g. /blood-tests/hormone, /blood-tests/at-home
-/locations, /locations/[city]   Collection coverage pages
-/faq, /about
-/legal/privacy | terms | retesting-terms | collection-notice
-/api/stripe/webhook             Stripe events (stubbed)
-/api/events                     Server-side analytics mirror (stubbed)
+/                               Home (built): A–M around THE SIGNAL TEST
+/signal                         Product + configurator (built): base + add-ons, live total, sticky bar; ?addons= deep links
+/find-my-signal                 Quiz (built): interests → SIGNAL + add-ons → /signal?addons=
+/lp/[slug]                      Paid landing pages from config (phase 4)
+/checkout                       Order summary + Stripe boundary (phase 6); ?addons=&collection=
+/order/[orderId]                Confirmation → Automatic Retesting offer → booking (phase 8)
+/retesting                      How Automatic Retesting works (built)
+/account, /account/retesting    Phase 2+
+/legal/*                        Stubs until legal
+/api/stripe/webhook, /api/events  Stubs (phases 6–7)
+/tests, /tests/*, /find-my-test 301 → /signal, /find-my-signal
 ```
 
 SEO note: the commercial architecture is five products, but the content architecture is open-ended. `/biomarkers/*`, `/blood-tests/*` and `/locations/*` are independent static collections that each link into the relevant product. Adding a sixth product or a new topic never requires restructuring URLs.

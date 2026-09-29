@@ -20,6 +20,7 @@ npm install
 cp .env.example .env.local
 npm run dev        # http://localhost:3000
 npm run build      # production build + type check
+npm test           # unit tests: pricing, catalogue integrity, quiz rules, copy guard
 ```
 
 Requires Node 20+.
@@ -35,10 +36,14 @@ No UI framework and no CSS-in-JS. The homepage's client JavaScript is limited to
 
 ```
 src/
-  app/                 Routes. Built: / (home), /tests (compare), /tests/[slug] (product), /find-my-test (quiz). Others are placeholders.
+  app/                 Routes. Built: / (home), /signal (product + configurator), /find-my-signal (quiz), /retesting. Others are placeholders.
   config/              Business data — edit here, not in components
-    products.ts        The five tests: marker ids per panel, copy, "builds on" (prices null until set)
-    addons.ts          Add-on marker bundles; offered where they add new markers
+    products.ts        THE SIGNAL TEST: marker ids, price/compare-at (null until set), collection and add-on ids
+    addons.ts          Six add-ons (depth): markers, benefit, price (null), interest mapping
+    collection.ts      Collection methods, availability notes, price delta
+    interests.ts       Customer interests used by the quiz and add-on recommendations
+    trust.ts           Trust-bar claims: verified vs placeholder (placeholders never render in production)
+    experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
     brand.ts           Brand lockup, endorsement prominence, trust claims
     biomarkers.ts      Biomarker catalogue: every marker, its area of health, plain-language "about", derived-from
@@ -47,7 +52,7 @@ src/
     comparison.ts      "SIGNAL vs a standard check-up" rows (all TODO-VERIFY)
     social-proof.ts    Press logos and approved reviews (empty by default)
     faq.ts             FAQ items; clinical questions are TODO and not rendered
-    quiz.ts            "Find my test" questions, scoring rules and result copy (QUIZ_VERSION)
+    quiz.ts            "Find my SIGNAL": interests → SIGNAL + add-ons (QUIZ_VERSION)
     offer.ts           What every test includes (the offer itself)
     media.ts           Imagery, including placeholder slots with photography briefs
   lib/
@@ -55,6 +60,7 @@ src/
     retest/offer.ts    Pure offer calculation shared by UI and (later) payment code
     money.ts           AUD formatting (all amounts are integer cents)
     home-tokens.ts     Fills {fromPrice} {areas} {markers} {interval} in marketing copy
+    pricing.ts         quoteConfiguration(): the one pricing function (configurator, sticky bar, checkout, server)
   components/          ui/, brand/, layout/, analytics/, product/, home/
   types/domain.ts      Commerce data model (no clinical data)
 docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, retesting, analytics, security

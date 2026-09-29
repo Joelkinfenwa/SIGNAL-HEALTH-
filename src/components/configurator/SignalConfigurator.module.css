@@ -1,0 +1,58 @@
+.wrap { display: grid; gap: var(--s-7); align-items: start; }
+.steps { display: grid; gap: var(--s-8); min-width: 0; }
+.stepLabel { display: inline-flex; align-items: center; gap: var(--s-2); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.stepLabel .num { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--accent); color: var(--on-accent); font-size: 0.75rem; letter-spacing: 0; }
+.stepTitle { margin-top: var(--s-3); font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; }
+.stepBody { margin-top: var(--s-3); color: var(--muted); max-width: 34rem; text-wrap: pretty; }
+
+.baseCard { margin-top: var(--s-5); display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: inset 0 0 0 2px var(--accent); }
+.baseHead { display: flex; justify-content: space-between; align-items: center; gap: var(--s-3); }
+.included { display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: var(--r-pill); background: var(--c-brand-soft); color: var(--c-brand); font-size: var(--fs-xs); font-weight: 700; }
+.basePrice { font-weight: 700; }
+.tbc { font-size: var(--fs-xs); font-weight: 700; color: var(--muted); }
+.baseCounts { font-weight: 700; font-size: var(--fs-sm); }
+.baseAreas { display: flex; flex-wrap: wrap; gap: 6px; }
+.baseAreas li { padding: 4px 10px; border-radius: var(--r-pill); background: var(--panel-soft); font-size: var(--fs-xs); font-weight: 600; }
+.baseLink { font-size: var(--fs-sm); font-weight: 700; text-underline-offset: 3px; }
+
+.addons { margin-top: var(--s-5); display: grid; gap: var(--s-3); }
+.addon {
+  display: flex; gap: var(--s-4); align-items: flex-start; width: 100%;
+  padding: var(--s-4) var(--s-5); border: 0; border-radius: var(--r-md); text-align: left; cursor: pointer;
+  background: var(--panel); color: var(--fg); box-shadow: var(--shadow-soft);
+  transition: box-shadow 140ms var(--ease-out), background-color 140ms var(--ease-out);
+}
+.addon:hover { box-shadow: var(--shadow-card); }
+.addon:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.addonOn { background: var(--c-brand-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+.check { flex: none; display: grid; place-items: center; width: 28px; height: 28px; margin-top: 2px; border-radius: 50%; background: var(--panel-soft); color: var(--accent); }
+.addonOn .check { background: var(--accent); color: var(--on-accent); }
+.addonText { display: grid; gap: 4px; min-width: 0; flex: 1; }
+.addonHead { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); }
+.addonName { font-weight: 700; letter-spacing: -0.015em; }
+.addonPrice { flex: none; font-size: var(--fs-sm); font-weight: 700; color: var(--muted); }
+.addonBenefit { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+.addonMarkers { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+
+.summary { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-card); }
+.summaryTitle { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.lines { display: grid; gap: var(--s-2); }
+.line { display: flex; justify-content: space-between; gap: var(--s-3); font-size: var(--fs-sm); }
+.coverage { padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-sm); font-weight: 700; }
+.total { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); padding-top: var(--s-3); border-top: 1px solid var(--line); font-weight: 700; }
+.totalValue { font-size: var(--fs-lg); letter-spacing: -0.02em; }
+.note { font-size: var(--fs-xs); color: var(--muted); }
+
+/* mobile sticky purchase bar */
+.bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 40; padding: var(--s-3) var(--gutter) calc(var(--s-3) + env(safe-area-inset-bottom)); background: rgba(246, 245, 241, 0.94); backdrop-filter: blur(12px); border-top: 1px solid var(--line); }
+.barInner { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+.barText { display: grid; }
+.barLabel { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.barPrice { font-weight: 700; }
+.barButton { flex: none; min-width: 9rem; }
+
+@media (min-width: 64rem) {
+  .wrap { grid-template-columns: 1fr 22rem; gap: var(--s-8); }
+  .summary { position: sticky; top: var(--s-5); }
+  .bar { display: none; }
+}
