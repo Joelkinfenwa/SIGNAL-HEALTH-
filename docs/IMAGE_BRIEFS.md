@@ -18,7 +18,13 @@ Prompts for the Higgsfield `soul_2` model (quality 2k), one per slot in `src/con
 | 11 | hero alternative | 3:4 | Editorial lifestyle photograph. A man in his early thirties on an apartment balcony at sunrise holding a coffee, relaxed genuine smile, city greenery and morning haze behind, bone linen shirt, cool light. Candid, aspirational, premium health brand, no text, no logos. |
 
 ## Hero video (`heroVideo` in media.ts)
-Model `seedance_2_5`, 16:9, 5–8 s, loopable, ~35 credits. Prompt: "Cinematic slow-motion tracking shot: a woman in her thirties running barefoot along the wet sand of an Australian beach at sunrise, relaxed easy stride, genuine smile, sea mist and soft golden-green light, headland with coastal scrub behind. Muted bone and evergreen tones, no text, no logos. Premium health brand hero video, loopable." Also generate the matching still (same prompt, `soul_2`, 16:9) as the poster and LCP image. Keep the file under ~2 MB (720p, H.264, no audio) so it never hurts mobile performance.
+Direction: drone-like footage of someone running on a coastal road with the ocean right beside them. Aspirational, calm, a symbol of health. Not a beach close-up.
+
+Model `seedance_2_5`, 16:9, 8 s, loopable, ~35 credits. Prompt: "Aerial drone footage, cinematic, slow forward tracking from behind and above: a lone runner in a muted green top running along an empty winding coastal road, cliffs and open ocean immediately beside the road, early morning light, long shadows, sea haze, waves breaking on rocks below. Smooth gimbal motion, wide establishing scale, aspirational and calm. Muted bone and evergreen tones, no text, no logos, loopable."
+
+Poster/LCP still: same prompt on `soul_2`, 16:9, 2k, "keep the left third of the frame open sky and road for text".
+
+Delivery: 720p H.264, no audio, under ~2 MB, plus the poster as a 2k still. Set `heroVideo.src` and swap `heroVideo.poster`.
 
 ## After generating
 1. Pick the keepers; note the Higgsfield job ids.

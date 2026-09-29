@@ -99,7 +99,7 @@ export const heroVideo: VideoAsset = {
   src: "",
   poster: media.heroSwim,
   brief:
-    "5-8s loop, 16:9. A woman in her thirties running barefoot along wet sand at sunrise on an Australian beach, relaxed stride, sea mist, headland behind. Muted bone and evergreen tones. No text.",
+    "8s loop, 16:9, aerial drone footage. A lone runner on an empty winding coastal road, cliffs and open ocean right beside the road, early light, slow forward tracking from behind and above. Muted bone and evergreen tones. No text. The poster image is the same frame as a still.",
 };
 
 /** Product page hero image per tier. Placeholders render as colour panels until photography exists. */
