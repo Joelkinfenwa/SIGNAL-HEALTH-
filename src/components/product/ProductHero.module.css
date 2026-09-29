@@ -1,7 +1,7 @@
 .hero { padding-block: var(--s-5) var(--s-8); overflow: hidden; }
 .inner { display: grid; gap: var(--s-7); align-items: center; }
 .kicker { display: inline-flex; align-items: center; gap: var(--s-3); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
-.badge { padding: 3px 10px; border-radius: var(--r-pill); background: var(--c-plasma-soft); color: var(--c-ink); letter-spacing: 0; text-transform: none; font-size: var(--fs-xs); }
+.badge { padding: 3px 10px; border-radius: var(--r-pill); background: var(--c-signal); color: var(--c-ink); letter-spacing: 0; text-transform: none; font-size: var(--fs-xs); }
 .title { margin-top: var(--s-4); font-size: var(--fs-display); line-height: var(--lh-tight); font-weight: 700; letter-spacing: -0.045em; text-wrap: balance; }
 .tagline { margin-top: var(--s-4); font-size: var(--fs-lg); line-height: 1.25; font-weight: 600; letter-spacing: -0.02em; max-width: 24ch; text-wrap: balance; }
 .question { margin-top: var(--s-5); font-size: var(--fs-md); font-style: italic; color: var(--muted); text-wrap: pretty; max-width: 30rem; }

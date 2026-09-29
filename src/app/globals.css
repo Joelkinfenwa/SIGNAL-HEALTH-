@@ -1,21 +1,22 @@
 /* =========================================================================
-   SIGNAL design tokens — v0.3 "warm, human, aspirational"
-   Photography carries the mood. The palette stays light and warm; Oxblood
-   and Plasma (the two parts of a blood sample) are accents, not wallpaper.
-   v0.3: larger type contrast, fewer borders, softer shadows, consistent radii.
+   SIGNAL design tokens — v0.4 "evergreen"
+   Photography carries the mood. Base is a cool bone; Evergreen is the brand
+   (buttons, dark sections, eyebrows); Coral is the "signal" — reserved for
+   data points, the latest reading and the recommended badge. Ink type.
    ========================================================================= */
 :root {
-  --c-paper: #fbf9f6;
-  --c-shell: #f3eee7;
+  --c-paper: #f6f5f1;
+  --c-shell: #ecebe5;
   --c-white: #ffffff;
-  --c-ink: #221c19;
-  --c-stone: #6a625c;
-  --c-rule: #e6dfd6;
-  --c-oxblood: #7a1b2b;
-  --c-oxblood-deep: #5a1220;
-  --c-plasma: #f2c14e;
-  --c-plasma-soft: #fbeecb;
-  --c-sage: #2f6b4f; /* positive change */
+  --c-ink: #121614;
+  --c-stone: #5f6661;
+  --c-rule: #dedcd5;
+  --c-brand: #1c4a3c;        /* Evergreen */
+  --c-brand-deep: #123227;
+  --c-brand-soft: #e2ede7;   /* mint tint for highlight backgrounds */
+  --c-signal: #f06a47;       /* Coral: data, latest reading, badge */
+  --c-signal-soft: #fce3da;
+  --c-sage: #1f6f48;         /* positive change text */
 
   --font-sans: var(--font-figtree), "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --fs-xs: 0.8125rem;
@@ -44,9 +45,9 @@
   --r-lg: 32px;
   --r-pill: 999px;
 
-  --shadow-soft: 0 1px 2px rgba(60, 30, 20, 0.04), 0 8px 24px -12px rgba(60, 30, 20, 0.12);
-  --shadow-card: 0 2px 4px rgba(60, 30, 20, 0.04), 0 18px 40px -20px rgba(60, 30, 20, 0.18);
-  --shadow-float: 0 24px 48px -16px rgba(60, 30, 20, 0.28), 0 2px 6px rgba(60, 30, 20, 0.06);
+  --shadow-soft: 0 1px 2px rgba(18, 22, 20, 0.04), 0 8px 24px -12px rgba(18, 22, 20, 0.10);
+  --shadow-card: 0 2px 4px rgba(18, 22, 20, 0.04), 0 18px 40px -20px rgba(18, 22, 20, 0.16);
+  --shadow-float: 0 24px 48px -16px rgba(18, 22, 20, 0.26), 0 2px 6px rgba(18, 22, 20, 0.06);
 
   --container: 76rem;
   --gutter: clamp(1rem, 5vw, 2.5rem);
@@ -61,11 +62,11 @@
   --fg: var(--c-ink);
   --muted: var(--c-stone);
   --line: var(--c-rule);
-  --accent: var(--c-oxblood);
+  --accent: var(--c-brand);
   --on-accent: #ffffff;
   --panel: var(--c-white);
   --panel-soft: var(--c-shell);
-  --focus: var(--c-oxblood);
+  --focus: var(--c-brand);
 }
 [data-theme="shell"] {
   --bg: var(--c-shell);
@@ -73,15 +74,15 @@
   --panel-soft: var(--c-paper);
 }
 [data-theme="dark"] {
-  --bg: var(--c-oxblood);
-  --fg: #fdf8f3;
-  --muted: rgba(253, 248, 243, 0.78);
-  --line: rgba(253, 248, 243, 0.22);
-  --accent: var(--c-plasma);
+  --bg: var(--c-brand);
+  --fg: #f6f5f1;
+  --muted: rgba(246, 245, 241, 0.76);
+  --line: rgba(246, 245, 241, 0.2);
+  --accent: var(--c-paper);
   --on-accent: var(--c-ink);
-  --panel: var(--c-oxblood-deep);
-  --panel-soft: rgba(255, 255, 255, 0.08);
-  --focus: var(--c-plasma);
+  --panel: var(--c-brand-deep);
+  --panel-soft: rgba(255, 255, 255, 0.1);
+  --focus: var(--c-signal);
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -107,7 +108,7 @@ button, input { font: inherit; }
 
 .skip-link {
   position: absolute; left: var(--s-4); top: -100px; z-index: 100;
-  padding: var(--s-2) var(--s-4); background: var(--c-plasma); color: var(--c-ink);
+  padding: var(--s-2) var(--s-4); background: var(--c-signal); color: var(--c-ink);
   border-radius: var(--r-sm); font-weight: 600;
 }
 .skip-link:focus { top: var(--s-4); }

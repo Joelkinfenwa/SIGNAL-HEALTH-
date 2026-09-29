@@ -35,8 +35,8 @@
   padding: 4px 12px; border-radius: var(--r-pill);
   font-size: var(--fs-xs); font-weight: 700;
 }
-.yes .badge { background: #e4f1ea; color: var(--c-sage); }
-.centre .badge { background: var(--c-plasma-soft); color: var(--c-ink); }
+.yes .badge { background: var(--c-brand-soft); color: var(--c-sage); }
+.centre .badge { background: var(--c-brand-soft); color: var(--c-ink); }
 .headline { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; }
 .body { color: var(--muted); font-size: var(--fs-sm); }
 .centres { display: grid; gap: var(--s-2); font-size: var(--fs-sm); }

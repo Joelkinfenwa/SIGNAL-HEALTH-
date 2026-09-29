@@ -62,20 +62,23 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 ## 3. Design system
 
-> **v0.2 update:** the design moved to a photography-led, warmer direction. Base is now warm paper (`#FBF9F6`) and shell (`#F3EEE7`); Oxblood (`#7A1B2B`) and Plasma (`#F2C14E`) are accents; typeface is Figtree; radii are larger (20/32px); the "Your signal" readout is now a floating card over photography. The principles below still apply.
+> **v0.4 update ("evergreen"):** the palette moved off oxblood/plasma. Base is a cool bone; Evergreen is the brand colour (buttons, dark sections, eyebrows); Coral is the "signal", reserved for data points, the latest reading and the Recommended badge. Typeface is Figtree; radii 20/32px; the "Your signal" readout is a floating card over photography. Tokens live in `src/app/globals.css`.
 
-**Concept.** A collected blood sample separates into red cells and straw-coloured plasma. The palette is taken directly from that: Oxblood and Plasma, on a neutral lab-glass base. It avoids medical blue and "biohacker" neon, and reads as premium rather than clinical.
+**Concept.** Calm, natural and premium rather than clinical. Evergreen reads as health and longevity without "medical blue" or biohacker neon; the single coral accent is the signal in the data, used sparingly so it always means "look here".
 
 | Token | Hex | Role |
 |---|---|---|
-| Oxblood | `#6B1422` | Brand, dark sections, featured product |
-| Oxblood deep | `#4C0D18` | Panels on dark |
-| Plasma | `#F2C14E` | Accent on dark: primary buttons, data highlights |
-| Porcelain | `#F1F2EE` | Default light background |
-| Surface | `#FFFFFF` | Alternate light background, cards |
-| Graphite | `#1D211F` | Text |
-| Slate | `#5B625E` | Secondary text |
-| Rule | `#D7DAD4` | Lines and borders |
+| Evergreen (`--c-brand`) | `#1C4A3C` | Brand: buttons, dark sections, eyebrows, sparklines |
+| Evergreen deep | `#123227` | Panels on dark |
+| Mint (`--c-brand-soft`) | `#E2EDE7` | Highlight backgrounds, icon discs |
+| Coral (`--c-signal`) | `#F06A47` | The signal: latest data point, Recommended badge, on-dark focus ring. Ink text on coral (AA). |
+| Coral soft | `#FCE3DA` | Halo behind the latest reading |
+| Bone (`--c-paper`) | `#F6F5F1` | Default light background |
+| Shell | `#ECEBE5` | Alternate light background, chips |
+| Surface | `#FFFFFF` | Cards |
+| Ink | `#121614` | Text |
+| Stone | `#5F6661` | Secondary text |
+| Rule | `#DEDCD5` | Lines |
 
 **Theming.** Sections set `data-theme="light" | "surface" | "dark"`. Components only use semantic tokens (`--bg`, `--fg`, `--muted`, `--line`, `--accent`, `--on-accent`, `--panel`), so any component works on any section without variants.
 
@@ -85,7 +88,9 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 **Motion.** Two deliberate moments: the hero readout lines draw in on load, and the results phone mock rises as it scrolls into view (CSS scroll-driven animation behind `@supports`, no JavaScript). Everything else is still. `prefers-reduced-motion` is respected globally.
 
-**Signature element.** The "Your signal" readout: markers tracked across three tests. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings) and the retesting timeline.
+**Signature element.** The "Your signal" readout: markers tracked across three tests, evergreen line, coral latest reading. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings, coral last dot) and the retesting timeline.
+
+**Product presentation.** The featured product gets a full-width dark card with "what you'll learn" chips; the other four are compact cards (question + areas of health + counts). Marker detail lives on the product page. Never five equal columns.
 
 **Quality floor.** 52px minimum touch targets, visible focus rings, skip link, semantic landmarks, a real `<table>` for the biomarker comparison, AA contrast on all text tokens.
 

@@ -7,8 +7,8 @@
 .head, .featuredHead { font-size: var(--fs-sm); font-weight: 700; }
 .headLink { text-decoration: none; text-underline-offset: 3px; }
 .headLink:hover { text-decoration: underline; }
-.featuredHead { background: var(--c-oxblood); color: #fff; }
-.featuredCell { background: color-mix(in srgb, var(--c-plasma-soft) 45%, transparent); }
+.featuredHead { background: var(--c-brand); color: #fff; }
+.featuredCell { background: color-mix(in srgb, var(--c-brand-soft) 45%, transparent); }
 .count { display: inline-grid; place-items: center; min-width: 32px; height: 32px; padding-inline: 8px; border-radius: var(--r-pill); background: var(--panel-soft); font-weight: 700; font-size: var(--fs-sm); }
 .none { color: var(--muted); }
 @media (min-width: 64rem) { .table th, .table td { padding: var(--s-4) var(--s-5); } }

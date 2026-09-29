@@ -9,7 +9,7 @@ interface PanelLearnProps {
   only?: readonly BiomarkerCategoryId[];
   /** Max markers per category before "+N more". */
   limit?: number;
-  variant?: "compact" | "full";
+  variant?: "compact" | "full" | "chips";
   /** Marker ids to visually mark as newly added (compare presentations). */
   highlight?: readonly string[];
   className?: string;
@@ -37,7 +37,7 @@ export function PanelLearn({ markers, only, limit, variant = "full", highlight, 
             <ul className={styles.markers}>
               {shown.map((m) => (
                 <li key={m.id} className={cx(styles.marker, m.derivedFrom && styles.derived, hl.has(m.id) && styles.added)} title={variant === "full" ? m.about : undefined}>
-                  {variant === "full" ? m.name : (m.short ?? m.name)}
+                  {variant === "compact" ? (m.short ?? m.name) : m.name}
                   {m.derivedFrom && variant === "full" ? <span className={styles.calc}>calculated</span> : null}
                 </li>
               ))}

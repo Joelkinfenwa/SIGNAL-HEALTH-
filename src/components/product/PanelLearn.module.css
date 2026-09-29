@@ -10,7 +10,7 @@
   background: var(--panel-soft); font-size: var(--fs-xs); font-weight: 600;
 }
 .derived { box-shadow: inset 0 0 0 1px var(--line); background: transparent; }
-.added { background: var(--c-plasma-soft); color: var(--c-ink); }
+.added { background: var(--c-brand-soft); color: var(--c-ink); }
 .calc { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
 .more { display: inline-flex; align-items: center; padding: 5px 4px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
 
@@ -27,3 +27,10 @@
 @media (min-width: 52rem) {
   .full { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5) var(--s-7); }
 }
+
+/* chips: label above a row of chips, tight; used inside the featured card */
+.chips { gap: var(--s-3); }
+.chips .group { gap: 6px; }
+.chips .category { color: var(--muted); }
+.chips .marker { background: var(--panel-soft); color: var(--fg); }
+.chips .derived { background: transparent; box-shadow: inset 0 0 0 1px var(--line); }

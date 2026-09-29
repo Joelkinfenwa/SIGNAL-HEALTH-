@@ -14,7 +14,7 @@
 .minus { display: none; }
 .item[open] .plus { display: none; }
 .item[open] .minus { display: block; }
-.item[open] .toggle { background: var(--c-plasma-soft); }
+.item[open] .toggle { background: var(--c-brand-soft); }
 .answer { padding: 0 var(--s-5) var(--s-5); color: var(--muted); max-width: 60ch; text-wrap: pretty; }
 @media (min-width: 64rem) {
   .inner { grid-template-columns: 1fr 1.6fr; gap: var(--s-8); align-items: start; }

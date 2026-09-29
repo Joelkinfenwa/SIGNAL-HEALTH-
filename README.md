@@ -67,7 +67,7 @@ docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, 
 5. **Subscription before refund.** A partial refund is only issued once the recurring arrangement exists. All Stripe writes use idempotency keys; webhooks are the source of truth.
 6. **This app is not a clinical system.** No results, quiz answers or clinical details in this database.
 7. **Analytics are typed and health-data-safe.** Ad platforms receive value, currency and order id only — never product names or categories, which can reveal health information. Browser and server events share an `event_id` for de-duplication.
-8. **Theme by section, not by component.** Sections set `data-theme`; components read semantic tokens. Any component works on light or dark sections.
+8. **Theme by section, not by component.** Sections set `data-theme`; components read semantic tokens. Any component works on light or dark sections. Palette v0.4: evergreen brand, bone base, coral "signal" accent (see `docs/ARCHITECTURE.md` §3).
 9. **Brand architecture is a setting.** `brand.endorsementLevel` (`prominent` | `subtle` | `hidden`) controls the endorsement site-wide.
 
 ## Imagery

@@ -6,9 +6,9 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AddOns } from "@/components/product/AddOns";
 import { CompareTable } from "@/components/product/CompareTable";
-import { ProductCard } from "@/components/product/ProductCard";
+import { TestsGrid } from "@/components/product/TestsGrid";
 import { Section, SectionHeader } from "@/components/ui/Section";
-import { featuredProduct, products } from "@/config/products";
+import { featuredProduct } from "@/config/products";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
@@ -30,11 +30,7 @@ export default function TestsPage() {
             title="Five tests. Each answers a different question."
             intro={`One sample, collected at home or nearby, explained in plain language. ${featured.shortName} is our recommended starting point.`}
           />
-          <ul className={styles.grid} aria-label="SIGNAL tests">
-            {products.map((p) => (
-              <li key={p.id}><ProductCard product={p} location="tests_page" /></li>
-            ))}
-          </ul>
+          <TestsGrid location="tests_page" />
           <p className={styles.help}>
             Not sure? <Link href="/find-my-test">Answer a few quick questions</Link> and we&apos;ll recommend one.
           </p>

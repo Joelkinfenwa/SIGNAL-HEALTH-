@@ -4,11 +4,11 @@
   border-radius: var(--r-lg);
   padding: var(--s-8) var(--s-5);
   text-align: center;
-  background: radial-gradient(120% 90% at 50% 0%, #8e2536 0%, var(--c-oxblood) 55%, var(--c-oxblood-deep) 100%);
+  background: radial-gradient(120% 90% at 50% 0%, #27604d 0%, var(--c-brand) 55%, var(--c-brand-deep) 100%);
 }
 .panel::after {
   content: ""; position: absolute; inset: auto -10% -40% -10%; height: 60%;
-  background: radial-gradient(50% 60% at 50% 100%, rgba(242, 193, 78, 0.28) 0%, transparent 70%);
+  background: radial-gradient(50% 60% at 50% 100%, rgba(240, 106, 71, 0.30) 0%, transparent 70%);
   pointer-events: none;
 }
 .title { position: relative; font-size: var(--fs-display); line-height: var(--lh-tight); font-weight: 700; letter-spacing: -0.045em; text-wrap: balance; }

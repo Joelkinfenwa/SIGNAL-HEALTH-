@@ -3,10 +3,10 @@
 .photo { position: absolute; inset: 0; border-radius: 0; }
 .band::before {
   content: ""; position: absolute; inset: 0; z-index: 1;
-  background: linear-gradient(to top, rgba(30, 16, 12, 0.88) 12%, rgba(30, 16, 12, 0.18) 70%);
+  background: linear-gradient(to top, rgba(10, 22, 16, 0.88) 12%, rgba(10, 22, 16, 0.18) 70%);
 }
 .copy { position: relative; z-index: 2; min-height: 38rem; display: flex; flex-direction: column; justify-content: flex-end; padding: var(--s-6) var(--s-5); }
-.eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-plasma); margin-bottom: var(--s-3); }
+.eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-signal); margin-bottom: var(--s-3); }
 .title { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; max-width: 14ch; text-wrap: balance; }
 .body { margin-top: var(--s-4); max-width: 34rem; font-size: var(--fs-md); line-height: 1.5; opacity: 0.92; text-wrap: pretty; }
 .timeline { margin-top: var(--s-6); display: flex; flex-wrap: wrap; gap: var(--s-2); }
@@ -15,9 +15,9 @@
   border: 1px solid rgba(255, 255, 255, 0.4); font-size: var(--fs-xs); font-weight: 600;
   background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(6px);
 }
-.timeline .now { background: var(--c-plasma); color: var(--c-ink); border-color: var(--c-plasma); }
+.timeline .now { background: var(--c-signal); color: var(--c-ink); border-color: var(--c-signal); }
 .link { margin-top: var(--s-6); align-self: flex-start; font-weight: 700; text-underline-offset: 4px; min-height: 44px; display: inline-flex; align-items: center; }
 @media (min-width: 52rem) {
-  .band::before { background: linear-gradient(to right, rgba(30, 16, 12, 0.84) 15%, rgba(30, 16, 12, 0) 70%); }
+  .band::before { background: linear-gradient(to right, rgba(10, 22, 16, 0.84) 15%, rgba(10, 22, 16, 0) 70%); }
   .copy { min-height: 40rem; justify-content: center; padding: var(--s-8); }
 }

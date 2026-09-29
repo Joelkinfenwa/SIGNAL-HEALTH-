@@ -7,7 +7,7 @@
 .placeholder {
   display: grid; place-items: end start;
   background:
-    radial-gradient(80% 60% at 20% 20%, var(--c-plasma-soft) 0%, transparent 60%),
+    radial-gradient(80% 60% at 20% 20%, var(--c-brand-soft) 0%, transparent 60%),
     linear-gradient(160deg, var(--c-shell) 0%, #e9dfd2 100%);
 }
 .placeholderNote {

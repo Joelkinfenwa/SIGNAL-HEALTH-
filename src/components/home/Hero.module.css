@@ -3,7 +3,7 @@
 .kicker {
   display: inline-flex; align-items: center; gap: var(--s-2);
   padding: 6px 14px; border-radius: var(--r-pill);
-  background: var(--c-plasma-soft); color: var(--c-ink);
+  background: var(--c-brand-soft); color: var(--c-ink);
   font-size: var(--fs-sm); font-weight: 600;
 }
 .title {
@@ -33,7 +33,7 @@
 .bookedSub { color: var(--c-stone); }
 .bookedIcon {
   display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%;
-  background: var(--c-oxblood); color: #fff;
+  background: var(--c-brand); color: #fff;
 }
 @media (min-width: 36rem) {
   .actions { display: flex; flex-wrap: wrap; }
