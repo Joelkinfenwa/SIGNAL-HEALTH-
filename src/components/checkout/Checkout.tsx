@@ -24,6 +24,7 @@ import styles from "./Checkout.module.css";
 export function Checkout() {
   const [cfg, setCfg] = useState<Configuration>(() => defaultConfiguration(signalTest));
   const [hydrated, setHydrated] = useState(false);
+  const [addonsOpen, setAddonsOpen] = useState(false);
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
   const options = addonsFor(signalTest);
@@ -33,6 +34,7 @@ export function Checkout() {
   useEffect(() => {
     const parsed = parseConfiguration(new URLSearchParams(window.location.search), signalTest);
     setCfg(parsed);
+    setAddonsOpen(parsed.addonIds.length === 0);
     setHydrated(true);
     track({ name: "checkout_started", props: { product_id: signalTest.id, addon_ids: parsed.addonIds } });
   }, []);
@@ -74,7 +76,7 @@ export function Checkout() {
               </li>
             ))}
           </ul>
-          <details className={styles.addons} open={cfg.addonIds.length === 0}>
+          <details className={styles.addons} open={addonsOpen} onToggle={(e) => setAddonsOpen((e.currentTarget as HTMLDetailsElement).open)}>
             <summary className={styles.addonsSummary}>
               <span>{cfg.addonIds.length ? "Add more depth" : "Go deeper where it matters to you"} <span className={styles.optional}>optional</span></span>
               <span className={styles.toggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
