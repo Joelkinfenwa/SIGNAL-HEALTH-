@@ -8,11 +8,9 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AddOns } from "@/components/product/AddOns";
 import { Included } from "@/components/product/Included";
-import { RetestPlans } from "@/components/retest/RetestPlans";
 import { ProductHero } from "@/components/product/ProductHero";
 import { ProductLearn } from "@/components/product/ProductLearn";
-import { WhySignal } from "@/components/product/WhySignal";
-import { WhyYou } from "@/components/product/WhyYou";
+import { ProductSteps } from "@/components/product/ProductSteps";
 import { getProduct, productCategoryCount, productMarkerCount, products } from "@/config/products";
 import { formatAUD } from "@/lib/money";
 
@@ -37,15 +35,13 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const priceLine = product.priceCents !== null ? formatAUD(product.priceCents) : `${productMarkerCount(product)} markers`;
   return (
     <>
-      <SiteHeader overlay />
+      <SiteHeader />
       <main id="main">
         <ProductHero product={product} />
-        <WhyYou product={product} />
         <ProductLearn product={product} />
-        <WhySignal />
-        <RetestPlans product={product} theme="light" />
-        <AddOns product={product} />
-        <Included />
+        <Included theme="shell" />
+        <AddOns product={product} theme="light" />
+        <ProductSteps />
         <Faq />
         <FinalCta
           title={`Ready to know? Choose ${product.shortName}.`}

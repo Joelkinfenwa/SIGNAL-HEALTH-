@@ -1,50 +1,45 @@
-import Image from "next/image";
-import { Button } from "@/components/ui/Button";
+import Link from "next/link";
+import { Photo } from "@/components/home/Photo";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { productHeroMedia, productHeroWide } from "@/config/media";
+import { media, productHeroMedia, productHeroWide } from "@/config/media";
 import { productCategoryCount, productMarkerCount, type Product } from "@/config/products";
-import { PriceTag } from "./PriceTag";
+import { activeRetestOffers } from "@/config/retest-offer";
+import { BuyBox } from "./BuyBox";
 import styles from "./ProductHero.module.css";
 
-/**
- * Full-bleed product hero in the same language as the homepage: what it is,
- * one primary action, and the three facts that matter. The header floats over it.
- */
+/** Classic product page top: images left, name, description, facts and buy box right. */
 export function ProductHero({ product }: { product: Product }) {
-  const image = productHeroWide[product.tier] ?? productHeroMedia[product.tier];
-  const areas = productCategoryCount(product);
-  const markers = productMarkerCount(product);
+  const main = productHeroWide[product.tier] ?? productHeroMedia[product.tier];
   return (
-    <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="product-title">
-      <div className={styles.media} aria-hidden="true">
-        {image.src ? <Image src={image.src} alt="" fill priority sizes="100vw" style={{ objectFit: "cover", objectPosition: "70% 40%" }} /> : null}
-        <div className={styles.shade} />
-      </div>
+    <section id="hero" data-theme="light" className={styles.section} aria-labelledby="product-title">
       <Container className={styles.inner}>
-        <div className={styles.copy}>
-          <p className={styles.kicker}>
-            SIGNAL {product.shortName}
-            {product.featured ? <span className={styles.badge}>Recommended</span> : null}
-          </p>
-          <h1 id="product-title" className={styles.title}>{product.tagline}</h1>
-          <p className={styles.promise}>{product.promise}</p>
-          <ul className={styles.chips} aria-label="At a glance">
-            <li><Icon name="check" size={14} /> <span className="num">{areas}</span> areas of health, <span className="num">{markers}</span> markers</li>
-            <li><Icon name="check" size={14} /> Collected at home or nearby</li>
-            <li><Icon name="check" size={14} /> Every marker explained</li>
-          </ul>
-        </div>
-        <div className={styles.buy}>
-          <p className={styles.buyName}>{product.name}</p>
-          <PriceTag priceCents={product.priceCents} size="lg" className={styles.price} />
-          <div className={styles.actions}>
-            <Button href={`/checkout/${product.slug}`} full ctaId={`choose_${product.slug}`} location="product_hero">
-              Choose {product.shortName} <Icon name="arrow" size={18} />
-            </Button>
-            <Button href="/tests" full variant="outline" ctaId="product_compare" location="product_hero">Compare tests</Button>
+        <div className={styles.gallery}>
+          <Photo asset={main} priority sizes="(min-width: 64rem) 55vw, 100vw" className={styles.main} position="60% 40%" />
+          <div className={styles.thumbs}>
+            <Photo asset={media.tubes} sizes="(min-width: 64rem) 27vw, 50vw" className={styles.thumb} position="center 60%" />
+            <Photo asset={media.homeVisit} sizes="(min-width: 64rem) 27vw, 50vw" className={styles.thumb} position="center 40%" />
           </div>
-          <p className={styles.buyNote}>Collection options and any details are shown before you pay.</p>
+        </div>
+
+        <div className={styles.details}>
+          <nav aria-label="Breadcrumb" className={styles.crumbs}>
+            <Link href="/tests">Tests</Link><span aria-hidden="true"> / </span><span>{product.shortName}</span>
+          </nav>
+          <h1 id="product-title" className={styles.title}>
+            {product.name}
+            {product.featured ? <span className={styles.badge}>Recommended</span> : null}
+          </h1>
+          <p className={styles.tagline}>{product.tagline}</p>
+          <p className={styles.desc}>{product.promise}</p>
+          <ul className={styles.facts}>
+            <li><Icon name="chart" size={16} /> <span className="num">{productCategoryCount(product)}</span> areas of health, <span className="num">{productMarkerCount(product)}</span> markers</li>
+            <li><Icon name="home" size={16} /> Collected at home or nearby</li>
+            <li><Icon name="shield" size={16} /> Clinical review included</li>
+            <li><Icon name="chat" size={16} /> Every marker explained in plain language</li>
+          </ul>
+          <BuyBox slug={product.slug} shortName={product.shortName} priceCents={product.priceCents} offers={activeRetestOffers()} />
+          <p className={styles.compare}><Link href="/tests">Compare all five tests</Link></p>
         </div>
       </Container>
     </section>

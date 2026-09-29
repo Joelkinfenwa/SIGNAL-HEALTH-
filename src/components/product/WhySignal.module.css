@@ -1,6 +1,0 @@
-.grid { display: grid; gap: var(--s-5); }
-.card { display: grid; gap: var(--s-3); }
-.photo { aspect-ratio: 4 / 3; border-radius: var(--r-md); }
-.title { margin-top: var(--s-2); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
-.body { color: var(--muted); font-size: var(--fs-sm); text-wrap: pretty; }
-@media (min-width: 52rem) { .grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-5); } .photo { aspect-ratio: 4 / 5; } }

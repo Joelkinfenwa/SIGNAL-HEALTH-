@@ -14,11 +14,14 @@ export function ProductLearn({ product }: { product: Product }) {
     <Section id="learn" theme="light" labelledBy="learn-title">
       <SectionHeader
         id="learn-title"
-        eyebrow="What you'll learn"
+        eyebrow="What's measured"
         title={`What ${product.shortName} tells you.`}
-        intro="Grouped by the area of health each marker describes. Every one comes explained in plain language."
+        intro={product.outcome}
       />
       {product.audienceNote ? <p className={styles.note}><Icon name="sparkle" size={16} /> {product.audienceNote}</p> : null}
+      <ul className={styles.forWho} aria-label="Good for">
+        {product.whyYou.map((w) => <li key={w}><Icon name="check" size={16} /> {w}</li>)}
+      </ul>
       <PanelLearn markers={product.markers} variant="full" highlight={added} />
 
       {derived.length > 0 ? (

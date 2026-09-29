@@ -13,3 +13,7 @@
   .derived { padding: var(--s-7); }
   .derivedList { grid-template-columns: repeat(2, 1fr); gap: var(--s-4) var(--s-6); }
 }
+.forWho { margin: calc(var(--s-4) * -1) 0 var(--s-6); display: grid; gap: var(--s-2); max-width: 44rem; }
+.forWho li { display: flex; gap: var(--s-2); align-items: flex-start; color: var(--muted); font-size: var(--fs-sm); }
+.forWho svg { flex: none; margin-top: 3px; color: var(--accent); }
+@media (min-width: 52rem) { .forWho { grid-template-columns: repeat(3, 1fr); gap: var(--s-4); max-width: none; } }

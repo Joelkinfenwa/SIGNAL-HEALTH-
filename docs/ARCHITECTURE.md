@@ -92,7 +92,7 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 **Signature element.** The "Your signal" readout: markers tracked across three tests, evergreen line, coral latest reading. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings, coral last dot) and the retesting timeline.
 
-**Product page order (conversion).** What it is (hero + buy card) → why you might need it (WhyYou) → what you'll learn → why SIGNAL → retesting plans → add-ons → every test includes → FAQ → product-specific close. Short sections, one idea each.
+**Product page (classic PDP).** Gallery left; name, tagline, description, four facts and the buy box right (sticky on desktop). The buy box chooses one test or an Automatic Retesting rhythm and carries `?plan=` to checkout, with the recurring-billing note inline. Below: what's measured (with "good for" and calculated markers) → every test includes → add-ons → how it works → FAQ → close.
 
 **Product presentation.** The featured product gets a full-width dark card with "what you'll learn" chips; the other four are compact cards (question + areas of health + counts). Marker detail lives on the product page. Never five equal columns.
 
@@ -109,8 +109,8 @@ components/
   layout/      SiteHeader, SiteFooter, PlannedPage (temporary)
   analytics/   TrackedLink, AttributionCapture
   product/     ProductCard (buy box), PriceTag (null-safe), PanelLearn ("what you'll learn"),
-               ProductHero (full-bleed, buy card), WhyYou, ProductLearn (+ calculated-for-you,
-               builds-on), WhySignal (photo triptych), AddOns, Included, CompareTable
+               ProductHero (gallery + details), BuyBox (client: plan selector), ProductLearn
+               (+ good-for, calculated-for-you, builds-on), ProductSteps, AddOns, Included, CompareTable
   home/        Hero, ProofStrip, SignalCard, Coverage + PostcodeChecker (client),
                HowItWorks + StepMock, Tests, Biomarkers (<details>), Comparison (<table>),
                ResultsMock, RetestBand, SocialProof, Faq (+ FAQPage JSON-LD), FinalCta,
