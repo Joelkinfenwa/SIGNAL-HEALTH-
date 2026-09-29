@@ -5,6 +5,8 @@ import { useEffect, useMemo, useState } from "react";
 import { NextSteps } from "@/components/journey/NextSteps";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
+import { addonNewMarkers, addonsFor } from "@/config/addons";
+import { getBiomarker } from "@/config/biomarkers";
 import { collectionMethods, type CollectionMethodId } from "@/config/collection";
 import { signalTest } from "@/config/products";
 import { visibleTrustClaims } from "@/config/trust";
@@ -24,6 +26,7 @@ export function Checkout() {
   const [hydrated, setHydrated] = useState(false);
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
+  const options = addonsFor(signalTest);
   const trust = visibleTrustClaims().filter((c) => c.status === "verified").slice(0, 3);
   const paymentsLive = false; // flipped by phase 6 when createOrder returns "ready"
 
@@ -38,6 +41,12 @@ export function Checkout() {
     if (!hydrated) return;
     window.history.replaceState(null, "", `${window.location.pathname}${serializeConfiguration(cfg)}`);
   }, [cfg, hydrated]);
+
+  function toggle(id: string) {
+    const has = cfg.addonIds.includes(id);
+    track({ name: has ? "addon_removed" : "addon_selected", props: { addon_id: id } });
+    setCfg(toggleAddon(cfg, id));
+  }
 
   function chooseCollection(id: CollectionMethodId) {
     setCfg({ ...cfg, collectionMethodId: id });
@@ -60,12 +69,35 @@ export function Checkout() {
                 </span>
                 <span className={styles.lineRight}>
                   <span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span>
-                  {l.kind === "addon" ? <button type="button" className={styles.remove} onClick={() => setCfg(toggleAddon(cfg, l.id))}>Remove</button> : null}
+                  {l.kind === "addon" ? <button type="button" className={styles.remove} onClick={() => toggle(l.id)}>Remove</button> : null}
                 </span>
               </li>
             ))}
           </ul>
-          <Link href={`/signal${serializeConfiguration(cfg)}#configure`} className={styles.edit}>Change add-ons</Link>
+          <details className={styles.addons} open={cfg.addonIds.length === 0}>
+            <summary className={styles.addonsSummary}>
+              <span>{cfg.addonIds.length ? "Add more depth" : "Go deeper where it matters to you"} <span className={styles.optional}>optional</span></span>
+              <span className={styles.toggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
+            </summary>
+            <ul className={styles.addonList}>
+              {options.map((a) => {
+                const on = cfg.addonIds.includes(a.id);
+                return (
+                  <li key={a.id} className={cx(styles.addonRow, on && styles.addonRowOn)}>
+                    <span className={styles.addonText}>
+                      <span className={styles.addonName}>{a.name} <span className={styles.addonPrice}>{a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "Price TBC"}</span></span>
+                      <span className={styles.addonFor}>{a.forWho}</span>
+                      <span className={styles.addonMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
+                    </span>
+                    <button type="button" className={cx(styles.addBtn, on && styles.addBtnOn)} aria-pressed={on} onClick={() => toggle(a.id)}>
+                      {on ? <><Icon name="check" size={16} /> Added</> : <><Icon name="plus" size={16} /> Add</>}
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+            <p className={styles.hint}>Not sure? <Link href="/find-my-signal">Answer four quick questions</Link> and we&apos;ll suggest the add-ons that fit.</p>
+          </details>
         </section>
 
         <section className={styles.block} aria-labelledby="collection-title">

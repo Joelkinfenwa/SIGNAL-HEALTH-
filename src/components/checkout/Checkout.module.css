@@ -11,7 +11,29 @@
 .lineRight { display: grid; justify-items: end; gap: 2px; flex: none; font-weight: 700; }
 .remove { min-height: 44px; padding: 0; border: 0; background: none; cursor: pointer; font-size: var(--fs-xs); font-weight: 700; color: var(--muted); text-decoration: underline; text-underline-offset: 3px; }
 .remove:hover { color: var(--fg); }
-.edit { display: inline-flex; align-items: center; min-height: 44px; font-size: var(--fs-sm); font-weight: 700; text-underline-offset: 3px; }
+.addons { border-top: 1px solid var(--line); }
+.addonsSummary { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 52px; cursor: pointer; list-style: none; font-weight: 700; }
+.addonsSummary::-webkit-details-marker { display: none; }
+.addonsSummary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.optional { margin-left: var(--s-2); font-size: var(--fs-xs); font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+.toggle { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--panel-soft); color: var(--accent); }
+.plus, .minus { grid-area: 1 / 1; }
+.minus { display: none; }
+.addons[open] .plus { display: none; }
+.addons[open] .minus { display: block; }
+.addonList { display: grid; gap: var(--s-2); padding-bottom: var(--s-2); }
+.addonRow { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); padding: var(--s-3) var(--s-4); border-radius: var(--r-sm); box-shadow: inset 0 0 0 1px var(--line); }
+.addonRowOn { background: var(--c-brand-soft); box-shadow: inset 0 0 0 2px var(--accent); }
+.addonText { display: grid; gap: 2px; min-width: 0; }
+.addonName { font-weight: 700; font-size: var(--fs-sm); }
+.addonPrice { font-weight: 600; color: var(--muted); }
+.addonFor { font-size: var(--fs-xs); color: var(--muted); text-wrap: pretty; }
+.addonMarkers { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.addBtn { flex: none; display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0 var(--s-4); border: 0; border-radius: var(--r-pill); background: var(--panel-soft); color: var(--fg); font-weight: 700; font-size: var(--fs-sm); cursor: pointer; }
+.addBtn:hover { background: var(--c-brand-soft); }
+.addBtn:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.addBtnOn { background: var(--accent); color: var(--on-accent); }
+.hint a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); font-weight: 700; text-underline-offset: 3px; }
 .methods { display: grid; gap: var(--s-2); }
 .method { display: flex; gap: var(--s-3); align-items: flex-start; width: 100%; min-height: 64px; padding: var(--s-4); border: 0; border-radius: var(--r-sm); text-align: left; cursor: pointer; background: var(--panel); color: var(--fg); box-shadow: inset 0 0 0 1px var(--line); }
 .method:hover { background: var(--panel-soft); }
