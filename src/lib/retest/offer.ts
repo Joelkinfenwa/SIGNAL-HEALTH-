@@ -20,14 +20,14 @@ export function isEligible(product: Product, offer: RetestOffer): boolean {
  * creates the Stripe subscription and refund — so the amount the customer sees
  * is exactly the amount they are charged and refunded.
  */
-export function quoteRetest(product: Product, offer: RetestOffer): RetestQuote {
-  const discountCents = Math.round((product.priceCents * offer.discountBps) / 10_000);
+export function quoteRetest(priceCents: number, offer: RetestOffer): RetestQuote {
+  const discountCents = Math.round((priceCents * offer.discountBps) / 10_000);
   return {
     offerId: offer.id,
     offerVersion: offer.version,
     discountCents,
     refundTodayCents: offer.refundOnConversion ? discountCents : 0,
-    recurringPriceCents: product.priceCents - discountCents,
+    recurringPriceCents: priceCents - discountCents,
     intervalMonths: offer.intervalMonths,
   };
 }
@@ -35,9 +35,9 @@ export function quoteRetest(product: Product, offer: RetestOffer): RetestQuote {
 export const formatInterval = (months: number) =>
   months === 12 ? "year" : months === 1 ? "month" : `${months} months`;
 
-/** Fill offer copy tokens. */
-export function renderOfferCopy(template: string, product: Product, offer: RetestOffer): string {
-  const q = quoteRetest(product, offer);
+/** Fill offer copy tokens. Requires a priced product (checkout never reaches here without one). */
+export function renderOfferCopy(template: string, product: Product & { priceCents: number }, offer: RetestOffer): string {
+  const q = quoteRetest(product.priceCents, offer);
   const tokens: Record<string, string> = {
     refund: formatAUD(q.refundTodayCents),
     price: formatAUD(q.recurringPriceCents),

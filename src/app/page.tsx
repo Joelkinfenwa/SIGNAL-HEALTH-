@@ -13,7 +13,7 @@ import { Tests } from "@/components/home/Tests";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { stickyCta } from "@/config/home";
-import { fillHomeTokens } from "@/lib/home-tokens";
+import { pickPriced } from "@/lib/home-tokens";
 
 /**
  * Homepage (v3). Statically rendered. Client JS is limited to analytics,
@@ -37,7 +37,7 @@ export default function HomePage() {
         <FinalCta />
       </main>
       <SiteFooter />
-      <StickyCta priceLine={fillHomeTokens(stickyCta.priceLine)} />
+      <StickyCta priceLine={pickPriced(stickyCta.priceLine, stickyCta.priceLineUnpriced)} />
     </>
   );
 }

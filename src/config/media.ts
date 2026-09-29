@@ -9,6 +9,8 @@
  * `brief` describes the shot to commission. The Photo component renders a warm
  * colour panel in place of the image until a `src` is supplied.
  */
+import type { ProductTier } from "./products";
+
 const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3DvAn6uMIdEntCnt7P71oSjYfdu";
 
 export interface MediaAsset {
@@ -58,4 +60,28 @@ export const media = {
     alt: "Someone at a kitchen bench choosing a test on their phone over coffee",
     brief: "How it works, step 1. Relaxed, decisive moment. Hands, phone, coffee. Square 1:1.",
   },
+  hormonesHero: {
+    src: "",
+    alt: "A man in his forties at the end of a morning run, catching his breath by the water",
+    brief: "Hormones product page. Candid, confident, not gym-bro. Portrait 4:5.",
+  },
+  performanceHero: {
+    src: "",
+    alt: "A cyclist mid-climb in early light",
+    brief: "Performance product page. Effort and focus, real athlete, not stock. Portrait 4:5.",
+  },
+  longevityHero: {
+    src: "",
+    alt: "A woman in her fifties tending a garden in the late afternoon",
+    brief: "Longevity product page. Calm, long-view, warm light. Portrait 4:5.",
+  },
 } satisfies Record<string, MediaAsset>;
+
+/** Product page hero image per tier. Placeholders render as colour panels until photography exists. */
+export const productHeroMedia: Record<ProductTier, MediaAsset> = {
+  core: media.tubes,
+  complete: media.heroSwim,
+  hormones: media.hormonesHero,
+  performance: media.performanceHero,
+  longevity: media.longevityHero,
+};

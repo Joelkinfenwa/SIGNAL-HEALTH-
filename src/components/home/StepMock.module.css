@@ -6,10 +6,10 @@
     radial-gradient(70% 60% at 80% 10%, var(--c-plasma-soft) 0%, transparent 60%),
     var(--panel-soft);
 }
-.picker { width: 100%; max-width: 15rem; display: grid; gap: 8px; }
+.picker { width: 100%; max-width: 13rem; display: grid; gap: 6px; }
 .option {
   display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 14px;
+  padding: 8px 12px; border-radius: 12px;
   background: var(--panel); box-shadow: var(--shadow-soft);
   font-size: var(--fs-sm); font-weight: 600; color: var(--muted);
 }

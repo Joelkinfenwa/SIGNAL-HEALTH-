@@ -4,7 +4,7 @@ Consumer web application for SIGNAL: premium blood testing built on Express Path
 
 **Test → Understand → Improve → Retest**
 
-This is v0.3: the architectural foundation and the rebuilt homepage (v3) with placeholder product data. Full specification is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); the homepage plan is in [`docs/HOMEPAGE_V3_PLAN.md`](docs/HOMEPAGE_V3_PLAN.md).
+This is v0.3: the architectural foundation and the rebuilt homepage (v3) with placeholder product data. Full specification is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); the homepage plan is in [`docs/HOMEPAGE_V3_PLAN.md`](docs/HOMEPAGE_V3_PLAN.md); the panel brief and open decisions are in [`docs/PANELS.md`](docs/PANELS.md).
 
 ## Deploy to Vercel
 
@@ -35,12 +35,13 @@ No UI framework and no CSS-in-JS. The homepage's client JavaScript is limited to
 
 ```
 src/
-  app/                 Routes. Only / is built; other routes are placeholders from the route map.
+  app/                 Routes. Built: / (home), /tests (compare), /tests/[slug] (product). Others are placeholders.
   config/              Business data — edit here, not in components
-    products.ts        The three tests (placeholder data, incl. buy-box copy)
+    products.ts        The five tests: marker ids per panel, copy, "builds on" (prices null until set)
+    addons.ts          Add-on marker bundles; offered where they add new markers
     retest-offer.ts    Automatic Retesting offer: discount, interval, eligibility, copy
     brand.ts           Brand lockup, endorsement prominence, trust claims
-    biomarkers.ts      Biomarker categories, counts and example markers (placeholders)
+    biomarkers.ts      Biomarker catalogue: every marker, its area of health, plain-language "about", derived-from
     home.ts            Homepage copy: headline options, proof strip, steps, results mock, CTAs
     coverage.ts        Placeholder serviced postcodes + collection centres; checkPostcode()
     comparison.ts      "SIGNAL vs a standard check-up" rows (all TODO-VERIFY)
@@ -86,8 +87,13 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "The price you see includes the test… collection options shown before you pay" | Buy box price note; FAQ "What's included" | TODO-VERIFY: confirm pricing and collection-fee model |
 | "Clinical review included" / "reviewed and explained in plain language" | Proof strip, How it works, Results section | TODO-VERIFY with clinical lead |
 | "Advanced blood testing from $279, collected at home or nearby" | Hero offer line, sticky bar | Price from config; "at home or nearby" depends on launch coverage |
-| "{n} areas of health" / "{n} markers" per category | Proof strip, buy box, biomarker cards | PLACEHOLDER counts and example markers in `config/biomarkers.ts` — replace with real lists |
-| Key inclusions per product | Buy box | PLACEHOLDER in `config/products.ts` — confirm against analyte lists |
+| "{n} areas of health" / "{n} markers" | Proof strip, buy box, product pages, compare table | Derived from `config/products.ts` marker lists — TODO-VERIFY analyte availability with the lab |
+| Every marker "about" line (what it measures) | Product pages, biomarker cards | Measurement language only; clinical lead to review `config/biomarkers.ts` |
+| "Calculated for you, at no extra cost" (non-HDL-C, eGFR, TSAT, free T, HOMA-IR, ratios) | Product pages | TODO-VERIFY which the lab reports vs. we compute; no extra assay is charged |
+| "Everything in Core, plus N more" | Product pages | Derived from marker lists |
+| Add-ons "coming; availability and pricing confirmed at launch" | Product and compare pages | TODO(pricing) and TODO-VERIFY assay availability |
+| "Pricing coming soon" | Everywhere a price would show | TODO(pricing): set `priceCents` per product and add-on |
+| Hormones panel "designed around male hormone markers; versions for women are planned" | Hormones product page | DECISION: confirm roadmap before publishing |
 | "You can change the date or cancel from your account at any time" | FAQ (Automatic Retesting) | True once account/retesting management ships |
 | "Recommended" / "recommended starting point" (not "most popular") | Tests section | Change only when sales data supports it |
 | "Collector visit booked, at home" pill | Hero | Illustrative UI; TODO-VERIFY home visits are offered in launch areas |
@@ -127,6 +133,8 @@ See **DECISION** and **VERIFY** markers in `docs/ARCHITECTURE.md`. The most impo
 - Add new analytics events to `src/lib/analytics/events.ts` first; the types enforce the payload.
 - Never add health-related properties to events sent to ad platforms.
 - Fonts are self-hosted and preloaded via `next/font/google` (Figtree) — no render-blocking font stylesheet.
-- Marketing copy lives in `src/config/home.ts`; use `fillHomeTokens()` for `{fromPrice}` `{areas}` `{markers}` `{interval}` so numbers never go stale.
+- Marketing copy lives in `src/config/home.ts`; use `fillHomeTokens()` / `pickPriced()` for `{fromPrice}` `{areas}` `{markers}` `{tests}` `{interval}` so numbers never go stale and no "from $" line renders without a price.
+- Panels reference markers by id from the catalogue. Never type marker counts or lists into components or copy; derive them.
+- Sell what people learn: group markers by area of health (`PanelLearn`), tag calculated markers, never lead with a line-item count.
 - The postcode checker sends `postcode_checked { serviceable }` only. Never add the postcode to any event.
 - Social proof renders only when `config/social-proof.ts` has approved content. Never add outcome testimonials or invented ratings.

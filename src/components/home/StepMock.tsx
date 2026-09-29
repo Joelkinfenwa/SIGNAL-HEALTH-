@@ -3,7 +3,6 @@ import { resultsMock, type Step } from "@/config/home";
 import { media } from "@/config/media";
 import { featuredProduct, products } from "@/config/products";
 import { activeRetestOffer } from "@/config/retest-offer";
-import { formatAUD } from "@/lib/money";
 import { cx } from "@/lib/cx";
 import { Photo } from "./Photo";
 import styles from "./StepMock.module.css";
@@ -35,7 +34,6 @@ function ChooseMock() {
           <li key={p.id} className={cx(styles.option, p.id === featured.id && styles.selected)}>
             <span className={styles.radio} />
             <span className={styles.optionName}>{p.shortName}</span>
-            <span className={cx(styles.optionPrice, "num")}>{formatAUD(p.priceCents)}</span>
           </li>
         ))}
       </ul>

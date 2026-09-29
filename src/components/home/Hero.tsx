@@ -3,7 +3,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { activeHeadline, hero, heroHeadlines } from "@/config/home";
 import { media } from "@/config/media";
-import { fillHomeTokens } from "@/lib/home-tokens";
+import { pickPriced } from "@/lib/home-tokens";
 import { Photo } from "./Photo";
 import { ProofStrip } from "./ProofStrip";
 import { SignalCard } from "./SignalCard";
@@ -19,7 +19,7 @@ export function Hero() {
             <Icon name="sparkle" size={16} /> {hero.kicker}
           </p>
           <h1 id="hero-title" className={styles.title}>{headline.text}</h1>
-          <p className={styles.lede}>{fillHomeTokens(hero.offerLine)}</p>
+          <p className={styles.lede}>{pickPriced(hero.offerLine, hero.offerLineUnpriced)}</p>
           <div className={styles.actions}>
             <Button href={hero.primaryCta.href} ctaId="hero_find_my_test" location="hero">
               {hero.primaryCta.label} <Icon name="arrow" size={18} />

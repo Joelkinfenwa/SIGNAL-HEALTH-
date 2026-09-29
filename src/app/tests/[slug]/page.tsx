@@ -1,24 +1,51 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { PlannedPage } from "@/components/layout/PlannedPage";
-import { getProduct, products } from "@/config/products";
+import { ProductViewTracker } from "@/components/analytics/ProductViewTracker";
+import { Faq } from "@/components/home/Faq";
+import { FinalCta } from "@/components/home/FinalCta";
+import { HowItWorks } from "@/components/home/HowItWorks";
+import { StickyCta } from "@/components/home/StickyCta";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { SiteHeader } from "@/components/layout/SiteHeader";
+import { AddOns } from "@/components/product/AddOns";
+import { ProductHero } from "@/components/product/ProductHero";
+import { ProductLearn } from "@/components/product/ProductLearn";
+import { getProduct, productCategoryCount, productMarkerCount, products } from "@/config/products";
+import { formatAUD } from "@/lib/money";
 
 export const dynamicParams = false;
 export function generateStaticParams() {
   return products.map((p) => ({ slug: p.slug }));
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const product = getProduct((await params).slug);
-  return { title: product?.name ?? "Test" };
+  if (!product) return { title: "Test" };
+  return {
+    title: `${product.name}: ${product.tagline}`,
+    description: `${product.helps} ${productMarkerCount(product)} markers across ${productCategoryCount(product)} areas of health, collected at home or nearby.`,
+  };
 }
 
+/** Product page. Static. Client JS: analytics view event and the sticky CTA. */
 export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
   const product = getProduct((await params).slug);
   if (!product) notFound();
+  const priceLine = product.priceCents !== null ? formatAUD(product.priceCents) : `${productMarkerCount(product)} markers`;
   return (
-    <PlannedPage
-      title={product.name}
-      purpose="Product page: outcome, price, who it's for, biomarker areas (expandable analyte list), collection options, what happens after purchase, FAQ, CTA. Phase 1b."
-    />
+    <>
+      <SiteHeader />
+      <main id="main">
+        <ProductHero product={product} />
+        <ProductLearn product={product} />
+        <AddOns product={product} />
+        <HowItWorks />
+        <Faq />
+        <FinalCta />
+      </main>
+      <SiteFooter />
+      <StickyCta priceLine={priceLine} href={`/checkout/${product.slug}`} label={`Choose ${product.shortName}`} ctaId={`sticky_choose_${product.slug}`} />
+      <ProductViewTracker productId={product.id} tier={product.tier} priceCents={product.priceCents} />
+    </>
   );
 }

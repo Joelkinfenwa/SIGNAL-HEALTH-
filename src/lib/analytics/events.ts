@@ -14,7 +14,7 @@ type Money = { value: number; currency: "AUD" };
 export type AnalyticsEvent =
   | { name: "page_viewed"; props: { path: string } }
   | { name: "cta_clicked"; props: { cta_id: string; location: string } }
-  | { name: "product_viewed"; props: { product_id: string; tier: ProductTier } & Money }
+  | { name: "product_viewed"; props: { product_id: string; tier: ProductTier } & Partial<Money> }
   | { name: "quiz_started"; props: { quiz_version: string } }
   | { name: "quiz_completed"; props: { quiz_version: string } }
   | { name: "product_recommended"; props: { quiz_version: string; product_id: string } }

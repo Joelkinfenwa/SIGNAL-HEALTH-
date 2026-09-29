@@ -1,5 +1,5 @@
 .card {
-  display: flex; flex-direction: column; height: 100%;
+  display: flex; flex-direction: column; height: 100%; min-width: 0;
   padding: var(--s-6) var(--s-5);
   border-radius: var(--r-lg);
   background: var(--panel);
@@ -7,14 +7,11 @@
   box-shadow: var(--shadow-soft);
 }
 .featured { background: var(--bg); box-shadow: var(--shadow-float); }
-.head { display: flex; justify-content: space-between; align-items: center; gap: var(--s-3); }
+.head { display: flex; justify-content: space-between; align-items: flex-start; gap: var(--s-3); }
 .name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.02em; line-height: var(--lh-snug); }
 .badge { flex: none; padding: 4px 12px; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); font-size: var(--fs-xs); font-weight: 700; }
-.price { margin-top: var(--s-4); display: grid; gap: 4px; font-size: clamp(2.25rem, 1.8rem + 1.5vw, 2.75rem); font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
-.priceNote { font-size: var(--fs-xs); font-weight: 500; letter-spacing: 0; color: var(--muted); line-height: 1.3; }
-.helps { margin-top: var(--s-5); color: var(--muted); text-wrap: pretty; }
-.coverage { margin-top: var(--s-5); padding-top: var(--s-4); border-top: 1px solid var(--line); font-size: var(--fs-sm); font-weight: 700; }
-.inclusions { margin-top: var(--s-3); display: grid; gap: var(--s-2); font-size: var(--fs-sm); color: var(--muted); }
-.inclusions li { display: flex; align-items: flex-start; gap: var(--s-2); }
-.inclusions svg { color: var(--accent); flex: none; margin-top: 3px; }
+.question { margin-top: var(--s-3); font-size: var(--fs-md); line-height: 1.3; letter-spacing: -0.015em; font-weight: 500; text-wrap: pretty; min-height: 2.6em; }
+.price { margin-top: var(--s-5); align-self: flex-start; }
+.counts { margin-top: var(--s-4); padding-top: var(--s-4); border-top: 1px solid var(--line); font-size: var(--fs-sm); font-weight: 700; }
+.learn { margin-top: var(--s-3); min-width: 0; }
 .actions { margin-top: auto; padding-top: var(--s-6); display: grid; }

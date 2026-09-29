@@ -19,8 +19,9 @@ export const activeHeadline: HeadlineOption["id"] = "know";
 
 export const hero = {
   kicker: "Advanced blood testing, made simple",
-  /** One line that anchors the offer and price. */
+  /** One line that anchors the offer and price. The unpriced line renders until pricing is set. */
   offerLine: "Advanced blood testing from {fromPrice}, collected at home or nearby.",
+  offerLineUnpriced: "Advanced blood testing, collected at home or nearby, explained in plain language.",
   primaryCta: { label: "Find my test", href: "/find-my-test" },
   secondaryCta: { label: "View tests", href: "/tests" },
   /** Illustrative pill over the hero photo. TODO-VERIFY: confirm home visits are offered in launch areas. */
@@ -36,7 +37,7 @@ export interface ProofItem {
 
 /** Three-item proof strip under the hero. Tokens allowed. */
 export const proofStrip: ProofItem[] = [
-  { id: "areas", icon: "chart", title: "{areas} areas of health", body: "Hormones, heart, metabolic, nutrients and more from one sample." },
+  { id: "areas", icon: "chart", title: "{areas} areas of health", body: "Heart, hormones, metabolic, thyroid, nutrients and more from one sample." },
   { id: "home", icon: "home", title: "Collected at home or nearby", body: "A qualified collector visits where available, or drop into a collection centre." },
   { id: "review", icon: "shield", title: "Clinical review included", body: "Results are reviewed and explained in plain language." },
 ];
@@ -50,7 +51,7 @@ export interface Step {
 
 /** How it works. Retesting is the final step, not an add-on. Tokens allowed. */
 export const steps: Step[] = [
-  { id: "choose", label: "Choose", title: "Choose your test", body: "Three tests, one clear choice. Not sure? Answer a few questions and we'll suggest the right one." },
+  { id: "choose", label: "Choose", title: "Choose your test", body: "{tests} tests, each built around a question you actually have. Not sure? Answer a few questions and we'll suggest one." },
   { id: "collect", label: "Get tested", title: "Get tested, your way", body: "A qualified collector comes to your home or workplace where available. Or visit a collection centre near you." },
   { id: "understand", label: "Understand", title: "Understand your results", body: "Every marker explained in plain language, with clinical review, in your own dashboard." },
   { id: "retest", label: "Retest", title: "Retest and see the change", body: "Test again every {interval} and watch how your numbers move as you make changes." },
@@ -81,6 +82,7 @@ export const finalCta = {
 export const stickyCta = {
   label: "Find my test",
   href: "/find-my-test",
-  /** Tokens allowed. */
+  /** Tokens allowed. The unpriced line renders until pricing is set. */
   priceLine: "From {fromPrice}",
+  priceLineUnpriced: "{tests} tests, one sample",
 };

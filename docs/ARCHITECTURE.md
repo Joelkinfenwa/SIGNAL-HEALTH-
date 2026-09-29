@@ -34,8 +34,8 @@ Configuration over code: products, the retest offer, trust claims and brand endo
 
 ```
 /                               Home (built)
-/tests                          Compare the three tests
-/tests/[slug]                   Product page (core | complete | performance)
+/tests                          Compare the five tests (built)
+/tests/[slug]                   Product page: core | complete | hormones | performance | longevity (built)
 /find-my-test                   Recommendation quiz
 /checkout/[slug]                Collection method → details → clinical requirements → payment
 /order/[orderId]                Confirmation → Automatic Retesting offer → booking next steps
@@ -54,7 +54,7 @@ Configuration over code: products, the retest offer, trust claims and brand endo
 /api/events                     Server-side analytics mirror (stubbed)
 ```
 
-SEO note: the commercial architecture is three products, but the content architecture is open-ended. `/biomarkers/*`, `/blood-tests/*` and `/locations/*` are independent static collections that each link into the relevant product. Adding a fourth product or a new topic never requires restructuring URLs.
+SEO note: the commercial architecture is five products, but the content architecture is open-ended. `/biomarkers/*`, `/blood-tests/*` and `/locations/*` are independent static collections that each link into the relevant product. Adding a sixth product or a new topic never requires restructuring URLs.
 
 Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
@@ -99,7 +99,8 @@ components/
   brand/       Logo (+ SignalMark) — endorsement level driven by config
   layout/      SiteHeader, SiteFooter, PlannedPage (temporary)
   analytics/   TrackedLink, AttributionCapture
-  product/     ProductCard (buy-box card)
+  product/     ProductCard (buy box), PriceTag (null-safe), PanelLearn ("what you'll learn"),
+               ProductHero, ProductLearn (+ calculated-for-you, builds-on), AddOns, CompareTable
   home/        Hero, ProofStrip, SignalCard, Coverage + PostcodeChecker (client),
                HowItWorks + StepMock, Tests, Biomarkers (<details>), Comparison (<table>),
                ResultsMock, RetestBand, SocialProof, Faq (+ FAQPage JSON-LD), FinalCta,

@@ -10,7 +10,7 @@ import styles from "./StickyCta.module.css";
  * Mobile-only sticky bar that appears once the hero has scrolled away.
  * Hidden on desktop by CSS. Uses IntersectionObserver on #hero (no scroll listeners).
  */
-export function StickyCta({ priceLine }: { priceLine: string }) {
+export function StickyCta({ priceLine, href = stickyCta.href, label = stickyCta.label, ctaId = "sticky_find_my_test" }: { priceLine: string; href?: string; label?: string; ctaId?: string }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -25,8 +25,8 @@ export function StickyCta({ priceLine }: { priceLine: string }) {
     <div className={cx(styles.bar, visible && styles.visible)} aria-hidden={!visible} data-theme="light">
       <div className={styles.inner}>
         <span className={styles.price}>{priceLine}</span>
-        <Button href={stickyCta.href} size="sm" ctaId="sticky_find_my_test" location="sticky_bar" className={styles.button}>
-          {stickyCta.label}
+        <Button href={href} size="sm" ctaId={ctaId} location="sticky_bar" className={styles.button}>
+          {label}
         </Button>
       </div>
     </div>
