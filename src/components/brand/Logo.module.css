@@ -1,6 +1,8 @@
 .logo {
+  min-height: 44px;
   display: inline-flex;
   flex-direction: column;
+  justify-content: center;
   gap: 2px;
   text-decoration: none;
   color: var(--fg);

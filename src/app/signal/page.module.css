@@ -8,6 +8,8 @@
 .facts svg { color: var(--accent); flex: none; }
 .photo { aspect-ratio: 16 / 10; }
 .configure { padding-block: var(--s-4) var(--section-pad); }
+:global(main):has(.configure) { padding-bottom: 5.5rem; }
+@media (min-width: 64rem) { :global(main):has(.configure) { padding-bottom: 0; } }
 @media (min-width: 64rem) {
   .top { padding-block: var(--s-7) var(--s-7); }
   .topInner { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); }

@@ -1,5 +1,20 @@
 .wrap { display: grid; gap: var(--s-5); }
-.grid { display: grid; gap: var(--s-4); align-items: start; }
+
+/* Phone accordion */
+.list { display: grid; gap: var(--s-2); }
+.row { border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); overflow: hidden; }
+.rowSummary { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); min-height: 60px; padding: var(--s-3) var(--s-4); cursor: pointer; list-style: none; }
+.rowSummary::-webkit-details-marker { display: none; }
+.rowSummary:focus-visible { outline: 2px solid var(--focus); outline-offset: -3px; border-radius: var(--r-md); }
+.rowText { display: grid; gap: 1px; }
+.rowName { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
+.rowCount { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.row[open] .plus { display: none; }
+.row[open] .minus { display: block; }
+.row[open] .toggle { background: var(--c-brand-soft); }
+.rowBody { display: grid; gap: var(--s-3); padding: 0 var(--s-4) var(--s-4); }
+.grid { display: none; }
+
 .card { display: grid; gap: var(--s-3); align-content: start; padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
 .head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); }
 .name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; }
@@ -25,6 +40,7 @@
 .def { display: grid; gap: 2px; }
 .def dt { font-weight: 700; font-size: var(--fs-sm); }
 .def dd { margin: 0; font-size: var(--fs-sm); color: var(--muted); line-height: 1.45; text-wrap: pretty; }
-.legend { display: inline-flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--muted); }
-@media (min-width: 40rem) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.legend { display: flex; align-items: baseline; gap: var(--s-2); font-size: var(--fs-sm); color: var(--muted); }
+.legend .dot { flex: none; position: relative; top: -1px; }
+@media (min-width: 48rem) { .list { display: none; } .grid { display: grid; gap: var(--s-4); align-items: start; grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 @media (min-width: 64rem) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); } }
