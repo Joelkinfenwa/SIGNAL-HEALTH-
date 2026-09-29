@@ -8,9 +8,6 @@
 .facts svg { color: var(--accent); flex: none; }
 .photo { aspect-ratio: 16 / 10; }
 .configure { padding-block: var(--s-4) var(--section-pad); }
-.derivedNote { margin-top: var(--s-6); display: flex; gap: var(--s-2); align-items: flex-start; max-width: 48rem; font-size: var(--fs-sm); color: var(--muted); }
-.derivedNote svg { flex: none; margin-top: 3px; color: var(--accent); }
-.derivedNote em { font-style: normal; font-weight: 700; color: var(--fg); }
 @media (min-width: 64rem) {
   .top { padding-block: var(--s-7) var(--s-7); }
   .topInner { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); }

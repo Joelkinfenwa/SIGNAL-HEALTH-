@@ -1,0 +1,30 @@
+.wrap { display: grid; gap: var(--s-5); }
+.grid { display: grid; gap: var(--s-4); align-items: start; }
+.card { display: grid; gap: var(--s-3); align-content: start; padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
+.head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); }
+.name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; }
+.count { flex: none; font-size: var(--fs-xs); font-weight: 700; color: var(--muted); letter-spacing: 0.04em; text-transform: uppercase; }
+.learn { color: var(--muted); font-size: var(--fs-sm); line-height: 1.45; text-wrap: pretty; }
+.markers { display: flex; flex-wrap: wrap; gap: var(--s-2) var(--s-4); padding-top: var(--s-2); border-top: 1px solid var(--line); }
+.marker { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-sm); font-weight: 600; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--c-signal); }
+.details { margin-top: var(--s-1); }
+.summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+  min-height: 44px; cursor: pointer; list-style: none;
+  font-size: var(--fs-sm); font-weight: 700; color: var(--accent);
+}
+.summary::-webkit-details-marker { display: none; }
+.summary:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; border-radius: 6px; }
+.toggle { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--panel-soft); }
+.plus, .minus { grid-area: 1 / 1; }
+.minus { display: none; }
+.details[open] .plus { display: none; }
+.details[open] .minus { display: block; }
+.defs { display: grid; gap: var(--s-3); padding-top: var(--s-2); }
+.def { display: grid; gap: 2px; }
+.def dt { font-weight: 700; font-size: var(--fs-sm); }
+.def dd { margin: 0; font-size: var(--fs-sm); color: var(--muted); line-height: 1.45; text-wrap: pretty; }
+.legend { display: inline-flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); color: var(--muted); }
+@media (min-width: 40rem) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 64rem) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s-5); } }

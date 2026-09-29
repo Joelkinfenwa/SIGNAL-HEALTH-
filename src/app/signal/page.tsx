@@ -6,12 +6,11 @@ import { Photo } from "@/components/home/Photo";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Included } from "@/components/product/Included";
-import { PanelLearn } from "@/components/product/PanelLearn";
+import { MarkerAreas } from "@/components/product/MarkerAreas";
 import { ProductSteps } from "@/components/product/ProductSteps";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Section, SectionHeader } from "@/components/ui/Section";
-import { derivedMarkers } from "@/config/biomarkers";
 import { signalMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import styles from "./page.module.css";
@@ -27,7 +26,6 @@ export const metadata: Metadata = {
  * and reads ?addons= on the client (deep links from the quiz and landing pages).
  */
 export default function SignalPage() {
-  const derived = derivedMarkers(signalTest.markerIds);
   return (
     <>
       <SiteHeader />
@@ -55,13 +53,13 @@ export default function SignalPage() {
         </section>
 
         <Section id="what-is-tested" theme="shell" labelledBy="tested-title">
-          <SectionHeader id="tested-title" eyebrow="What's tested" title="Every marker in the SIGNAL Test." intro="Grouped by the area of health it describes. Each one comes explained in plain language with your results." />
-          <PanelLearn markers={signalTest.markerIds} variant="full" />
-          {derived.length ? (
-            <p className={styles.derivedNote}>
-              <Icon name="sparkle" size={16} /> Markers tagged <em>calculated</em> ({derived.map((m) => m.short ?? m.name).join(", ")}) are worked out from results already in the panel, at no extra cost.
-            </p>
-          ) : null}
+          <SectionHeader
+            id="tested-title"
+            eyebrow="What's tested"
+            title={`${productCategoryCount()} areas of health. ${productMarkerCount()} markers. Here's what each one tells you.`}
+            intro="Every marker comes back explained in plain language, so you never have to decode a lab report. Open any area to see what each marker measures."
+          />
+          <MarkerAreas markers={signalTest.markerIds} />
         </Section>
 
         <Included theme="light" />
