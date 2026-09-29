@@ -1,0 +1,16 @@
+.section { padding-block: var(--section-pad); }
+.header { max-width: 42rem; margin-bottom: var(--s-7); }
+.title {
+  font-size: var(--fs-xl);
+  line-height: var(--lh-snug);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-wrap: balance;
+}
+.intro {
+  margin-top: var(--s-4);
+  font-size: var(--fs-md);
+  line-height: 1.5;
+  color: var(--muted);
+  text-wrap: pretty;
+}

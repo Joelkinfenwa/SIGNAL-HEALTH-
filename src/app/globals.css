@@ -1,0 +1,113 @@
+/* =========================================================================
+   SIGNAL design tokens — v0.2 "warm, human, aspirational"
+   Photography carries the mood. The palette stays light and warm; Oxblood
+   and Plasma (the two parts of a blood sample) are accents, not wallpaper.
+   ========================================================================= */
+:root {
+  --c-paper: #fbf9f6;
+  --c-shell: #f3eee7;
+  --c-white: #ffffff;
+  --c-ink: #221c19;
+  --c-stone: #6a625c;
+  --c-rule: #e6dfd6;
+  --c-oxblood: #7a1b2b;
+  --c-oxblood-deep: #5a1220;
+  --c-plasma: #f2c14e;
+  --c-plasma-soft: #fbeecb;
+
+  --font-sans: "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --fs-xs: 0.8125rem;
+  --fs-sm: 0.9375rem;
+  --fs-base: 1.0625rem;
+  --fs-md: 1.25rem;
+  --fs-lg: 1.5625rem;
+  --fs-xl: clamp(2rem, 1.3rem + 2.6vw, 3rem);
+  --fs-display: clamp(2.75rem, 1.6rem + 4.8vw, 5.25rem);
+  --lh-tight: 1.02;
+  --lh-snug: 1.15;
+  --lh-body: 1.55;
+
+  --s-1: 0.25rem;
+  --s-2: 0.5rem;
+  --s-3: 0.75rem;
+  --s-4: 1rem;
+  --s-5: 1.5rem;
+  --s-6: 2rem;
+  --s-7: 3rem;
+  --s-8: 4.5rem;
+  --s-9: 7rem;
+
+  --r-sm: 12px;
+  --r-md: 20px;
+  --r-lg: 32px;
+  --r-pill: 999px;
+
+  --shadow-float: 0 24px 48px -16px rgba(60, 30, 20, 0.28), 0 2px 6px rgba(60, 30, 20, 0.06);
+
+  --container: 76rem;
+  --gutter: clamp(1.25rem, 5vw, 2.5rem);
+  --section-pad: clamp(4rem, 8vw, 7rem);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+:root,
+[data-theme="light"] {
+  --bg: var(--c-paper);
+  --fg: var(--c-ink);
+  --muted: var(--c-stone);
+  --line: var(--c-rule);
+  --accent: var(--c-oxblood);
+  --on-accent: #ffffff;
+  --panel: var(--c-white);
+  --focus: var(--c-oxblood);
+}
+[data-theme="shell"] {
+  --bg: var(--c-shell);
+  --panel: var(--c-white);
+}
+[data-theme="dark"] {
+  --bg: var(--c-oxblood);
+  --fg: #fdf8f3;
+  --muted: rgba(253, 248, 243, 0.78);
+  --line: rgba(253, 248, 243, 0.22);
+  --accent: var(--c-plasma);
+  --on-accent: var(--c-ink);
+  --panel: var(--c-oxblood-deep);
+  --focus: var(--c-plasma);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-base);
+  line-height: var(--lh-body);
+  color: var(--fg);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: inherit; }
+img, svg { display: block; max-width: 100%; }
+button { font: inherit; }
+[data-theme] { background: var(--bg); color: var(--fg); }
+
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 6px; }
+
+.skip-link {
+  position: absolute; left: var(--s-4); top: -100px; z-index: 100;
+  padding: var(--s-2) var(--s-4); background: var(--c-plasma); color: var(--c-ink);
+  border-radius: var(--r-sm); font-weight: 600;
+}
+.skip-link:focus { top: var(--s-4); }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.num { font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}

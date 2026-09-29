@@ -1,0 +1,13 @@
+.grid { display: grid; gap: var(--s-3); }
+.tile {
+  display: flex; flex-direction: column; gap: var(--s-2);
+  padding: var(--s-5); border-radius: var(--r-md);
+  background: var(--panel); border: 1px solid var(--line);
+}
+.name { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.01em; }
+.desc { color: var(--muted); font-size: var(--fs-sm); flex: 1; }
+.tag, .tagAll { align-self: flex-start; margin-top: var(--s-2); padding: 3px 10px; border-radius: var(--r-pill); font-size: var(--fs-xs); font-weight: 600; }
+.tagAll { background: var(--c-plasma-soft); color: var(--c-ink); }
+.tag { background: var(--c-shell); color: var(--c-oxblood); }
+@media (min-width: 40rem) { .grid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-4); } }

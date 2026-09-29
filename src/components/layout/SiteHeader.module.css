@@ -1,0 +1,28 @@
+.header {
+  padding-block: var(--s-4);
+}
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--s-5);
+}
+.nav {
+  display: none;
+  margin-left: auto;
+}
+.nav ul {
+  display: flex;
+  gap: var(--s-6);
+}
+.nav a {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  color: var(--muted);
+}
+.nav a:hover { color: var(--fg); }
+
+@media (min-width: 52rem) {
+  .nav { display: block; }
+}

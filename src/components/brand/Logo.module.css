@@ -1,0 +1,32 @@
+.logo {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+  text-decoration: none;
+  color: var(--fg);
+  line-height: 1;
+}
+.row {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--s-2);
+}
+.mark {
+  width: 28px;
+  height: 20px;
+}
+.word {
+  font-weight: 700;
+  font-size: 1.3rem;
+  letter-spacing: 0.14em;
+}
+.endorse {
+  padding-left: 36px; /* aligns under the wordmark, past the mark */
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+  color: var(--muted);
+}
+.subtle {
+  font-size: 0.64rem;
+  opacity: 0.8;
+}
