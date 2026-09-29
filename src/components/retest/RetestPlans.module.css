@@ -1,0 +1,18 @@
+.grid { display: grid; gap: var(--s-4); }
+.plan { display: grid; gap: var(--s-3); align-content: start; padding: var(--s-6) var(--s-5); border-radius: var(--r-lg); background: var(--panel); box-shadow: var(--shadow-soft); }
+.featured { background: var(--bg); box-shadow: var(--shadow-float); }
+.head { display: flex; justify-content: space-between; align-items: center; gap: var(--s-3); }
+.cadence { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.badge { padding: 4px 12px; border-radius: var(--r-pill); background: var(--c-signal); color: var(--c-ink); font-size: var(--fs-xs); font-weight: 700; }
+.name { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; }
+.save { font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
+.quote { font-size: var(--fs-sm); font-weight: 600; }
+.quoteTbc { font-size: var(--fs-sm); color: var(--muted); }
+.perks { margin-top: var(--s-2); display: grid; gap: var(--s-2); font-size: var(--fs-sm); }
+.perks li { display: flex; gap: var(--s-2); align-items: flex-start; }
+.perks svg { flex: none; margin-top: 3px; color: var(--c-signal); }
+.disclosure { margin-top: var(--s-5); max-width: 48rem; font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+@media (min-width: 52rem) {
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s-5); }
+  .plan { padding: var(--s-7) var(--s-6); }
+}

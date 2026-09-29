@@ -44,7 +44,7 @@ export const faqItems: FaqItem[] = [
     question: "What is Automatic Retesting?",
     status: "draft",
     answer:
-      "Automatic Retesting books your next test every {interval} so you can see how your numbers change over time. It's optional, and it's offered after your first purchase. It uses recurring billing: you're charged for each test at the retest interval, and you can change the date or cancel from your account at any time.",
+      "Automatic Retesting books your next test for you, twice a year or four times a year, and discounts every test. It's optional and offered after your first purchase. It uses recurring billing: you're charged the discounted price for each test at the start of each interval, it continues until you cancel, and you can change the date, pause or cancel from your account at any time.",
   },
   {
     id: "privacy",

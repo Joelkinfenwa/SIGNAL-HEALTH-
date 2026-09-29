@@ -39,7 +39,7 @@ src/
   config/              Business data — edit here, not in components
     products.ts        The five tests: marker ids per panel, copy, "builds on" (prices null until set)
     addons.ts          Add-on marker bundles; offered where they add new markers
-    retest-offer.ts    Automatic Retesting offer: discount, interval, eligibility, copy
+    retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
     brand.ts           Brand lockup, endorsement prominence, trust claims
     biomarkers.ts      Biomarker catalogue: every marker, its area of health, plain-language "about", derived-from
     home.ts            Homepage copy: headline options, proof strip, steps, results mock, CTAs
@@ -48,6 +48,7 @@ src/
     social-proof.ts    Press logos and approved reviews (empty by default)
     faq.ts             FAQ items; clinical questions are TODO and not rendered
     quiz.ts            "Find my test" questions, scoring rules and result copy (QUIZ_VERSION)
+    offer.ts           What every test includes (the offer itself)
     media.ts           Imagery, including placeholder slots with photography briefs
   lib/
     analytics/         Typed event catalogue, tracking, attribution capture
@@ -64,7 +65,7 @@ docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, 
 1. **Custom Next.js app, not Shopify.** The funnel (quiz → collection method → payment → post-purchase retest conversion with partial refund) doesn't fit a standard ecommerce checkout, and the brand shouldn't look like a store.
 2. **Configuration over code.** Products, the retest offer, trust claims and the "by Express Pathology" prominence are data. Changing the discount, interval or product lineup never means hunting through components.
 3. **Offers are versioned and immutable.** Each consent record stores the exact offer id and version the customer saw, which is also what makes offer experiments measurable.
-4. **Integer cents everywhere; one quote function.** `quoteRetest()` is used to display and to charge/refund, so the numbers can't diverge. $319 at 15% → $47.85 refund today, $271.15 per retest.
+4. **Integer cents everywhere; one quote function.** `quoteRetest(priceCents, offer)` is used to display and to charge/refund, so the numbers can't diverge. Two plans in `config/retest-offer.ts`: every 6 months at 15% off, every 3 months at 20% off with priority booking and one at-home visit included per year.
 5. **Subscription before refund.** A partial refund is only issued once the recurring arrangement exists. All Stripe writes use idempotency keys; webhooks are the source of truth.
 6. **This app is not a clinical system.** No results, quiz answers or clinical details in this database.
 7. **Analytics are typed and health-data-safe.** Ad platforms receive value, currency and order id only — never product names or categories, which can reveal health information. Browser and server events share an `event_id` for de-duplication.
@@ -107,6 +108,9 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Results mock (Vitamin D 78 nmol/L, "+24 since your last test") | Results section, How it works step 3 | Illustrative, labelled "Example"; clinical lead to confirm the plain-language wording |
 | Quiz result copy ("You train seriously…", "You're thinking long term…") | `config/quiz.ts` | Recommendation framing only, not health advice; marketing/legal to confirm |
 | "Every test can be collected either way. You choose when you book." | Quiz, collection question | TODO-VERIFY against launch coverage |
+| Retesting plans: "Save 15% / 20% on every test", "Priority booking", "One at-home collector visit included each year" | Product pages, /retesting | TODO-VERIFY perks are operationally defined; legal to review recurring-billing disclosure |
+| "Every test includes" six items (accredited lab, collection, clinical review, explanations, tracking, add-ons) | Product and compare pages | TODO-VERIFY each with operations and the lab (`config/offer.ts`, `verified: false`) |
+| Retesting terms ("reminders before each charge", "no fees to change, pause or cancel") | /retesting | TODO(legal) and TODO(product): true once account management ships |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.

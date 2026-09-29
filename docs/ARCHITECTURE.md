@@ -40,7 +40,7 @@ Configuration over code: products, the retest offer, trust claims and brand endo
 /checkout/[slug]                Collection method → details → clinical requirements → payment
 /order/[orderId]                Confirmation → Automatic Retesting offer → booking next steps
 /book/[orderId]                 Booking (or embedded in /order if Doorstep allows)
-/retesting                      How Automatic Retesting works
+/retesting                      How Automatic Retesting works (built): plans, steps, billing terms
 /account                        Your SIGNAL (dashboard)
 /account/retesting              Manage, reschedule or cancel Automatic Retesting
 /account/tests/[orderId]        A single test / booking
@@ -113,6 +113,7 @@ components/
                ResultsMock, RetestBand, SocialProof, Faq (+ FAQPage JSON-LD), FinalCta,
                StickyCta (client, mobile only), Photo
   quiz/        Quiz (client; one question per screen, result with recommendation)
+  retest/      RetestPlans (two plans from config, with the recurring-billing disclosure built in)
 ```
 
 Planned next: `PriceTag`, `CollectionMethodPicker`, `ProductHero`, `QuizStep`, `RetestOfferPanel`, `ConsentCheckbox` (records text version), `OrderSummary`, `StepIndicator`, `Field`/`Input` primitives, `Toast`.

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { media } from "@/config/media";
-import { activeRetestOffer } from "@/config/retest-offer";
+import { activeRetestOffer, bestDiscountBps, formatDiscount } from "@/config/retest-offer";
 import { formatInterval } from "@/lib/retest/offer";
 import { Photo } from "./Photo";
 import styles from "./RetestBand.module.css";
@@ -30,7 +30,7 @@ export function RetestBand() {
                 <li key={p} className={i === 0 ? styles.now : undefined}>{p}</li>
               ))}
             </ol>
-            <Link href="/retesting" className={styles.link}>How Automatic Retesting works</Link>
+            <Link href="/retesting" className={styles.link}>Automatic Retesting: save up to {formatDiscount(bestDiscountBps())} on every test</Link>
           </div>
         </div>
       </Container>

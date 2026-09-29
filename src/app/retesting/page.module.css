@@ -1,0 +1,24 @@
+.hero { padding-block: var(--s-6) var(--section-pad); }
+.heroInner { display: grid; gap: var(--s-7); align-items: center; }
+.eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.title { margin-top: var(--s-4); font-size: var(--fs-display); line-height: var(--lh-tight); font-weight: 700; letter-spacing: -0.045em; text-wrap: balance; max-width: 12ch; }
+.lede { margin-top: var(--s-5); font-size: var(--fs-md); line-height: 1.5; color: var(--muted); max-width: 32rem; text-wrap: pretty; }
+.actions { margin-top: var(--s-6); display: grid; gap: var(--s-3); }
+.photo { aspect-ratio: 4 / 5; }
+.steps { display: grid; gap: var(--s-4); }
+.step { display: grid; grid-template-columns: auto 1fr; gap: var(--s-2) var(--s-4); align-items: center; padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
+.stepIcon { grid-row: 1 / span 3; display: grid; place-items: center; width: 48px; height: 48px; border-radius: 50%; background: var(--c-brand-soft); color: var(--c-brand); }
+.stepIndex { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; color: var(--accent); }
+.stepTitle { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.015em; }
+.stepBody { color: var(--muted); font-size: var(--fs-sm); text-wrap: pretty; }
+.terms { display: grid; gap: var(--s-3); max-width: 48rem; }
+.terms li { padding: var(--s-4) var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); color: var(--muted); }
+.terms strong { color: var(--fg); }
+@media (min-width: 36rem) { .actions { display: flex; flex-wrap: wrap; } }
+@media (min-width: 52rem) { .steps { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) {
+  .heroInner { grid-template-columns: 1.05fr 1fr; gap: var(--s-8); }
+  .steps { grid-template-columns: repeat(4, 1fr); }
+  .step { grid-template-columns: 1fr; align-content: start; }
+  .stepIcon { grid-row: auto; margin-bottom: var(--s-2); }
+}

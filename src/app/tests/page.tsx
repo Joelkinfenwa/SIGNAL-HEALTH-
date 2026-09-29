@@ -6,6 +6,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AddOns } from "@/components/product/AddOns";
 import { CompareTable } from "@/components/product/CompareTable";
+import { Included } from "@/components/product/Included";
 import { TestsGrid } from "@/components/product/TestsGrid";
 import { Section, SectionHeader } from "@/components/ui/Section";
 import { featuredProduct } from "@/config/products";
@@ -47,6 +48,7 @@ export default function TestsPage() {
         </Section>
 
         <AddOns theme="light" />
+        <Included theme="shell" />
         <Faq />
         <FinalCta />
       </main>

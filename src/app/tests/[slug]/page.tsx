@@ -8,6 +8,8 @@ import { StickyCta } from "@/components/home/StickyCta";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { AddOns } from "@/components/product/AddOns";
+import { Included } from "@/components/product/Included";
+import { RetestPlans } from "@/components/retest/RetestPlans";
 import { ProductHero } from "@/components/product/ProductHero";
 import { ProductLearn } from "@/components/product/ProductLearn";
 import { getProduct, productCategoryCount, productMarkerCount, products } from "@/config/products";
@@ -39,6 +41,8 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <ProductHero product={product} />
         <ProductLearn product={product} />
         <AddOns product={product} />
+        <Included />
+        <RetestPlans product={product} />
         <HowItWorks />
         <Faq />
         <FinalCta />
