@@ -35,7 +35,7 @@ No UI framework and no CSS-in-JS. The homepage's client JavaScript is limited to
 
 ```
 src/
-  app/                 Routes. Built: / (home), /tests (compare), /tests/[slug] (product). Others are placeholders.
+  app/                 Routes. Built: / (home), /tests (compare), /tests/[slug] (product), /find-my-test (quiz). Others are placeholders.
   config/              Business data — edit here, not in components
     products.ts        The five tests: marker ids per panel, copy, "builds on" (prices null until set)
     addons.ts          Add-on marker bundles; offered where they add new markers
@@ -47,6 +47,7 @@ src/
     comparison.ts      "SIGNAL vs a standard check-up" rows (all TODO-VERIFY)
     social-proof.ts    Press logos and approved reviews (empty by default)
     faq.ts             FAQ items; clinical questions are TODO and not rendered
+    quiz.ts            "Find my test" questions, scoring rules and result copy (QUIZ_VERSION)
     media.ts           Imagery, including placeholder slots with photography briefs
   lib/
     analytics/         Typed event catalogue, tracking, attribution capture
@@ -104,6 +105,8 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "Qualified collectors from Express Pathology" | FAQ, proof strip | Confirm collector qualifications wording |
 | "Your results are held in a separate clinical system… never shared with advertising platforms" | FAQ (privacy) | True by architecture; legal to confirm wording |
 | Results mock (Vitamin D 78 nmol/L, "+24 since your last test") | Results section, How it works step 3 | Illustrative, labelled "Example"; clinical lead to confirm the plain-language wording |
+| Quiz result copy ("You train seriously…", "You're thinking long term…") | `config/quiz.ts` | Recommendation framing only, not health advice; marketing/legal to confirm |
+| "Every test can be collected either way. You choose when you book." | Quiz, collection question | TODO-VERIFY against launch coverage |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
@@ -137,4 +140,6 @@ See **DECISION** and **VERIFY** markers in `docs/ARCHITECTURE.md`. The most impo
 - Panels reference markers by id from the catalogue. Never type marker counts or lists into components or copy; derive them.
 - Sell what people learn: group markers by area of health (`PanelLearn`), tag calculated markers, never lead with a line-item count.
 - The postcode checker sends `postcode_checked { serviceable }` only. Never add the postcode to any event.
+- The quiz keeps answers in component state. Events carry `quiz_version` and the recommended `product_id` only. Bump `QUIZ_VERSION` when questions or rules change.
+- Homepage order is a CRO decision: hero → proof → how it works → tests → what you'll learn → results → comparison → postcode checker → retesting → FAQ → final CTA. At-home collection is a benefit chip in the hero; the postcode checker sits low so it never interrupts the path to "Find my test".
 - Social proof renders only when `config/social-proof.ts` has approved content. Never add outcome testimonials or invented ratings.

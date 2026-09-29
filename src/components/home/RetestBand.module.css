@@ -1,4 +1,4 @@
-.section { padding-block: 0 var(--section-pad); }
+.section { padding-block: var(--section-pad); }
 .band { position: relative; border-radius: var(--r-lg); overflow: hidden; color: #fff; }
 .photo { position: absolute; inset: 0; border-radius: 0; }
 .band::before {

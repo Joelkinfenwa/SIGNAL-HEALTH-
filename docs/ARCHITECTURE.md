@@ -22,7 +22,7 @@ Items marked **DECISION** need sign-off from the business. Items marked **VERIFY
 Rendering strategy:
 
 - Marketing, product, biomarker and SEO pages: **static** (SSG/ISR). The homepage ships only ~2.6 kB of page JS (analytics).
-- Quiz: client component; answers never leave the browser.
+- Quiz (`/find-my-test`): static page with one client island; answers never leave the browser; rules in `config/quiz.ts`.
 - Checkout and post-purchase: **dynamic**, server-rendered, no caching.
 - Account: dynamic, authenticated.
 
@@ -86,6 +86,8 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 **Shape.** Radius carries hierarchy: controls are pills, cards 16px, the hero readout and featured product 28px.
 
+**Hero.** Full-bleed photo (or muted looping video with the photo as poster) under a dark evergreen gradient, headline, one primary CTA, three benefit chips. The "Your signal" card floats bottom-right on desktop only. The video is hidden under `prefers-reduced-motion` by CSS.
+
 **Motion.** Two deliberate moments: the hero readout lines draw in on load, and the results phone mock rises as it scrolls into view (CSS scroll-driven animation behind `@supports`, no JavaScript). Everything else is still. `prefers-reduced-motion` is respected globally.
 
 **Signature element.** The "Your signal" readout: markers tracked across three tests, evergreen line, coral latest reading. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings, coral last dot) and the retesting timeline.
@@ -110,6 +112,7 @@ components/
                HowItWorks + StepMock, Tests, Biomarkers (<details>), Comparison (<table>),
                ResultsMock, RetestBand, SocialProof, Faq (+ FAQPage JSON-LD), FinalCta,
                StickyCta (client, mobile only), Photo
+  quiz/        Quiz (client; one question per screen, result with recommendation)
 ```
 
 Planned next: `PriceTag`, `CollectionMethodPicker`, `ProductHero`, `QuizStep`, `RetestOfferPanel`, `ConsentCheckbox` (records text version), `OrderSummary`, `StepIndicator`, `Field`/`Input` primitives, `Toast`.

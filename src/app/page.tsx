@@ -5,6 +5,7 @@ import { Faq } from "@/components/home/Faq";
 import { FinalCta } from "@/components/home/FinalCta";
 import { Hero } from "@/components/home/Hero";
 import { HowItWorks } from "@/components/home/HowItWorks";
+import { ProofStrip } from "@/components/home/ProofStrip";
 import { ResultsMock } from "@/components/home/ResultsMock";
 import { RetestBand } from "@/components/home/RetestBand";
 import { SocialProof } from "@/components/home/SocialProof";
@@ -25,12 +26,13 @@ export default function HomePage() {
       <SiteHeader />
       <main id="main">
         <Hero />
-        <Coverage />
+        <ProofStrip />
         <HowItWorks />
         <Tests />
         <Biomarkers />
-        <Comparison />
         <ResultsMock />
+        <Comparison />
+        <Coverage />
         <RetestBand />
         <SocialProof />
         <Faq />

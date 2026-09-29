@@ -24,6 +24,8 @@ export const hero = {
   offerLineUnpriced: "Advanced blood testing, collected at home or nearby, explained in plain language.",
   primaryCta: { label: "Find my test", href: "/find-my-test" },
   secondaryCta: { label: "View tests", href: "/tests" },
+  /** Small reassurance chips under the hero CTAs. Keep to three; at-home is a benefit, not a gate. */
+  chips: ["Collected at home or nearby", "Clinical review included", "Results explained in plain language"],
   /** Illustrative pill over the hero photo. TODO-VERIFY: confirm home visits are offered in launch areas. */
   bookedPill: { title: "Collector visit booked", sub: "At home, Tuesday 7:30am" },
 };

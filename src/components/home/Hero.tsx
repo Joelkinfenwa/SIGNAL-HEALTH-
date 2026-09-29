@@ -1,23 +1,38 @@
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { activeHeadline, hero, heroHeadlines } from "@/config/home";
-import { media } from "@/config/media";
+import { heroVideo } from "@/config/media";
 import { pickPriced } from "@/lib/home-tokens";
-import { Photo } from "./Photo";
-import { ProofStrip } from "./ProofStrip";
 import { SignalCard } from "./SignalCard";
 import styles from "./Hero.module.css";
 
+/**
+ * Full-bleed hero. The poster image is always rendered (it is the LCP element);
+ * when a video source exists it plays muted and looped on top, and is hidden
+ * under prefers-reduced-motion by CSS. No JavaScript.
+ */
 export function Hero() {
   const headline = heroHeadlines.find((h) => h.id === activeHeadline) ?? heroHeadlines[0]!;
+  const poster = heroVideo.poster;
   return (
-    <section id="hero" data-theme="light" className={styles.hero} aria-labelledby="hero-title">
+    <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
+      <div className={styles.media} aria-hidden="true">
+        {poster.src ? (
+          <Image src={poster.src} alt="" fill priority sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 35%" }} />
+        ) : null}
+        {heroVideo.src ? (
+          <video className={styles.video} autoPlay muted loop playsInline preload="metadata" poster={poster.src || undefined}>
+            <source src={heroVideo.src} type="video/mp4" />
+          </video>
+        ) : null}
+        <div className={styles.shade} />
+      </div>
+
       <Container className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.kicker}>
-            <Icon name="sparkle" size={16} /> {hero.kicker}
-          </p>
+          <p className={styles.kicker}><Icon name="sparkle" size={16} /> {hero.kicker}</p>
           <h1 id="hero-title" className={styles.title}>{headline.text}</h1>
           <p className={styles.lede}>{pickPriced(hero.offerLine, hero.offerLineUnpriced)}</p>
           <div className={styles.actions}>
@@ -28,21 +43,12 @@ export function Hero() {
               {hero.secondaryCta.label}
             </Button>
           </div>
+          <ul className={styles.chips} aria-label="Highlights">
+            {hero.chips.map((c) => <li key={c}><Icon name="check" size={14} /> {c}</li>)}
+          </ul>
         </div>
-
-        <div className={styles.visual}>
-          <Photo asset={media.heroSwim} priority sizes="(min-width: 64rem) 46vw, 100vw" className={styles.photo} position="center 30%" />
-          <div className={styles.booked} aria-hidden="true">
-            <span className={styles.bookedIcon}><Icon name="calendar" size={18} /></span>
-            <span>
-              <strong>{hero.bookedPill.title}</strong>
-              <span className={styles.bookedSub}>{hero.bookedPill.sub}</span>
-            </span>
-          </div>
-          <SignalCard className={styles.signal} />
-        </div>
+        <SignalCard className={styles.signal} />
       </Container>
-      <ProofStrip />
     </section>
   );
 }

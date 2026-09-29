@@ -7,8 +7,9 @@ import styles from "./ProofStrip.module.css";
 /** Three-item proof strip under the hero. Wording lives in config/home.ts. */
 export function ProofStrip() {
   return (
-    <Container>
-      <ul className={styles.list} aria-label="What you get with SIGNAL">
+    <section data-theme="light" className={styles.section} aria-label="What you get with SIGNAL">
+      <Container>
+      <ul className={styles.list}>
         {proofStrip.map((p) => (
           <li key={p.id} className={styles.item}>
             <span className={styles.icon}><Icon name={p.icon} size={20} /></span>
@@ -19,6 +20,7 @@ export function ProofStrip() {
           </li>
         ))}
       </ul>
-    </Container>
+      </Container>
+    </section>
   );
 }

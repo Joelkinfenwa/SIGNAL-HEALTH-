@@ -17,6 +17,9 @@ Prompts for the Higgsfield `soul_2` model (quality 2k), one per slot in `src/con
 | 10 | `longevityHero` | 3:4 | Editorial lifestyle photograph. A woman in her mid-fifties tending a lush vegetable garden in late afternoon light, linen shirt, gentle contented expression, greens and bone tones, long shadows. Calm, long-view, warmth, premium health brand, no text, no logos. |
 | 11 | hero alternative | 3:4 | Editorial lifestyle photograph. A man in his early thirties on an apartment balcony at sunrise holding a coffee, relaxed genuine smile, city greenery and morning haze behind, bone linen shirt, cool light. Candid, aspirational, premium health brand, no text, no logos. |
 
+## Hero video (`heroVideo` in media.ts)
+Model `seedance_2_5`, 16:9, 5–8 s, loopable, ~35 credits. Prompt: "Cinematic slow-motion tracking shot: a woman in her thirties running barefoot along the wet sand of an Australian beach at sunrise, relaxed easy stride, genuine smile, sea mist and soft golden-green light, headland with coastal scrub behind. Muted bone and evergreen tones, no text, no logos. Premium health brand hero video, loopable." Also generate the matching still (same prompt, `soul_2`, 16:9) as the poster and LCP image. Keep the file under ~2 MB (720p, H.264, no audio) so it never hurts mobile performance.
+
 ## After generating
 1. Pick the keepers; note the Higgsfield job ids.
 2. Paste each CDN `src` into the matching slot in `src/config/media.ts` (slots with `src: ""` stop rendering the colour panel automatically).

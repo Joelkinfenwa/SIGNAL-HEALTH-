@@ -23,6 +23,14 @@ export interface MediaAsset {
   brief?: string;
 }
 
+export interface VideoAsset {
+  /** MP4/WebM URL. Empty string = not yet produced; the poster image renders alone. */
+  src: string;
+  /** Still frame shown before playback, under reduced-motion, and as the LCP image. */
+  poster: MediaAsset;
+  brief?: string;
+}
+
 export const media = {
   heroSwim: {
     src: `${CDN2}/hf_20260929_072654_f017808e-03d4-48ea-8d35-9a2989284097.png`,
@@ -81,6 +89,18 @@ export const media = {
     brief: "Longevity product page. Calm, long-view, warm light. Portrait 4:5.",
   },
 } satisfies Record<string, MediaAsset>;
+
+/**
+ * Full-bleed homepage hero. Video is optional: until `src` is set the poster
+ * image is the hero. Autoplay is muted, looped and hidden under reduced motion.
+ * TODO(media): generate the beach-run video (docs/IMAGE_BRIEFS.md) and set `src`.
+ */
+export const heroVideo: VideoAsset = {
+  src: "",
+  poster: media.heroSwim,
+  brief:
+    "5-8s loop, 16:9. A woman in her thirties running barefoot along wet sand at sunrise on an Australian beach, relaxed stride, sea mist, headland behind. Muted bone and evergreen tones. No text.",
+};
 
 /** Product page hero image per tier. Placeholders render as colour panels until photography exists. */
 export const productHeroMedia: Record<ProductTier, MediaAsset> = {
