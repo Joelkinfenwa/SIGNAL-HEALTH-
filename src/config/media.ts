@@ -37,11 +37,11 @@ export const media = {
     alt: "A woman laughing after an early morning swim at an ocean pool, wrapped in a towel",
   },
   homeVisit: {
-    src: `${CDN}/hf_20260929_053507_3c45dfb1-d16f-41cb-b436-019594094b2f.png`,
+    src: `${CDN2}/hf_20260929_075332_cd7b768d-acf8-4908-a37e-f7f16dec88d0.png`,
     alt: "A collector visiting a smiling man at his kitchen table for a blood test",
   },
   couple: {
-    src: `${CDN}/hf_20260929_053507_54153659-6e62-4ef0-9464-e83c2573f010.png`,
+    src: `${CDN2}/hf_20260929_075332_4fa91809-5c02-43c1-8665-d616c07f7b4c.png`,
     alt: "A couple in their sixties laughing together on a bushwalk",
   },
   tubes: {
@@ -49,26 +49,22 @@ export const media = {
     alt: "Three glass sample tubes glowing in morning sunlight",
   },
   phone: {
-    src: `${CDN}/hf_20260929_053507_43837262-2473-4190-a796-69e08a913b34.png`,
+    src: `${CDN2}/hf_20260929_075331_630dd0a4-779d-423b-87b2-9d9785c691ac.png`,
     alt: "A woman on a sunlit window seat reading her results on her phone",
   },
 
   /* ---- Placeholder slots: photography still needed ---- */
   nurseArrival: {
-    src: "",
+    src: `${CDN2}/hf_20260929_075331_cf4fe854-0ec1-4680-a47d-5ce24272847a.png`,
     alt: "A collector arriving at a front door with a small collection kit, morning light",
-    brief:
-      "Postcode checker section. A collector in Express Pathology uniform greeted at a suburban front door. Warm, candid, morning light. Portrait 4:5.",
   },
   collectionCentre: {
-    src: "",
+    src: `${CDN2}/hf_20260929_075331_38c4c4a0-867e-4d43-adc5-614c912f1068.png`,
     alt: "A bright, calm collection centre reception",
-    brief: "Alternative for the postcode checker when mobile collection is unavailable. Bright, uncluttered reception. Landscape 3:2.",
   },
   chooseTest: {
-    src: "",
+    src: `${CDN2}/hf_20260929_075332_0b72036f-0626-472c-a43e-0c42789b699e.png`,
     alt: "Someone at a kitchen bench choosing a test on their phone over coffee",
-    brief: "How it works, step 1. Relaxed, decisive moment. Hands, phone, coffee. Square 1:1.",
   },
   hormonesHero: {
     src: `${CDN2}/hf_20260929_072655_e6f5b443-9f39-4774-a156-836b94bbac6a.png`,
@@ -78,15 +74,19 @@ export const media = {
     src: `${CDN2}/hf_20260929_072654_16041d5a-47b4-481e-8629-0fe06846ba3a.png`,
     alt: "A cyclist mid-climb in early light",
   },
-  /** Alternative hero, palette v0.4. Swap into `heroSwim` to A/B the hero photo. */
+  /** Hero poster / LCP still: aerial coastal-road runner (matches the hero video). */
+  heroRoad: {
+    src: `${CDN2}/hf_20260929_075331_a7165443-2e01-4d96-bc55-29babf7294b3.png`,
+    alt: "Aerial view of a lone runner on an empty coastal road beside the ocean at sunrise",
+  },
+  /** Alternative hero, palette v0.4. */
   heroBalcony: {
     src: `${CDN2}/hf_20260929_072655_fba4e99e-8beb-436d-86c4-57a7b01fbc75.png`,
     alt: "A man in his early thirties on an apartment balcony at sunrise, holding a coffee",
   },
   longevityHero: {
-    src: "",
+    src: `${CDN2}/hf_20260929_075332_66a73319-6bbf-4e9f-aa34-c3a28323e903.png`,
     alt: "A woman in her fifties tending a garden in the late afternoon",
-    brief: "Longevity product page. Calm, long-view, warm light. Portrait 4:5.",
   },
 } satisfies Record<string, MediaAsset>;
 
@@ -97,7 +97,7 @@ export const media = {
  */
 export const heroVideo: VideoAsset = {
   src: "",
-  poster: media.heroSwim,
+  poster: media.heroRoad,
   brief:
     "8s loop, 16:9, aerial drone footage. A lone runner on an empty winding coastal road, cliffs and open ocean right beside the road, early light, slow forward tracking from behind and above. Muted bone and evergreen tones. No text. The poster image is the same frame as a still.",
 };
