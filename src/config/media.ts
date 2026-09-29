@@ -95,8 +95,16 @@ export const media = {
  * image is the hero. Autoplay is muted, looped and hidden under reduced motion.
  * TODO(launch): re-encode to 720p H.264 under ~2 MB and self-host; the current file is the raw render.
  */
+/** Two renders of the same brief. `heroVideo` is the active one; swap the src to A/B. */
+export const heroVideoRenders = {
+  /** Wide: runner small in frame, road and ocean dominate. */
+  wide: `${CDN2}/hf_20260929_075330_d10281af-cd07-44f4-a2c6-82b1e46c80d1.mp4`,
+  /** Tight: drone ~12 m behind, runner mid-sized lower right. */
+  tight: `${CDN2}/hf_20260929_081235_fec0a1de-a473-4b47-b04e-82cbf57ec180.mp4`,
+} as const;
+
 export const heroVideo: VideoAsset = {
-  src: `${CDN2}/hf_20260929_075330_d10281af-cd07-44f4-a2c6-82b1e46c80d1.mp4`,
+  src: heroVideoRenders.tight,
   poster: media.heroRoad,
   brief:
     "8s loop, 16:9, aerial drone footage. A lone runner on an empty winding coastal road, cliffs and open ocean right beside the road, early light, slow forward tracking from behind and above. Muted bone and evergreen tones. No text. The poster image is the same frame as a still.",
