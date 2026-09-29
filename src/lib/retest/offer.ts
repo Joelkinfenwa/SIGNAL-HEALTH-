@@ -12,7 +12,7 @@ export interface RetestQuote {
 }
 
 export function isEligible(product: Product, offer: RetestOffer): boolean {
-  return offer.active && (offer.eligibleTiers === "all" || offer.eligibleTiers.includes(product.tier));
+  return offer.active && (offer.appliesTo === "all" || offer.appliesTo.includes(product.id));
 }
 
 /**

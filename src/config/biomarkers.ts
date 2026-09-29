@@ -19,9 +19,11 @@ export type BiomarkerCategoryId =
   | "thyroid"
   | "nutrients"
   | "iron"
+  | "inflammation"
   | "liver"
   | "kidney"
-  | "inflammation"
+  | "electrolytes"
+  | "minerals"
   | "blood"
   | "recovery";
 
@@ -41,9 +43,11 @@ export const biomarkerCategories: BiomarkerCategory[] = [
   { id: "thyroid", name: "Thyroid", learn: "How the gland that sets your metabolic pace is signalling.", description: "Thyroid hormones and the signal that controls them." },
   { id: "nutrients", name: "Nutrients", learn: "Whether the vitamins and minerals your body relies on are where they should be.", description: "Vitamins and minerals your body needs to function." },
   { id: "iron", name: "Iron", learn: "How much iron you have stored and how well it's being carried.", description: "Iron stores and the proteins that transport iron." },
-  { id: "liver", name: "Liver", learn: "How your liver is working, from enzymes to the proteins it makes.", description: "Enzymes and proteins that reflect how your liver is working." },
-  { id: "kidney", name: "Kidneys", learn: "How well your kidneys filter, and whether your electrolytes are balanced.", description: "Filtration markers and electrolytes." },
   { id: "inflammation", name: "Inflammation", learn: "Your general level of inflammation right now.", description: "General markers of inflammation in the body." },
+  { id: "liver", name: "Liver", learn: "How your liver is working, from enzymes to the proteins it makes.", description: "Enzymes and proteins that reflect how your liver is working." },
+  { id: "kidney", name: "Kidneys", learn: "How well your kidneys are filtering.", description: "Markers of kidney filtration." },
+  { id: "electrolytes", name: "Electrolytes", learn: "Whether the salts that keep fluid, nerves and muscle in balance are where they should be.", description: "Sodium, potassium, chloride and bicarbonate." },
+  { id: "minerals", name: "Minerals", learn: "The minerals your bones, muscles and energy systems depend on.", description: "Calcium, magnesium, phosphate and uric acid." },
   { id: "blood", name: "Blood", learn: "The cells that carry oxygen, fight infection and help you clot.", description: "Red cells, white cells, haemoglobin and platelets." },
   { id: "recovery", name: "Recovery", learn: "What your body is telling you about training load, stress and recovery.", description: "Markers related to muscle load, stress and recovery." },
 ];
@@ -69,7 +73,7 @@ export const biomarkers: Biomarker[] = [
   { id: "hba1c", name: "HbA1c", category: "metabolic", about: "Your average blood sugar over roughly the last three months." },
   { id: "insulin", name: "Fasting insulin", category: "metabolic", about: "The hormone that moves sugar out of your blood, measured after fasting." },
   { id: "homa_ir", name: "HOMA-IR", category: "metabolic", about: "A calculated view of how your body responds to insulin.", derivedFrom: ["glucose", "insulin"] },
-  { id: "uric_acid", name: "Uric acid", category: "metabolic", about: "A waste product from the breakdown of purines." },
+  { id: "uric_acid", name: "Uric acid", category: "minerals", about: "A waste product from the breakdown of purines." },
 
   // Heart
   { id: "tc", name: "Total cholesterol", category: "heart", about: "All the cholesterol carried in your blood." },
@@ -96,10 +100,10 @@ export const biomarkers: Biomarker[] = [
   { id: "creatinine", name: "Creatinine", category: "kidney", about: "A waste product from muscle that your kidneys clear." },
   { id: "egfr", name: "eGFR", category: "kidney", about: "An estimate of how much blood your kidneys filter each minute.", derivedFrom: ["creatinine"] },
   { id: "urea", name: "Urea", category: "kidney", about: "A waste product from protein breakdown, cleared by the kidneys." },
-  { id: "sodium", name: "Sodium", category: "kidney", about: "An electrolyte that helps regulate fluid balance." },
-  { id: "potassium", name: "Potassium", category: "kidney", about: "An electrolyte important for nerves and muscle." },
-  { id: "chloride", name: "Chloride", category: "kidney", about: "An electrolyte that works alongside sodium." },
-  { id: "bicarbonate", name: "Bicarbonate", category: "kidney", about: "A measure of the acid-base balance in your blood." },
+  { id: "sodium", name: "Sodium", category: "electrolytes", about: "An electrolyte that helps regulate fluid balance." },
+  { id: "potassium", name: "Potassium", category: "electrolytes", about: "An electrolyte important for nerves and muscle." },
+  { id: "chloride", name: "Chloride", category: "electrolytes", about: "An electrolyte that works alongside sodium." },
+  { id: "bicarbonate", name: "Bicarbonate", category: "electrolytes", about: "A measure of the acid-base balance in your blood." },
 
   // Iron
   { id: "ferritin", name: "Ferritin", category: "iron", about: "A protein that reflects how much iron you have stored." },
@@ -111,7 +115,8 @@ export const biomarkers: Biomarker[] = [
   { id: "tsh", name: "TSH", category: "thyroid", about: "The signal from your brain that tells the thyroid how much to produce." },
   { id: "ft4", name: "Free T4", short: "FT4", category: "thyroid", about: "The main hormone your thyroid releases, in its active form." },
   { id: "ft3", name: "Free T3", short: "FT3", category: "thyroid", about: "The more potent thyroid hormone, in its active form." },
-  { id: "thyroid_ab", name: "Thyroid antibodies", category: "thyroid", about: "Antibodies directed at thyroid proteins (TPO and thyroglobulin)." },
+  { id: "tpo_ab", name: "TPO antibodies", category: "thyroid", about: "Antibodies directed at thyroid peroxidase, an enzyme in the thyroid." },
+  { id: "tg_ab", name: "Thyroglobulin antibodies", short: "Tg antibodies", category: "thyroid", about: "Antibodies directed at thyroglobulin, a protein made by the thyroid." },
 
   // Hormones
   { id: "testosterone", name: "Total testosterone", category: "hormones", about: "All the testosterone in your blood, bound and free." },
@@ -127,9 +132,9 @@ export const biomarkers: Biomarker[] = [
   { id: "b12", name: "Vitamin B12", category: "nutrients", about: "A vitamin your body uses for nerves and red cells." },
   { id: "folate", name: "Folate", category: "nutrients", about: "A B vitamin your body uses to make new cells." },
   { id: "vit_d", name: "Vitamin D", category: "nutrients", about: "A nutrient your body uses for bone and muscle health." },
-  { id: "magnesium", name: "Magnesium", category: "nutrients", about: "A mineral involved in muscle, nerve and energy processes." },
-  { id: "calcium", name: "Calcium", category: "nutrients", about: "A mineral your bones, muscles and nerves rely on." },
-  { id: "phosphate", name: "Phosphate", category: "nutrients", about: "A mineral that works with calcium in bone and energy processes." },
+  { id: "magnesium", name: "Magnesium", category: "minerals", about: "A mineral involved in muscle, nerve and energy processes." },
+  { id: "calcium", name: "Calcium", category: "minerals", about: "A mineral your bones, muscles and nerves rely on." },
+  { id: "phosphate", name: "Phosphate", category: "minerals", about: "A mineral that works with calcium in bone and energy processes." },
   { id: "zinc", name: "Zinc", category: "nutrients", about: "A mineral involved in immunity, healing and hormone production." },
 
   // Inflammation

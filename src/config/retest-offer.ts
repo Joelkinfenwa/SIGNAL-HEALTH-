@@ -1,4 +1,3 @@
-import type { ProductTier } from "./products";
 
 /**
  * Automatic Retesting plans.
@@ -26,7 +25,8 @@ export interface RetestOffer {
   /** Discount in basis points (1500 = 15%). Integer maths avoids rounding drift. */
   discountBps: number;
   intervalMonths: number;
-  eligibleTiers: ProductTier[] | "all";
+  /** Product ids this plan applies to, or "all". */
+  appliesTo: string[] | "all";
   /** Refund the discount against today's order when the customer converts. */
   refundOnConversion: boolean;
   /** Extra benefits beyond the discount. TODO-VERIFY each is operationally deliverable before launch. */
@@ -51,7 +51,7 @@ export const retestOffers: RetestOffer[] = [
     cadence: "Every 6 months",
     discountBps: 1500,
     intervalMonths: 6,
-    eligibleTiers: "all",
+    appliesTo: "all",
     refundOnConversion: true,
     perks: [],
     featured: false,
@@ -70,7 +70,7 @@ export const retestOffers: RetestOffer[] = [
     cadence: "Every 3 months",
     discountBps: 2000,
     intervalMonths: 3,
-    eligibleTiers: "all",
+    appliesTo: "all",
     refundOnConversion: true,
     // TODO-VERIFY: priority booking and the included at-home visit must be defined operationally
     // (what "priority" means, how the included visit is redeemed, regions) before launch.

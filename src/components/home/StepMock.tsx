@@ -1,7 +1,8 @@
 import { Icon } from "@/components/ui/Icon";
 import { resultsMock, type Step } from "@/config/home";
 import { media } from "@/config/media";
-import { featuredProduct, products } from "@/config/products";
+import { addonsFor } from "@/config/addons";
+import { signalTest } from "@/config/products";
 import { activeRetestOffer } from "@/config/retest-offer";
 import { cx } from "@/lib/cx";
 import { Photo } from "./Photo";
@@ -26,14 +27,18 @@ export function StepMock({ step }: { step: Step["id"] }) {
 }
 
 function ChooseMock() {
-  const featured = featuredProduct();
+  const picks = addonsFor().slice(0, 3);
   return (
     <div className={styles.frame} aria-hidden="true">
       <ul className={styles.picker}>
-        {products.map((p) => (
-          <li key={p.id} className={cx(styles.option, p.id === featured.id && styles.selected)}>
-            <span className={styles.radio} />
-            <span className={styles.optionName}>{p.shortName}</span>
+        <li className={cx(styles.option, styles.selected)}>
+          <span className={styles.radio} />
+          <span className={styles.optionName}>{signalTest.shortName} Test</span>
+        </li>
+        {picks.map((a, i) => (
+          <li key={a.id} className={cx(styles.option, i === 0 && styles.selected)}>
+            <span className={cx(styles.radio, styles.box)} />
+            <span className={styles.optionName}>{a.name}</span>
           </li>
         ))}
       </ul>

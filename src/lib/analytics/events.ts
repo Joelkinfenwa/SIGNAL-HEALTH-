@@ -1,4 +1,4 @@
-import type { CollectionMethod, ProductTier } from "@/config/products";
+import type { CollectionMethodId } from "@/config/collection";
 
 /**
  * The single, typed catalogue of analytics events.
@@ -11,21 +11,30 @@ import type { CollectionMethod, ProductTier } from "@/config/products";
  */
 type Money = { value: number; currency: "AUD" };
 
+/**
+ * Add-on ids are commerce identifiers (e.g. "heart_plus"). They stay first-party:
+ * the ad-platform allowlist below never includes them.
+ */
 export type AnalyticsEvent =
   | { name: "page_viewed"; props: { path: string } }
+  | { name: "landing_page_viewed"; props: { lp_slug: string } }
   | { name: "cta_clicked"; props: { cta_id: string; location: string } }
-  | { name: "product_viewed"; props: { product_id: string; tier: ProductTier } & Partial<Money> }
+  | { name: "product_viewed"; props: { product_id: string } & Partial<Money> }
+  | { name: "biomarkers_viewed"; props: { category_id: string } }
   | { name: "quiz_started"; props: { quiz_version: string } }
   | { name: "quiz_completed"; props: { quiz_version: string } }
-  | { name: "product_recommended"; props: { quiz_version: string; product_id: string } }
-  | { name: "checkout_started"; props: { product_id: string } & Money }
-  | { name: "collection_method_selected"; props: { product_id: string; method: CollectionMethod } }
-  | { name: "purchase_completed"; props: { order_id: string; product_id: string } & Money }
+  | { name: "product_recommended"; props: { quiz_version: string; product_id: string; addon_ids: string[] } }
+  | { name: "configurator_started"; props: { product_id: string } }
+  | { name: "addon_selected"; props: { addon_id: string } }
+  | { name: "addon_removed"; props: { addon_id: string } }
+  | { name: "checkout_started"; props: { product_id: string; addon_ids: string[] } & Partial<Money> }
+  | { name: "collection_method_selected"; props: { product_id: string; method: CollectionMethodId } }
+  | { name: "purchase_completed"; props: { order_id: string; product_id: string; addon_ids: string[] } & Money }
   | { name: "retest_offer_viewed"; props: RetestOfferProps }
   | { name: "retest_offer_accepted"; props: RetestOfferProps & Money }
   | { name: "retest_offer_declined"; props: RetestOfferProps }
-  | { name: "booking_started"; props: { order_id: string; method: CollectionMethod } }
-  | { name: "booking_completed"; props: { order_id: string; method: CollectionMethod } }
+  | { name: "booking_started"; props: { order_id: string; method: CollectionMethodId } }
+  | { name: "booking_completed"; props: { order_id: string; method: CollectionMethodId } }
   /** Postcode checker. Only whether the area is serviceable — the postcode itself is never sent. */
   | { name: "postcode_checked"; props: { serviceable: boolean } };
 
@@ -47,6 +56,11 @@ export interface DestinationPolicy {
 
 export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   page_viewed: { ga4: "page_view", meta: "PageView", klaviyo: null, serverAuthoritative: false },
+  landing_page_viewed: { ga4: "landing_page_view", meta: null, klaviyo: null, serverAuthoritative: false },
+  biomarkers_viewed: { ga4: "view_biomarkers", meta: null, klaviyo: null, serverAuthoritative: false },
+  configurator_started: { ga4: "configurator_start", meta: null, klaviyo: null, serverAuthoritative: false },
+  addon_selected: { ga4: "addon_select", meta: null, klaviyo: null, serverAuthoritative: false },
+  addon_removed: { ga4: "addon_remove", meta: null, klaviyo: null, serverAuthoritative: false },
   cta_clicked: { ga4: "cta_click", meta: null, klaviyo: null, serverAuthoritative: false },
   product_viewed: { ga4: "view_item", meta: "ViewContent", klaviyo: "Viewed Product", serverAuthoritative: false },
   quiz_started: { ga4: "quiz_start", meta: null, klaviyo: null, serverAuthoritative: false },

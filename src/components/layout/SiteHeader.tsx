@@ -5,9 +5,9 @@ import { cx } from "@/lib/cx";
 import styles from "./SiteHeader.module.css";
 
 const NAV = [
-  { href: "/tests", label: "Tests" },
   { href: "/#how-it-works", label: "How it works" },
-  { href: "/retesting", label: "Retesting" },
+  { href: "/#what-is-tested", label: "What's tested" },
+  { href: "/#why-signal", label: "Why SIGNAL" },
   { href: "/#faq", label: "FAQ" },
 ];
 
@@ -33,8 +33,8 @@ export function SiteHeader({ theme = "light", overlay = false }: { theme?: "ligh
             ))}
           </ul>
         </nav>
-        <Button href="/find-my-test" size="sm" ctaId="header_find_my_test" location="header">
-          Find my test
+        <Button href="/signal" size="sm" ctaId="header_get_my_signal" location="header">
+          Get my SIGNAL
         </Button>
       </Container>
     </header>

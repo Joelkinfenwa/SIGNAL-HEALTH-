@@ -7,8 +7,8 @@ import { quizQuestions } from "@/config/quiz";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
-  title: "Find my test",
-  description: "Answer a few quick questions and we'll recommend the SIGNAL blood test that fits what you want to understand.",
+  title: "Find my SIGNAL",
+  description: "Tell us what you want to understand and we'll build your SIGNAL: the comprehensive test plus the add-ons that fit.",
 };
 
 /** Quiz page. The quiz itself is the client island; answers never leave the browser. */
@@ -19,9 +19,9 @@ export default function QuizPage() {
       <main id="main" className={styles.main}>
         <Container>
           <header className={styles.header}>
-            <p className={styles.eyebrow}>Find my test</p>
-            <h1 className={styles.title}>Which test is right for you?</h1>
-            <p className={styles.intro}>{quizQuestions.length} quick questions, about a minute. We&apos;ll suggest one of five tests.</p>
+            <p className={styles.eyebrow}>Find my SIGNAL</p>
+            <h1 className={styles.title}>What do you want to understand?</h1>
+            <p className={styles.intro}>{quizQuestions.length} quick questions, under a minute. We&apos;ll build your SIGNAL: the test plus any add-ons worth adding.</p>
           </header>
           <Quiz />
         </Container>

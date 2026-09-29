@@ -1,6 +1,6 @@
 import { Icon } from "@/components/ui/Icon";
 import { Section, SectionHeader } from "@/components/ui/Section";
-import type { Product } from "@/config/products";
+import { signalTest, type Product } from "@/config/products";
 import { activeRetestOffers, formatDiscount } from "@/config/retest-offer";
 import { formatAUD } from "@/lib/money";
 import { formatInterval, quoteRetest } from "@/lib/retest/offer";
@@ -14,19 +14,19 @@ import styles from "./RetestPlans.module.css";
  *
  * Billing disclosure is part of the component, not optional copy.
  */
-export function RetestPlans({ product, theme = "shell", compact }: { product?: Product; theme?: "light" | "shell"; compact?: boolean }) {
-  const offers = activeRetestOffers();
+export function RetestPlans({ product = signalTest, theme = "shell", compact }: { product?: Product; theme?: "light" | "shell"; compact?: boolean }) {
+  const offers = activeRetestOffers().filter((o) => o.appliesTo === "all" || o.appliesTo.includes(product.id));
   return (
     <Section id="retesting-plans" theme={theme} labelledBy="plans-title">
       <SectionHeader
         id="plans-title"
         eyebrow="Automatic Retesting"
-        title={product ? `Make ${product.shortName} a habit and save.` : "Test once, or make it a habit."}
+        title="Test once, or make it a habit."
         intro="One test tells you where you are. Retesting tells you which way you're heading. Choose a rhythm after your first test and every retest is booked and discounted for you."
       />
       <ul className={cx(styles.grid, compact && styles.compact)}>
         {offers.map((o) => {
-          const quote = product && product.priceCents !== null ? quoteRetest(product.priceCents, o) : null;
+          const quote = product.priceCents !== null ? quoteRetest(product.priceCents, o) : null;
           return (
             <li key={o.id} data-theme={o.featured ? "dark" : undefined} className={cx(styles.plan, o.featured && styles.featured)}>
               <div className={styles.head}>
@@ -39,7 +39,7 @@ export function RetestPlans({ product, theme = "shell", compact }: { product?: P
               </p>
               {quote ? (
                 <p className={styles.quote}>
-                  <span className="num">{formatAUD(quote.recurringPriceCents)}</span> per {product!.shortName} test, every {formatInterval(o.intervalMonths)}
+                  <span className="num">{formatAUD(quote.recurringPriceCents)}</span> per test, every {formatInterval(o.intervalMonths)}
                 </p>
               ) : (
                 <p className={styles.quoteTbc}>Per-test price shown once pricing is set.</p>

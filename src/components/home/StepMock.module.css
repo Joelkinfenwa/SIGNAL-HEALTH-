@@ -14,6 +14,7 @@
   font-size: var(--fs-sm); font-weight: 600; color: var(--muted);
 }
 .radio { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--line); }
+.box { border-radius: 4px; }
 .selected { color: var(--fg); box-shadow: 0 0 0 2px var(--c-brand), var(--shadow-card); }
 .selected .radio { border-color: var(--c-brand); background: radial-gradient(circle, var(--c-brand) 45%, transparent 50%); }
 .optionName { flex: 1; }

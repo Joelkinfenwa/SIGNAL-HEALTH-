@@ -1,5 +1,4 @@
 import { Biomarkers } from "@/components/home/Biomarkers";
-import { Comparison } from "@/components/home/Comparison";
 import { Coverage } from "@/components/home/Coverage";
 import { Faq } from "@/components/home/Faq";
 import { FinalCta } from "@/components/home/FinalCta";
@@ -10,7 +9,7 @@ import { ResultsMock } from "@/components/home/ResultsMock";
 import { RetestBand } from "@/components/home/RetestBand";
 import { SocialProof } from "@/components/home/SocialProof";
 import { StickyCta } from "@/components/home/StickyCta";
-import { Tests } from "@/components/home/Tests";
+import { AddOns } from "@/components/product/AddOns";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { stickyCta } from "@/config/home";
@@ -28,10 +27,9 @@ export default function HomePage() {
         <Hero />
         <ProofStrip />
         <HowItWorks />
-        <Tests />
         <Biomarkers />
+        <AddOns />
         <ResultsMock />
-        <Comparison />
         <Coverage />
         <RetestBand />
         <SocialProof />

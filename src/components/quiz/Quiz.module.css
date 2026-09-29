@@ -45,3 +45,12 @@
 .resultFoot { margin-top: var(--s-6); text-align: center; font-size: var(--fs-sm); color: var(--muted); }
 .resultFoot a { color: var(--fg); font-weight: 700; text-underline-offset: 4px; }
 @media (min-width: 52rem) { .resultCard { padding: var(--s-6); } }
+.optionsMulti { grid-template-columns: 1fr; }
+.continue { margin-left: auto; }
+.recs { display: grid; gap: var(--s-3); }
+.rec { display: flex; gap: var(--s-3); align-items: flex-start; padding: var(--s-4); border-radius: var(--r-md); background: var(--panel-soft); }
+.recPlus { flex: none; display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--c-signal); color: var(--c-ink); font-weight: 700; }
+.rec strong { display: block; }
+.recReason { display: block; margin-top: 2px; font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+.recMarkers { display: block; margin-top: var(--s-2); font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+@media (min-width: 40rem) { .optionsMulti { grid-template-columns: 1fr 1fr; } }
