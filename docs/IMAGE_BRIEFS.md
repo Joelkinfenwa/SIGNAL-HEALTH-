@@ -32,3 +32,6 @@ Status: generated (Seedance 2.5, 8 s) and wired into `heroVideo.src`; poster is 
 3. Before launch: move files to `/public` or the final CDN, remove the temporary host from `next.config.ts`, confirm usage rights.
 
 Status 2026-09-29: all twelve stills generated and wired in, plus the aerial coastal-road still (`heroRoad`, hero poster). Hero video: see below.
+
+## QA note (2026-09-30)
+The 16:9 "woman at ocean pool edge" render (`hf_20260929_083019_0f5eaf04…`) carried baked-in text and was removed from use. Every generated image must be checked at full size for rendered text, extra limbs and watermarks before it is wired in; add "absolutely no text, no letters, no words, no watermark" to every prompt. Three no-text candidates for the /signal hero are in `signalMedia.heroCandidates`.

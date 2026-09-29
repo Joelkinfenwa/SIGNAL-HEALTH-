@@ -115,6 +115,12 @@ export const signalMedia = {
   kit: media.tubes,
   collection: media.homeVisit,
   results: media.phone,
+  /** Replacement candidates for `hero` (generated with an explicit no-text instruction). Swap `hero` to one once approved. */
+  heroCandidates: {
+    poolEdge: { src: `${CDN2}/hf_20260929_231943_7b649b21-28d3-4e55-a98d-2bb9fe85eed7.png`, alt: "A woman at the edge of a calm ocean pool at sunrise, looking out to sea" },
+    towel: { src: `${CDN2}/hf_20260929_231943_ba7ddc31-0839-40c8-9f25-ed3392b4b867.png`, alt: "A man towelling off on the rocks beside an ocean pool after a morning swim" },
+    kitStill: { src: `${CDN2}/hf_20260929_231944_c41c4afc-b7fa-4ece-baa5-50397169df8a.png`, alt: "A collection kit box, three sample tubes and a folded linen cloth on pale stone" },
+  },
   /** Spare wide shots for landing pages. */
   wide: {
     walk: { src: `${CDN2}/hf_20260929_083019_4d74607b-e127-4874-888c-b2aa0bb32f8c.png`, alt: "A couple walking their dog along a clifftop path above the ocean at sunrise" },
