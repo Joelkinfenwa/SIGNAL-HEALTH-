@@ -7,7 +7,7 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Included } from "@/components/product/Included";
 import { MarkerAreas } from "@/components/product/MarkerAreas";
-import { ProductSteps } from "@/components/product/ProductSteps";
+import { NextSteps } from "@/components/journey/NextSteps";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { Section, SectionHeader } from "@/components/ui/Section";
@@ -63,7 +63,7 @@ export default function SignalPage() {
         </Section>
 
         <Included theme="light" />
-        <ProductSteps />
+        <NextSteps title="What happens after you choose." intro="No referral paperwork to organise. Here's the whole path, start to retest." />
         <Faq />
         <FinalCta title="Ready to know your numbers?" body={signalTest.tagline} cta={{ label: "Build my SIGNAL", href: "/signal#configure" }} ctaId="signal_final_build" />
       </main>

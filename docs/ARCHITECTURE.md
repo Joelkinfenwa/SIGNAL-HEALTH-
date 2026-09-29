@@ -37,7 +37,7 @@ Configuration over code: products, the retest offer, trust claims and brand endo
 /signal                         Product + configurator (built): base + add-ons, live total, sticky bar; ?addons= deep links
 /find-my-signal                 Quiz (built): interests → SIGNAL + add-ons → /signal?addons=
 /lp/[slug]                      Paid landing pages from config (phase 4)
-/checkout                       Order summary + Stripe boundary (phase 6); ?addons=&collection=
+/checkout                       Built: editable summary, collection choice, what happens next, pay panel (Stripe boundary in lib/checkout/create-order.ts; pay button honest until connected)
 /order/[orderId]                Confirmation → Automatic Retesting offer → booking (phase 8)
 /retesting                      How Automatic Retesting works (built)
 /account, /account/retesting    Phase 2+

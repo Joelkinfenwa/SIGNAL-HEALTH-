@@ -31,8 +31,11 @@
 .addonHead { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); }
 .addonName { font-weight: 700; letter-spacing: -0.015em; }
 .addonPrice { flex: none; font-size: var(--fs-sm); font-weight: 700; color: var(--muted); }
-.addonBenefit { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
-.addonMarkers { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.addonFor, .addonBenefit { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+.addonFor strong, .addonBenefit strong { color: var(--fg); font-weight: 700; }
+.addonMarkers { display: block; margin-top: 2px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.help { margin-top: var(--s-4); font-size: var(--fs-sm); color: var(--muted); }
+.help a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); font-weight: 700; text-underline-offset: 3px; }
 
 .summary { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-card); }
 .summaryTitle { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }

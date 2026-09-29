@@ -17,7 +17,7 @@ export function AddOns({ theme = "shell", highlightIds = [] }: { theme?: "light"
         id="addons-title"
         eyebrow="Make it yours"
         title="Go deeper where it matters to you."
-        intro="The SIGNAL Test already covers the major areas. Add depth only where you want it. Availability and pricing are confirmed at launch."
+        intro="The SIGNAL Test already covers the major areas. Add-ons are optional depth, never missing essentials. Availability and pricing are confirmed at launch."
       />
       <ul className={styles.grid}>
         {list.map((a) => (
@@ -26,6 +26,7 @@ export function AddOns({ theme = "shell", highlightIds = [] }: { theme?: "light"
               <h3 className={styles.name}>{a.name}</h3>
               {hl.has(a.id) ? <span className={styles.rec}>Recommended</span> : a.status !== "live" ? <span className={styles.soon}>Coming</span> : null}
             </div>
+            <p className={styles.summary}><strong>For you if</strong> {a.forWho}</p>
             <p className={styles.summary}>{a.benefit}</p>
             <ul className={styles.markers}>
               {addonNewMarkers(a).map((id) => { const m = getBiomarker(id); return <li key={id}>{m.short ?? m.name}</li>; })}

@@ -19,6 +19,8 @@ export interface Addon {
   name: string;
   /** One line, benefit first. */
   benefit: string;
+  /** "For you if…": one plain situation, never a symptom or condition. */
+  forWho: string;
   markerIds: string[];
   /** Markers being considered for this add-on; not rendered. */
   underConsideration?: string[];
@@ -33,6 +35,7 @@ export const addons: Addon[] = [
     sku: "ADD-HORM",
     name: "Hormones+",
     benefit: "The signals behind your hormones, not just the headline number.",
+    forWho: "You want to understand your hormones properly, not just the headline number.",
     markerIds: ["lh", "fsh", "oestradiol", "prolactin", "dheas"],
     underConsideration: ["cortisol"],
     priceCents: null,
@@ -44,6 +47,7 @@ export const addons: Addon[] = [
     sku: "ADD-HEART",
     name: "Heart+",
     benefit: "The particle-level cholesterol markers most check-ups never run.",
+    forWho: "Heart health matters to you and you want the markers most check-ups skip.",
     markerIds: ["apob", "apoa1", "lpa", "apob_apoa1"],
     priceCents: null,
     status: "planned",
@@ -54,6 +58,7 @@ export const addons: Addon[] = [
     sku: "ADD-THY",
     name: "Thyroid+",
     benefit: "The active thyroid hormones and antibodies, beyond TSH.",
+    forWho: "You want the full thyroid picture, not just TSH.",
     markerIds: ["ft4", "ft3", "tpo_ab", "tg_ab"],
     priceCents: null,
     status: "planned",
@@ -64,6 +69,7 @@ export const addons: Addon[] = [
     sku: "ADD-PERF",
     name: "Performance+",
     benefit: "Muscle load, stress and recovery markers for people who train.",
+    forWho: "You train most days and want to see how your body is coping and recovering.",
     markerIds: ["ck", "cortisol", "igf1"],
     priceCents: null,
     status: "planned",
@@ -74,6 +80,7 @@ export const addons: Addon[] = [
     sku: "ADD-META",
     name: "Metabolic+",
     benefit: "Fasting insulin and how your body responds to it.",
+    forWho: "You want to know how your body handles sugar and insulin, not just where it is today.",
     markerIds: ["insulin", "homa_ir"],
     priceCents: null,
     status: "planned",
@@ -84,13 +91,14 @@ export const addons: Addon[] = [
     sku: "ADD-NUTR",
     name: "Nutrients+",
     benefit: "Additional micronutrients beyond the base panel.",
+    forWho: "You want the micronutrient picture beyond the base panel before you buy another supplement.",
     markerIds: ["zinc"],
     priceCents: null,
     status: "planned",
     recommendedFor: ["nutrition", "energy"],
   },
   // TODO(decision): PSA only where age / use case supports it, never by default.
-  { id: "psa", sku: "ADD-PSA", name: "PSA", benefit: "Prostate-specific antigen, where appropriate.", markerIds: ["psa"], priceCents: null, status: "under-review", recommendedFor: [] },
+  { id: "psa", sku: "ADD-PSA", name: "PSA", benefit: "Prostate-specific antigen, where appropriate.", forWho: "Where age or circumstances make it appropriate.", markerIds: ["psa"], priceCents: null, status: "under-review", recommendedFor: [] },
 ];
 
 export const getAddon = (id: string) => addons.find((a) => a.id === id);

@@ -10,3 +10,4 @@
 @media (min-width: 64rem) { .grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-4); } }
 .highlight { box-shadow: inset 0 0 0 2px var(--accent), var(--shadow-soft); }
 .rec { flex: none; padding: 3px 10px; border-radius: var(--r-pill); background: var(--c-signal); color: var(--c-ink); font-size: var(--fs-xs); font-weight: 700; }
+.summary strong { color: var(--fg); }

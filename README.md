@@ -119,6 +119,9 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Retesting terms ("reminders before each charge", "no fees to change, pause or cancel") | /retesting | TODO(legal) and TODO(product): true once account management ships |
 | Product "promise", "is this you if…" and "what you walk away with" lines | Product pages (`config/products.ts`) | Understanding-only framing; marketing/legal to confirm none reads as symptom-to-diagnosis |
 | "Ten minutes, then get on with your day" (collection duration) | Product page, Why SIGNAL | TODO-VERIFY typical collection time with operations |
+| Add-on "For you if…" lines | /signal configurator, homepage add-ons (`config/addons.ts`) | Preference framing only; marketing/legal to confirm none reads as symptom-to-diagnosis |
+| Journey timings ("[Right after payment]", "[X business days after collection]") | /signal, /checkout (`config/journey.ts`) | Placeholders; render on previews only until operations confirm |
+| "Pay by card, Apple Pay or Google Pay. No account needed first." | Journey step 1, checkout | True once Stripe Payment + Express Checkout Elements ship |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.

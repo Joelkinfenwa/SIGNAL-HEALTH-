@@ -73,7 +73,7 @@ export function SignalConfigurator() {
         <section className={styles.step} aria-labelledby="step2">
           <p className={styles.stepLabel}><span className="num">2</span> Make it yours</p>
           <h2 id="step2" className={styles.stepTitle}>Go deeper where it matters to you.</h2>
-          <p className={styles.stepBody}>Optional depth on top of the base test. Add or remove any time before you pay.</p>
+          <p className={styles.stepBody}>The SIGNAL Test already covers the major areas. Add-ons are optional depth. Add or remove any time before you pay.</p>
           <ul className={styles.addons}>
             {options.map((a) => {
               const on = cfg.addonIds.includes(a.id);
@@ -92,14 +92,15 @@ export function SignalConfigurator() {
                         <span className={styles.addonName}>{a.name}</span>
                         <span className={styles.addonPrice}>{a.priceCents !== null ? <span className="num">+{formatAUD(a.priceCents)}</span> : "Price TBC"}</span>
                       </span>
-                      <span className={styles.addonBenefit}>{a.benefit}</span>
-                      <span className={styles.addonMarkers}>{markers.map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
+                      <span className={styles.addonFor}><strong>For you if</strong> {a.forWho}</span>
+                      <span className={styles.addonBenefit}><strong>You get</strong> {a.benefit} <span className={styles.addonMarkers}>{markers.map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span></span>
                     </span>
                   </button>
                 </li>
               );
             })}
           </ul>
+          <p className={styles.help}>Not sure? <a href="/find-my-signal">Answer four quick questions</a> and we&apos;ll suggest the add-ons that fit.</p>
         </section>
       </div>
 
