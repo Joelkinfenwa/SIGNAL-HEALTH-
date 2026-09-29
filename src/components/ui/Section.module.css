@@ -1,5 +1,10 @@
 .section { padding-block: var(--section-pad); }
-.header { max-width: 42rem; margin-bottom: var(--s-7); }
+.header { max-width: 44rem; margin-bottom: var(--s-7); }
+.eyebrow {
+  display: inline-block; margin-bottom: var(--s-4);
+  font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--accent);
+}
 .title {
   font-size: var(--fs-xl);
   line-height: var(--lh-snug);
@@ -13,4 +18,7 @@
   line-height: 1.5;
   color: var(--muted);
   text-wrap: pretty;
+  max-width: 36rem;
 }
+.center { margin-inline: auto; text-align: center; }
+.center .intro { margin-inline: auto; }

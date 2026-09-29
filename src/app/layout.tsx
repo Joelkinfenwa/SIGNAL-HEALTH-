@@ -1,7 +1,16 @@
 import type { Metadata, Viewport } from "next";
+import { Figtree } from "next/font/google";
 import type { ReactNode } from "react";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
 import "./globals.css";
+
+/** Self-hosted and preloaded by Next; no render-blocking Google Fonts stylesheet. */
+const figtree = Figtree({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+  variable: "--font-figtree",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
@@ -23,16 +32,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-AU">
-      <head>
-        {/* TODO(production): switch to next/font/google for self-hosted, preloaded fonts. */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
-        <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&display=swap"
-        />
-      </head>
+    <html lang="en-AU" className={figtree.variable}>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <AttributionCapture />

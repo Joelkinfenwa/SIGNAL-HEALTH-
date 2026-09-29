@@ -4,12 +4,19 @@
  * CONCEPT IMAGERY: these are AI-generated concept images for design review.
  * Before launch, replace with licensed photography (or confirm usage rights),
  * host them in /public or an asset CDN, and never present them as real customers.
+ *
+ * Slots with an empty `src` are PLACEHOLDERS: photography is still needed.
+ * `brief` describes the shot to commission. The Photo component renders a warm
+ * colour panel in place of the image until a `src` is supplied.
  */
 const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3DvAn6uMIdEntCnt7P71oSjYfdu";
 
 export interface MediaAsset {
+  /** Image URL. Empty string = placeholder (no photography yet). */
   src: string;
   alt: string;
+  /** Shot brief for photography still to be produced. */
+  brief?: string;
 }
 
 export const media = {
@@ -32,5 +39,23 @@ export const media = {
   phone: {
     src: `${CDN}/hf_20260929_053507_43837262-2473-4190-a796-69e08a913b34.png`,
     alt: "A woman on a sunlit window seat reading her results on her phone",
+  },
+
+  /* ---- Placeholder slots: photography still needed ---- */
+  nurseArrival: {
+    src: "",
+    alt: "A collector arriving at a front door with a small collection kit, morning light",
+    brief:
+      "Postcode checker section. A collector in Express Pathology uniform greeted at a suburban front door. Warm, candid, morning light. Portrait 4:5.",
+  },
+  collectionCentre: {
+    src: "",
+    alt: "A bright, calm collection centre reception",
+    brief: "Alternative for the postcode checker when mobile collection is unavailable. Bright, uncluttered reception. Landscape 3:2.",
+  },
+  chooseTest: {
+    src: "",
+    alt: "Someone at a kitchen bench choosing a test on their phone over coffee",
+    brief: "How it works, step 1. Relaxed, decisive moment. Hands, phone, coffee. Square 1:1.",
   },
 } satisfies Record<string, MediaAsset>;

@@ -1,0 +1,15 @@
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 40;
+  padding: var(--s-3) var(--gutter) calc(var(--s-3) + env(safe-area-inset-bottom));
+  background: rgba(251, 249, 246, 0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid var(--line);
+  transform: translateY(110%);
+  transition: transform 260ms var(--ease-out);
+  visibility: hidden;
+}
+.visible { transform: translateY(0); visibility: visible; }
+.inner { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); }
+.price { font-weight: 700; letter-spacing: -0.01em; white-space: nowrap; }
+.button { flex: 1; max-width: 16rem; }
+@media (min-width: 64rem) { .bar { display: none; } }

@@ -10,7 +10,7 @@ import styles from "./Logo.module.css";
  */
 export function Logo({ level = brand.endorsementLevel, className }: { level?: EndorsementLevel; className?: string }) {
   return (
-    <Link href="/" className={cx(styles.logo, className)} aria-label={`${brand.name} ${brand.endorsement}, home`}>
+    <Link href="/" className={cx(styles.logo, className)} title="Home">
       <span className={styles.row}>
         <SignalMark className={styles.mark} />
         <span className={styles.word}>{brand.name}</span>

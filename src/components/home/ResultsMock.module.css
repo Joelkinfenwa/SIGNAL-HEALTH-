@@ -1,0 +1,58 @@
+.section { padding-block: var(--section-pad); overflow: hidden; }
+.inner { display: grid; gap: var(--s-7); align-items: center; }
+.eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); margin-bottom: var(--s-4); }
+.title { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; }
+.body { margin-top: var(--s-4); font-size: var(--fs-md); line-height: 1.5; color: var(--muted); max-width: 32rem; text-wrap: pretty; }
+.points { margin-top: var(--s-6); display: grid; gap: var(--s-3); }
+.points li { display: flex; gap: var(--s-3); align-items: flex-start; }
+.tick { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 50%; background: var(--c-oxblood); color: #fff; margin-top: 1px; }
+.action { margin-top: var(--s-6); }
+
+.phoneWrap { display: grid; justify-items: center; gap: var(--s-4); }
+.phone {
+  width: min(20.5rem, 100%);
+  padding: 10px; border-radius: 44px;
+  background: var(--c-ink);
+  box-shadow: var(--shadow-float);
+}
+.screen {
+  display: grid; gap: var(--s-3);
+  padding: var(--s-5) var(--s-4) var(--s-5);
+  border-radius: 36px; min-height: 30rem;
+  background: var(--c-paper); color: var(--c-ink);
+}
+.appBar { display: flex; justify-content: space-between; align-items: center; padding-inline: var(--s-1); }
+.appTitle { font-weight: 700; }
+.example { font-size: 0.7rem; font-weight: 700; color: var(--c-stone); background: var(--c-shell); border-radius: var(--r-pill); padding: 2px 8px; }
+.markerCard { display: grid; gap: 6px; padding: var(--s-4); border-radius: 20px; background: #fff; box-shadow: var(--shadow-soft); }
+.markerName { font-size: var(--fs-xs); font-weight: 700; color: var(--c-stone); letter-spacing: 0.04em; text-transform: uppercase; }
+.markerValue { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
+.markerValue small { font-size: var(--fs-sm); font-weight: 600; color: var(--c-stone); letter-spacing: 0; }
+.status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); font-weight: 700; color: var(--c-sage); }
+.change { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 6px 10px; border-radius: var(--r-pill); background: #e4f1ea; color: var(--c-sage); font-size: var(--fs-xs); font-weight: 700; justify-self: start; }
+.explain { display: grid; gap: 6px; padding: var(--s-4); border-radius: 20px; background: var(--c-plasma-soft); font-size: var(--fs-sm); line-height: 1.45; }
+.explainLabel { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-oxblood); }
+.history { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--s-3); padding-inline: var(--s-2); font-size: 0.75rem; font-weight: 600; color: var(--c-stone); }
+.historyBar { position: relative; height: 6px; border-radius: 999px; background: var(--c-shell); }
+.historyPrev, .historyNow { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translate(-50%, -50%); background: var(--c-oxblood); }
+.historyPrev { left: 28%; opacity: 0.4; }
+.historyNow { left: 72%; box-shadow: 0 0 0 4px var(--c-plasma-soft); }
+.caption { font-size: var(--fs-xs); color: var(--muted); }
+
+/* Deliberate motion moment #2: the phone drifts up as it scrolls into view. No JS. */
+@supports (animation-timeline: view()) {
+  .phone {
+    animation: rise linear both;
+    animation-timeline: view();
+    animation-range: entry 0% entry 60%;
+  }
+  @keyframes rise {
+    from { opacity: 0.4; transform: translateY(48px) scale(0.97); }
+    to { opacity: 1; transform: none; }
+  }
+}
+@media (prefers-reduced-motion: reduce) { .phone { animation: none; } }
+
+@media (min-width: 64rem) {
+  .inner { grid-template-columns: 1fr 1fr; gap: var(--s-9); }
+}

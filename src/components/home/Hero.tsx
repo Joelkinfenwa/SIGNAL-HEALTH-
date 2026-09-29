@@ -1,35 +1,33 @@
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
+import { activeHeadline, hero, heroHeadlines } from "@/config/home";
 import { media } from "@/config/media";
-import { lowestPriceCents } from "@/config/products";
-import { formatAUD } from "@/lib/money";
+import { fillHomeTokens } from "@/lib/home-tokens";
 import { Photo } from "./Photo";
+import { ProofStrip } from "./ProofStrip";
 import { SignalCard } from "./SignalCard";
 import styles from "./Hero.module.css";
 
 export function Hero() {
+  const headline = heroHeadlines.find((h) => h.id === activeHeadline) ?? heroHeadlines[0]!;
   return (
-    <section data-theme="light" className={styles.hero} aria-labelledby="hero-title">
+    <section id="hero" data-theme="light" className={styles.hero} aria-labelledby="hero-title">
       <Container className={styles.inner}>
         <div className={styles.copy}>
           <p className={styles.kicker}>
-            <Icon name="sparkle" size={16} /> Advanced blood testing, made simple
+            <Icon name="sparkle" size={16} /> {hero.kicker}
           </p>
-          <h1 id="hero-title" className={styles.title}>Know what your body is telling&nbsp;you.</h1>
-          <p className={styles.lede}>
-            One simple blood test shows how your body is really doing. We collect at your home or nearby,
-            explain your results in plain language, and help you track how things change.
-          </p>
+          <h1 id="hero-title" className={styles.title}>{headline.text}</h1>
+          <p className={styles.lede}>{fillHomeTokens(hero.offerLine)}</p>
           <div className={styles.actions}>
-            <Button href="/find-my-test" ctaId="hero_find_my_test" location="hero">Find my test</Button>
-            <Button href="/tests" variant="outline" ctaId="hero_view_tests" location="hero">View tests</Button>
+            <Button href={hero.primaryCta.href} ctaId="hero_find_my_test" location="hero">
+              {hero.primaryCta.label} <Icon name="arrow" size={18} />
+            </Button>
+            <Button href={hero.secondaryCta.href} variant="outline" ctaId="hero_view_tests" location="hero">
+              {hero.secondaryCta.label}
+            </Button>
           </div>
-          <ul className={styles.reassure}>
-            <li><Icon name="home" size={18} /> At-home collection where available</li>
-            <li><Icon name="chat" size={18} /> Results in plain language</li>
-            <li><Icon name="tube" size={18} /> Tests from <span className="num">{formatAUD(lowestPriceCents())}</span></li>
-          </ul>
         </div>
 
         <div className={styles.visual}>
@@ -37,13 +35,14 @@ export function Hero() {
           <div className={styles.booked} aria-hidden="true">
             <span className={styles.bookedIcon}><Icon name="calendar" size={18} /></span>
             <span>
-              <strong>Nurse visit booked</strong>
-              <span className={styles.bookedSub}>At home, Tuesday 7:30am</span>
+              <strong>{hero.bookedPill.title}</strong>
+              <span className={styles.bookedSub}>{hero.bookedPill.sub}</span>
             </span>
           </div>
           <SignalCard className={styles.signal} />
         </div>
       </Container>
+      <ProofStrip />
     </section>
   );
 }

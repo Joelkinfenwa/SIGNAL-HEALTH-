@@ -1,27 +1,28 @@
 import { Section, SectionHeader } from "@/components/ui/Section";
-import { Icon, type IconName } from "@/components/ui/Icon";
+import { steps } from "@/config/home";
+import { fillHomeTokens } from "@/lib/home-tokens";
+import { StepMock } from "./StepMock";
 import styles from "./HowItWorks.module.css";
 
-const STEPS: { icon: IconName; title: string; body: string }[] = [
-  { icon: "tube", title: "Choose your test", body: "Pick from three tests, or answer a few questions and we'll suggest one." },
-  { icon: "home", title: "Get tested", body: "A collector comes to you where available, or visit a collection centre." },
-  { icon: "chat", title: "Understand your numbers", body: "Results come with clinical review, explained in plain language." },
-  { icon: "chart", title: "Track change", body: "Retest over time and see how your numbers move." },
-];
-
+/** Four numbered steps. Retesting is the final step, not an add-on. */
 export function HowItWorks() {
   return (
     <Section id="how-it-works" theme="light" labelledBy="how-title">
-      <SectionHeader id="how-title" title="Simple from start to finish" intro="From choosing a test to tracking your progress." />
+      <SectionHeader
+        id="how-title"
+        eyebrow="How it works"
+        title="Simple from the first test to the next."
+        intro="Choose, get tested, understand your results, then retest to see what's changed."
+      />
       <ol className={styles.steps}>
-        {STEPS.map((s, i) => (
-          <li key={s.title} className={styles.step}>
-            <div className={styles.top}>
-              <span className={styles.icon}><Icon name={s.icon} size={22} /></span>
-              <span className={styles.index}>Step {i + 1}</span>
+        {steps.map((s, i) => (
+          <li key={s.id} className={styles.step}>
+            <div className={styles.visual}><StepMock step={s.id} /></div>
+            <div className={styles.text}>
+              <span className={styles.index}><span className="num">{String(i + 1).padStart(2, "0")}</span> {s.label}</span>
+              <h3 className={styles.title}>{s.title}</h3>
+              <p className={styles.body}>{fillHomeTokens(s.body)}</p>
             </div>
-            <h3 className={styles.title}>{s.title}</h3>
-            <p className={styles.body}>{s.body}</p>
           </li>
         ))}
       </ol>

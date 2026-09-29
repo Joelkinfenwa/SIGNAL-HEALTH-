@@ -16,6 +16,7 @@
   gap: var(--s-6);
 }
 .nav a {
+  display: inline-flex; align-items: center; min-height: 44px;
   font-size: var(--fs-sm);
   font-weight: 500;
   text-decoration: none;

@@ -25,7 +25,9 @@ export type AnalyticsEvent =
   | { name: "retest_offer_accepted"; props: RetestOfferProps & Money }
   | { name: "retest_offer_declined"; props: RetestOfferProps }
   | { name: "booking_started"; props: { order_id: string; method: CollectionMethod } }
-  | { name: "booking_completed"; props: { order_id: string; method: CollectionMethod } };
+  | { name: "booking_completed"; props: { order_id: string; method: CollectionMethod } }
+  /** Postcode checker. Only whether the area is serviceable — the postcode itself is never sent. */
+  | { name: "postcode_checked"; props: { serviceable: boolean } };
 
 type RetestOfferProps = { order_id: string; offer_id: string; offer_version: number; variant?: string };
 
@@ -58,6 +60,7 @@ export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   retest_offer_declined: { ga4: "retest_offer_decline", meta: null, klaviyo: null, serverAuthoritative: false },
   booking_started: { ga4: "booking_start", meta: null, klaviyo: null, serverAuthoritative: false },
   booking_completed: { ga4: "booking_complete", meta: "Schedule", klaviyo: "Booked Collection", serverAuthoritative: true },
+  postcode_checked: { ga4: "postcode_checked", meta: null, klaviyo: null, serverAuthoritative: false },
 };
 
 /**

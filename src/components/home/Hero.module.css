@@ -1,4 +1,4 @@
-.hero { padding-block: var(--s-5) var(--s-8); overflow: hidden; }
+.hero { padding-block: var(--s-5) 0; overflow: hidden; }
 .inner { display: grid; gap: var(--s-7); align-items: center; }
 .kicker {
   display: inline-flex; align-items: center; gap: var(--s-2);
@@ -11,21 +11,18 @@
   font-size: var(--fs-display);
   line-height: var(--lh-tight);
   font-weight: 700;
-  letter-spacing: -0.04em;
-  max-width: 11ch;
+  letter-spacing: -0.045em;
+  max-width: 12ch;
   text-wrap: balance;
 }
-.lede { margin-top: var(--s-5); max-width: 33rem; font-size: var(--fs-md); line-height: 1.5; color: var(--muted); }
+.lede { margin-top: var(--s-5); max-width: 30rem; font-size: var(--fs-md); line-height: 1.45; color: var(--muted); text-wrap: pretty; }
 .actions { margin-top: var(--s-6); display: grid; gap: var(--s-3); }
-.reassure { margin-top: var(--s-6); display: grid; gap: var(--s-3); font-size: var(--fs-sm); color: var(--muted); }
-.reassure li { display: flex; align-items: center; gap: var(--s-3); }
-.reassure svg { color: var(--accent); flex: none; }
 
 .visual { position: relative; padding-bottom: var(--s-7); }
 .photo { aspect-ratio: 4 / 5; }
-.signal { position: absolute; left: calc(var(--s-3) * -1); bottom: 0; }
+.signal { position: absolute; left: 0; bottom: 0; }
 .booked {
-  position: absolute; top: var(--s-5); right: calc(var(--s-3) * -1);
+  position: absolute; top: var(--s-5); right: 0;
   display: flex; align-items: center; gap: var(--s-3);
   padding: var(--s-3) var(--s-4) var(--s-3) var(--s-3);
   background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(10px);
@@ -43,8 +40,9 @@
   .signal { left: var(--s-5); }
 }
 @media (min-width: 64rem) {
-  .hero { padding-block: var(--s-6) var(--s-9); }
-  .inner { grid-template-columns: 1fr 1fr; gap: var(--s-8); }
+  .hero { padding-block: var(--s-6) 0; }
+  .inner { grid-template-columns: 1.05fr 1fr; gap: var(--s-8); }
+  .title { max-width: 11ch; }
   .signal { left: calc(var(--s-7) * -1); bottom: var(--s-5); }
   .booked { right: calc(var(--s-5) * -1); }
   .visual { padding-bottom: 0; }

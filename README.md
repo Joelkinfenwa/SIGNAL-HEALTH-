@@ -4,7 +4,7 @@ Consumer web application for SIGNAL: premium blood testing built on Express Path
 
 **Test → Understand → Improve → Retest**
 
-This is v0.1: the architectural foundation and the homepage shell with placeholder product data. Full specification is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+This is v0.3: the architectural foundation and the rebuilt homepage (v3) with placeholder product data. Full specification is in [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md); the homepage plan is in [`docs/HOMEPAGE_V3_PLAN.md`](docs/HOMEPAGE_V3_PLAN.md).
 
 ## Deploy to Vercel
 
@@ -29,7 +29,7 @@ Requires Node 20+.
 Next.js (App Router) · React · TypeScript (strict) · CSS Modules with design tokens · Vercel (`syd1`).
 Phase 2 adds Postgres (Sydney region) with Drizzle, Stripe, and the server-side analytics mirror.
 
-No UI framework and no CSS-in-JS: the homepage ships about 2.6 kB of page-specific JavaScript, all of it analytics.
+No UI framework and no CSS-in-JS. The homepage's client JavaScript is limited to analytics, the postcode checker form and the sticky mobile CTA; every other section is a server component. Accordions use native `<details>`.
 
 ## Project structure
 
@@ -37,14 +37,21 @@ No UI framework and no CSS-in-JS: the homepage ships about 2.6 kB of page-specif
 src/
   app/                 Routes. Only / is built; other routes are placeholders from the route map.
   config/              Business data — edit here, not in components
-    products.ts        The three tests (placeholder data)
+    products.ts        The three tests (placeholder data, incl. buy-box copy)
     retest-offer.ts    Automatic Retesting offer: discount, interval, eligibility, copy
     brand.ts           Brand lockup, endorsement prominence, trust claims
-    biomarkers.ts      Biomarker categories shown in marketing
+    biomarkers.ts      Biomarker categories, counts and example markers (placeholders)
+    home.ts            Homepage copy: headline options, proof strip, steps, results mock, CTAs
+    coverage.ts        Placeholder serviced postcodes + collection centres; checkPostcode()
+    comparison.ts      "SIGNAL vs a standard check-up" rows (all TODO-VERIFY)
+    social-proof.ts    Press logos and approved reviews (empty by default)
+    faq.ts             FAQ items; clinical questions are TODO and not rendered
+    media.ts           Imagery, including placeholder slots with photography briefs
   lib/
     analytics/         Typed event catalogue, tracking, attribution capture
     retest/offer.ts    Pure offer calculation shared by UI and (later) payment code
     money.ts           AUD formatting (all amounts are integer cents)
+    home-tokens.ts     Fills {fromPrice} {areas} {markers} {interval} in marketing copy
   components/          ui/, brand/, layout/, analytics/, product/, home/
   types/domain.ts      Commerce data model (no clinical data)
 docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, retesting, analytics, security
@@ -66,20 +73,34 @@ docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, 
 
 `src/config/media.ts` holds the campaign imagery. The current images are **AI-generated concept images** for design review, served from the Higgsfield CDN. Before launch: replace them with licensed photography or confirm usage rights, move them into `/public` (or the final CDN), remove the temporary host from `next.config.ts`, and never present them as real customers.
 
+Slots with an empty `src` are placeholders with a shot `brief`; the `Photo` component renders a warm colour panel until photography exists. Currently: `nurseArrival` (postcode checker), `collectionCentre`, `chooseTest`.
+
 ## Claims register (must be cleared before launch)
 
 Every public claim needs substantiation under Australian Consumer Law. `trustPoints` in `config/brand.ts` carry a `substantiated` flag.
 
 | Claim | Location | Status |
 |---|---|---|
-| "Australia's largest mobile blood collection network" | Trust bar | Needs evidence on file |
-| "Samples are analysed by accredited Australian pathology laboratories" | Trust bar | Confirm laboratory partner(s) and accreditation |
-| "The price you see includes the test. Collection options are shown before you pay." | Trust bar | Confirm pricing and collection-fee model |
-| "Receive your results with appropriate clinical review" | How it works, Why SIGNAL | Confirm with clinical lead |
-| "You can change or cancel it from your account" | Retesting | True once account/retesting management ships |
+| "Australia's largest mobile blood collection network" | `config/brand.ts` trustPoints (not rendered on the v3 homepage) | Needs evidence on file |
+| "Samples are analysed by accredited Australian pathology laboratories" | `config/brand.ts` trustPoints (not rendered on the v3 homepage) | Confirm laboratory partner(s) and accreditation |
+| "The price you see includes the test… collection options shown before you pay" | Buy box price note; FAQ "What's included" | TODO-VERIFY: confirm pricing and collection-fee model |
+| "Clinical review included" / "reviewed and explained in plain language" | Proof strip, How it works, Results section | TODO-VERIFY with clinical lead |
+| "Advanced blood testing from $279, collected at home or nearby" | Hero offer line, sticky bar | Price from config; "at home or nearby" depends on launch coverage |
+| "{n} areas of health" / "{n} markers" per category | Proof strip, buy box, biomarker cards | PLACEHOLDER counts and example markers in `config/biomarkers.ts` — replace with real lists |
+| Key inclusions per product | Buy box | PLACEHOLDER in `config/products.ts` — confirm against analyte lists |
+| "You can change the date or cancel from your account at any time" | FAQ (Automatic Retesting) | True once account/retesting management ships |
 | "Recommended" / "recommended starting point" (not "most popular") | Tests section | Change only when sales data supports it |
-| "Nurse visit booked, at home" illustration | Hero | Illustrative UI; confirm home visits are offered in launch areas |
+| "Collector visit booked, at home" pill | Hero | Illustrative UI; TODO-VERIFY home visits are offered in launch areas |
+| Postcode checker results ("a collector can come to you in …") | Postcode checker | PLACEHOLDER lists in `config/coverage.ts`; connect to the Express booking API before launch |
+| Every row of "SIGNAL vs a standard check-up" | `config/comparison.ts` | TODO-VERIFY (each row has `verified: false`) |
+| "Mobile collection is available in many metropolitan areas and is expanding" | FAQ | TODO-VERIFY against launch coverage |
+| "Most results are ready within a few business days of collection" | FAQ | TODO-VERIFY turnaround with the laboratory |
+| "Qualified collectors from Express Pathology" | FAQ, proof strip | Confirm collector qualifications wording |
+| "Your results are held in a separate clinical system… never shared with advertising platforms" | FAQ (privacy) | True by architecture; legal to confirm wording |
+| Results mock (Vitamin D 78 nmol/L, "+24 since your last test") | Results section, How it works step 3 | Illustrative, labelled "Example"; clinical lead to confirm the plain-language wording |
 | Footer disclaimer | Footer | Clinical and legal review |
+
+Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
 
 ## Open decisions
 
@@ -105,4 +126,7 @@ See **DECISION** and **VERIFY** markers in `docs/ARCHITECTURE.md`. The most impo
 - Never hard-code product details, prices or offer terms in components — import from `src/config`.
 - Add new analytics events to `src/lib/analytics/events.ts` first; the types enforce the payload.
 - Never add health-related properties to events sent to ad platforms.
-- Fonts are loaded via a Google Fonts `<link>` for this shell; switch to `next/font/google` for production (self-hosted, preloaded).
+- Fonts are self-hosted and preloaded via `next/font/google` (Figtree) — no render-blocking font stylesheet.
+- Marketing copy lives in `src/config/home.ts`; use `fillHomeTokens()` for `{fromPrice}` `{areas}` `{markers}` `{interval}` so numbers never go stale.
+- The postcode checker sends `postcode_checked { serviceable }` only. Never add the postcode to any event.
+- Social proof renders only when `config/social-proof.ts` has approved content. Never add outcome testimonials or invented ratings.

@@ -14,6 +14,10 @@ export interface Product {
   priceCents: number;
   tagline: string;
   summary: string;
+  /** One sentence: what this test helps you understand. Areas of measurement only, never conditions. */
+  helps: string;
+  /** Key inclusions shown in the buy box. TODO: confirm against the final analyte lists. */
+  inclusions: string[];
   forWho: string[];
   categories: BiomarkerCategoryId[];
   collectionMethods: CollectionMethod[];
@@ -35,6 +39,8 @@ export const products: Product[] = [
     priceCents: 27900,
     tagline: "A clear baseline of your overall health.",
     summary: "The essential markers for understanding how your body is working today.",
+    helps: "How your body is working today: heart, metabolic, liver, kidney, thyroid and nutrient basics.",
+    inclusions: ["Cholesterol and lipids", "Blood sugar, including HbA1c", "Iron studies and vitamin D", "Liver, kidney and thyroid markers"],
     forWho: ["Your first comprehensive blood test", "A yearly health check-in"],
     categories: ["metabolic", "cardiovascular", "liver", "kidney", "thyroid", "nutrients"],
     collectionMethods: ["mobile", "centre"],
@@ -49,6 +55,8 @@ export const products: Product[] = [
     priceCents: 31900,
     tagline: "The full picture, including hormones.",
     summary: "Everything in Core, plus hormones and inflammation for a more complete view.",
+    helps: "The full picture, including the hormones behind energy, mood, sleep and body composition.",
+    inclusions: ["Everything in Core", "Key hormones", "Inflammation markers", "Change tracked between tests"],
     forWho: ["Understanding energy, mood and sleep", "Tracking change over time"],
     categories: ["hormones", "metabolic", "cardiovascular", "liver", "kidney", "thyroid", "nutrients", "inflammation"],
     collectionMethods: ["mobile", "centre"],
@@ -63,6 +71,8 @@ export const products: Product[] = [
     priceCents: 42900,
     tagline: "For people who train and want the detail.",
     summary: "Everything in Complete, plus markers related to muscle, recovery and training load.",
+    helps: "Everything in Complete, plus the markers that relate to muscle, recovery and training load.",
+    inclusions: ["Everything in Complete", "Muscle and recovery markers", "Training-load related markers", "Extended nutrient panel"],
     forWho: ["Regular training or competition", "Detailed tracking of recovery"],
     categories: ["hormones", "metabolic", "cardiovascular", "liver", "kidney", "thyroid", "nutrients", "inflammation", "performance"],
     collectionMethods: ["mobile", "centre"],

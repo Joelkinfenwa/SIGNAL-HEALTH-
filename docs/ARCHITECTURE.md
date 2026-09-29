@@ -16,7 +16,7 @@ Items marked **DECISION** need sign-off from the business. Items marked **VERIFY
 | Payments | **Stripe** (Payment Element, Express Checkout Element, Billing) | See §6. |
 | Auth (phase 3) | Passwordless email (magic link or one-time code) | No passwords to manage; suits an occasional-use account. |
 | Analytics | Typed event catalogue → dataLayer (GA4, Meta Pixel) + server mirror (Meta CAPI, GA4 Measurement Protocol, Klaviyo) | See §8. |
-| Booking | Integrate with the existing Express booking platform (Doorstep) via API; store only the booking reference | **VERIFY** Doorstep exposes availability + booking creation endpoints suitable for this flow. |
+| Booking | Integrate with the existing Express booking platform (Doorstep) via API; store only the booking reference | **VERIFY** Doorstep exposes availability + booking creation endpoints suitable for this flow. The homepage postcode checker (`config/coverage.ts`) is a static placeholder until then. |
 | Clinical results | Out of scope for this app. The dashboard will link to, or fetch through a separate authenticated service from, the clinical system | Keeps this database free of clinical data (§9). |
 
 Rendering strategy:
@@ -83,7 +83,7 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 **Shape.** Radius carries hierarchy: controls are pills, cards 16px, the hero readout and featured product 28px.
 
-**Motion.** One orchestrated moment only: the hero readout lines draw in on load. Everything else is still. `prefers-reduced-motion` is respected globally.
+**Motion.** Two deliberate moments: the hero readout lines draw in on load, and the results phone mock rises as it scrolls into view (CSS scroll-driven animation behind `@supports`, no JavaScript). Everything else is still. `prefers-reduced-motion` is respected globally.
 
 **Signature element.** The "Your signal" readout: markers tracked across three tests. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings) and the retesting timeline.
 
@@ -99,12 +99,14 @@ components/
   brand/       Logo (+ SignalMark) — endorsement level driven by config
   layout/      SiteHeader, SiteFooter, PlannedPage (temporary)
   analytics/   TrackedLink, AttributionCapture
-  product/     ProductCard
-  home/        Hero, SignalReadout, TrustBar, HowItWorks, FlagshipTests,
-               BiomarkerMatrix, WhySignal, Retesting, FinalCta
+  product/     ProductCard (buy-box card)
+  home/        Hero, ProofStrip, SignalCard, Coverage + PostcodeChecker (client),
+               HowItWorks + StepMock, Tests, Biomarkers (<details>), Comparison (<table>),
+               ResultsMock, RetestBand, SocialProof, Faq (+ FAQPage JSON-LD), FinalCta,
+               StickyCta (client, mobile only), Photo
 ```
 
-Planned next: `PriceTag`, `CollectionMethodPicker`, `ProductHero`, `BiomarkerAccordion`, `FAQ` (with FAQPage schema), `QuizStep`, `RetestOfferPanel`, `ConsentCheckbox` (records text version), `OrderSummary`, `StepIndicator`, `Field`/`Input` primitives, `Toast`.
+Planned next: `PriceTag`, `CollectionMethodPicker`, `ProductHero`, `QuizStep`, `RetestOfferPanel`, `ConsentCheckbox` (records text version), `OrderSummary`, `StepIndicator`, `Field`/`Input` primitives, `Toast`.
 
 Conventions: server components by default; `"use client"` only where interaction requires it. Every primary CTA passes a `ctaId` so clicks are measurable without extra code.
 
@@ -192,7 +194,7 @@ Note for offer design: when a partial refund is issued, Stripe's processing fee 
 
 `src/lib/analytics/events.ts` is the single typed catalogue. An event cannot be emitted unless it exists there with the correct properties.
 
-Events: `page_viewed`, `cta_clicked`, `product_viewed`, `quiz_started`, `quiz_completed`, `product_recommended`, `checkout_started`, `collection_method_selected`, `purchase_completed`, `retest_offer_viewed`, `retest_offer_accepted`, `retest_offer_declined`, `booking_started`, `booking_completed`.
+Events: `page_viewed`, `cta_clicked`, `product_viewed`, `quiz_started`, `quiz_completed`, `product_recommended`, `checkout_started`, `collection_method_selected`, `purchase_completed`, `retest_offer_viewed`, `retest_offer_accepted`, `retest_offer_declined`, `booking_started`, `booking_completed`, `postcode_checked` (`serviceable` boolean only; the postcode never leaves the browser).
 
 **Flow**
 ```

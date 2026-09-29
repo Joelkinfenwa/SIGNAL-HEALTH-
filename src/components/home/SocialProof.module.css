@@ -1,0 +1,8 @@
+.logos { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s-6) var(--s-7); opacity: 0.8; }
+.logos img { height: 32px; width: auto; }
+.reviews { margin-top: var(--s-7); display: grid; gap: var(--s-4); }
+.review { padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
+.review blockquote { margin: 0; }
+.quote { font-size: var(--fs-md); line-height: 1.4; letter-spacing: -0.01em; }
+.attribution { margin-top: var(--s-3); font-size: var(--fs-sm); color: var(--muted); }
+@media (min-width: 52rem) { .reviews { grid-template-columns: repeat(3, 1fr); } }
