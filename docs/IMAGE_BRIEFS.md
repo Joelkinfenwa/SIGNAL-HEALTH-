@@ -24,11 +24,11 @@ Model `seedance_2_5`, 16:9, 8 s, loopable, ~35 credits. Prompt: "Aerial drone fo
 
 Poster/LCP still: same prompt on `soul_2`, 16:9, 2k, "keep the left third of the frame open sky and road for text".
 
-Delivery: 720p H.264, no audio, under ~2 MB, plus the poster as a 2k still. Set `heroVideo.src` and swap `heroVideo.poster`.
+Status: generated (Seedance 2.5, 8 s) and wired into `heroVideo.src`; poster is `heroRoad`. TODO(launch): re-encode to 720p H.264, no audio, under ~2 MB, and self-host.
 
 ## After generating
 1. Pick the keepers; note the Higgsfield job ids.
 2. Paste each CDN `src` into the matching slot in `src/config/media.ts` (slots with `src: ""` stop rendering the colour panel automatically).
 3. Before launch: move files to `/public` or the final CDN, remove the temporary host from `next.config.ts`, confirm usage rights.
 
-Status 2026-09-29: generated and wired in: #0 heroSwim, #3 tubes, #8 hormonesHero, #9 performanceHero, #11 heroBalcony (alternative hero). Still to generate once the daily cap resets: #1 homeVisit, #2 couple, #4 phone, #5 nurseArrival, #6 collectionCentre, #7 chooseTest, #10 longevityHero.
+Status 2026-09-29: all twelve stills generated and wired in, plus the aerial coastal-road still (`heroRoad`, hero poster). Hero video: see below.

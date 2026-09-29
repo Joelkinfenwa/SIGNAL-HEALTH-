@@ -93,10 +93,10 @@ export const media = {
 /**
  * Full-bleed homepage hero. Video is optional: until `src` is set the poster
  * image is the hero. Autoplay is muted, looped and hidden under reduced motion.
- * TODO(media): generate the beach-run video (docs/IMAGE_BRIEFS.md) and set `src`.
+ * TODO(launch): re-encode to 720p H.264 under ~2 MB and self-host; the current file is the raw render.
  */
 export const heroVideo: VideoAsset = {
-  src: "",
+  src: `${CDN2}/hf_20260929_075330_d10281af-cd07-44f4-a2c6-82b1e46c80d1.mp4`,
   poster: media.heroRoad,
   brief:
     "8s loop, 16:9, aerial drone footage. A lone runner on an empty winding coastal road, cliffs and open ocean right beside the road, early light, slow forward tracking from behind and above. Muted bone and evergreen tones. No text. The poster image is the same frame as a still.",
