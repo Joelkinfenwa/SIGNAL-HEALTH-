@@ -7,12 +7,12 @@ import styles from "./HowItWorks.module.css";
 /** Four numbered steps. Retesting is the final step, not an add-on. */
 export function HowItWorks() {
   return (
-    <Section id="how-it-works" theme="light" labelledBy="how-title">
+    <Section id="how-it-works" theme="shell" labelledBy="how-title">
       <SectionHeader
         id="how-title"
         eyebrow="How it works"
-        title="Simple from the first test to the next."
-        intro="Choose, get tested, understand your results, then retest to see what's changed."
+        title="Four steps. No referral paperwork to organise."
+        intro="Choose, get collected, get your results, then track what changes."
       />
       <ol className={styles.steps}>
         {steps.map((s, i) => (

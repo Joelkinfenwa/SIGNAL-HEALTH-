@@ -1,6 +1,6 @@
 /**
- * Homepage copy and content that marketing may want to change without touching
- * components. Copy templates accept tokens: {fromPrice} {areas} {markers} {interval}
+ * Homepage copy and content. Marketing edits here, not in components.
+ * Copy templates accept tokens: {fromPrice} {areas} {markers} {product} {interval}
  * (filled by `fillHomeTokens()` in src/lib/home-tokens.ts).
  */
 
@@ -9,40 +9,40 @@ export interface HeadlineOption {
   text: string;
 }
 
-/** Hero headline options. `activeHeadline` selects which one renders. */
+/** Hero headline options; `activeHeadline` selects. Candidates for the home_headline experiment. */
 export const heroHeadlines: HeadlineOption[] = [
-  { id: "know", text: "Know what your body is telling you." },
-  { id: "inside", text: "See what's really going on inside." },
-  { id: "score", text: "Your body keeps the score. Now you can read it." },
+  { id: "inside", text: "Know what's happening inside your body." },
+  { id: "measure", text: "Stop guessing. Start measuring." },
+  { id: "telling", text: "Know what your body is telling you." },
 ];
-export const activeHeadline: HeadlineOption["id"] = "know";
+export const activeHeadline: HeadlineOption["id"] = "inside";
 
 export const hero = {
-  kicker: "Advanced blood testing, made simple",
-  /** One line that anchors the offer and price. The unpriced line renders until pricing is set. */
-  offerLine: "Advanced blood testing from {fromPrice}, collected at home or nearby.",
-  offerLineUnpriced: "Advanced blood testing, collected at home or nearby, explained in plain language.",
-  primaryCta: { label: "Find my test", href: "/find-my-test" },
-  secondaryCta: { label: "View tests", href: "/tests" },
-  /** Small reassurance chips under the hero CTAs. Keep to three; at-home is a benefit, not a gate. */
-  chips: ["Collected at home or nearby", "Clinical review included", "Results explained in plain language"],
-  /** Illustrative pill over the hero photo. TODO-VERIFY: confirm home visits are offered in launch areas. */
-  bookedPill: { title: "Collector visit booked", sub: "At home, Tuesday 7:30am" },
+  eyebrow: "The SIGNAL Test · by Express Pathology",
+  /** Priced and unpriced variants; the unpriced line renders until pricing is set. */
+  subheadline: "One comprehensive blood test. A clearer picture of what's happening inside your body, from {fromPrice}.",
+  subheadlineUnpriced: "One comprehensive blood test. A clearer picture of what's happening inside your body.",
+  primaryCta: { label: "Get my SIGNAL", href: "/signal" },
+  secondaryCta: { label: "See what's included", href: "/#what-is-tested" },
+  /** Three reassurance chips. Facts only; anything unverified belongs in config/trust.ts as a placeholder. */
+  chips: ["{areas} areas of health, {markers} markers", "Collected at a centre or at home", "Explained in plain language"],
 };
 
-export interface ProofItem {
-  id: string;
-  icon: "chart" | "home" | "shield" | "check" | "tube" | "chat" | "pin" | "calendar" | "sparkle";
-  title: string;
-  body: string;
-}
-
-/** Three-item proof strip under the hero. Tokens allowed. */
-export const proofStrip: ProofItem[] = [
-  { id: "areas", icon: "chart", title: "{areas} areas of health", body: "Heart, hormones, metabolic, thyroid, nutrients and more from one sample." },
-  { id: "home", icon: "home", title: "Collected at home or nearby", body: "A qualified collector visits where available, or drop into a collection centre." },
-  { id: "review", icon: "shield", title: "Clinical review included", body: "Results are reviewed and explained in plain language." },
-];
+/** D. The core insight: people measure everything except what's inside. */
+export const insight = {
+  eyebrow: "The core insight",
+  title: "You track everything else.",
+  tracked: [
+    { label: "Steps", value: "9,412" },
+    { label: "Sleep", value: "7h 12m" },
+    { label: "Resting HR", value: "54" },
+    { label: "Pace", value: "4:52 /km" },
+    { label: "Recovery", value: "82%" },
+  ],
+  body: "Your watch knows your steps. Your app knows your sleep. Your plan knows your pace. None of them can see what's happening in your blood.",
+  close: "SIGNAL measures the part the wearables can't.",
+  cta: { label: "See what SIGNAL measures", href: "/#what-is-tested" },
+};
 
 export interface Step {
   id: "choose" | "collect" | "understand" | "retest";
@@ -51,40 +51,46 @@ export interface Step {
   body: string;
 }
 
-/** How it works. Retesting is the final step, not an add-on. Tokens allowed. */
+/** H. How it works. Tokens allowed. */
 export const steps: Step[] = [
-  { id: "choose", label: "Choose", title: "Choose your test", body: "{tests} tests, each built around a question you actually have. Not sure? Answer a few questions and we'll suggest one." },
-  { id: "collect", label: "Get tested", title: "Get tested, your way", body: "A qualified collector comes to your home or workplace where available. Or visit a collection centre near you." },
-  { id: "understand", label: "Understand", title: "Understand your results", body: "Every marker explained in plain language, with clinical review, in your own dashboard." },
-  { id: "retest", label: "Retest", title: "Retest and see the change", body: "Test again every {interval} and watch how your numbers move as you make changes." },
+  { id: "choose", label: "Choose", title: "Choose your SIGNAL", body: "The comprehensive test, plus any add-ons you want. About two minutes." },
+  { id: "collect", label: "Collect", title: "Get collected", body: "At a collection centre, or at home where available. A few minutes with a qualified collector." },
+  { id: "understand", label: "Understand", title: "Get your results", body: "Returned digitally, reviewed, and explained marker by marker in plain language." },
+  { id: "retest", label: "Track", title: "Track over time", body: "Retest every {interval} and see exactly what's changed." },
 ];
 
 /**
- * Illustrative results card. Clearly labelled as an example in the UI.
- * No real reference ranges or clinical interpretation.
+ * I. Results preview. Illustrative; labelled as an example in the UI.
+ * previous → current pairs demonstrate tracking, never real results.
  */
-export const resultsMock = {
-  marker: "Vitamin D",
-  value: "78",
-  unit: "nmol/L",
-  status: "Within range",
-  change: { direction: "up" as "up" | "down" | "flat", label: "+24 since your last test" },
-  explanation:
-    "Vitamin D is a nutrient your body uses for bone and muscle health. Yours has risen since your last test, so what you changed appears to be working.",
+export interface PreviewMarker {
+  markerId: string;
+  unit: string;
+  previous: string;
+  current: string;
+  direction: "up" | "down" | "flat";
+  note: string;
+}
+export const resultsPreview: { previousLabel: string; currentLabel: string; markers: PreviewMarker[] } = {
   previousLabel: "March",
   currentLabel: "September",
+  markers: [
+    { markerId: "vit_d", unit: "nmol/L", previous: "54", current: "78", direction: "up", note: "Higher than last time." },
+    { markerId: "ferritin", unit: "µg/L", previous: "38", current: "61", direction: "up", note: "Iron stores have risen." },
+    { markerId: "hba1c", unit: "%", previous: "5.6", current: "5.4", direction: "down", note: "Slightly lower than last time." },
+  ],
 };
 
+/** M. Final close. */
 export const finalCta = {
-  title: "Stop guessing. Start knowing.",
-  body: "Choose a test today and see how your body is really doing.",
-  primaryCta: { label: "Find my test", href: "/find-my-test" },
+  title: "Stop guessing. Know your numbers.",
+  body: "One comprehensive blood test. Collected near you, explained in plain language.",
+  primaryCta: { label: "Get my SIGNAL", href: "/signal" },
 };
 
 export const stickyCta = {
-  label: "Find my test",
-  href: "/find-my-test",
-  /** Tokens allowed. The unpriced line renders until pricing is set. */
+  label: "Get my SIGNAL",
+  href: "/signal",
   priceLine: "From {fromPrice}",
-  priceLineUnpriced: "{tests} tests, one sample",
+  priceLineUnpriced: "{markers} markers, one test",
 };

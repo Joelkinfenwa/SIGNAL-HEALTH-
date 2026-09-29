@@ -29,9 +29,32 @@ export interface ApprovedReview {
   approvedOn: string;
 }
 
+export interface UgcVideo {
+  id: string;
+  /** Creator handle, with permission on file. */
+  creator: string;
+  /** Hosted video URL and poster; both self-hosted before launch. */
+  src: string;
+  poster: string;
+  /** One line of what the creator says, quoted exactly. */
+  quote: string;
+  approvedBy: string;
+  approvedOn: string;
+}
+
+export interface CreatorQuote {
+  id: string;
+  creator: string;
+  quote: string;
+  approvedBy: string;
+  approvedOn: string;
+}
+
 /** Empty by default. Add real, approved content only. */
 export const pressLogos: PressLogo[] = [];
 export const approvedReviews: ApprovedReview[] = [];
+export const ugcVideos: UgcVideo[] = [];
+export const creatorQuotes: CreatorQuote[] = [];
 
 export const hasSocialProof = () =>
-  pressLogos.some((l) => l.approved) || approvedReviews.length > 0;
+  pressLogos.some((l) => l.approved) || approvedReviews.length > 0 || ugcVideos.length > 0 || creatorQuotes.length > 0;

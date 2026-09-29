@@ -17,61 +17,51 @@ export interface FaqItem {
 }
 
 export const faqItems: FaqItem[] = [
-  {
-    id: "collection",
-    question: "How does the blood collection work?",
-    status: "draft",
-    answer:
-      "After you choose a test, you pick how you'd like your blood collected. Where mobile collection is available, a qualified collector from Express Pathology comes to your home or workplace at a time you choose. Otherwise you can visit a collection centre. The collection itself takes a few minutes.",
-  },
+  { id: "referral", question: "Do I need a GP referral?", status: "todo-clinical" },
   {
     id: "where",
-    question: "Where is at-home collection available?",
+    question: "Where can I get collected?",
     status: "draft",
-    answer:
-      "Mobile collection is available in many metropolitan areas and is expanding. Enter your postcode above to see the options in your area. If a collector can't come to you yet, you can still use a collection centre.",
+    // TODO-VERIFY launch regions and centre list.
+    answer: "At a collection centre, with locations shown when you book. Home or workplace collection is available in selected areas; you can check your postcode at booking.",
   },
   {
-    id: "timing",
-    question: "How long until I get my results?",
+    id: "home",
+    question: "Can someone come to my home?",
     status: "draft",
-    // TODO-VERIFY: confirm turnaround with the laboratory before launch.
-    answer:
-      "Most results are ready within a few business days of collection. We'll email you as soon as they're in, and you can read them in plain language in your SIGNAL dashboard.",
+    answer: "In selected areas, yes: a qualified collector from Express Pathology comes to your home or workplace at a time you choose. Availability is confirmed at booking.",
+  },
+  { id: "timing", question: "How long do results take?", status: "todo-clinical" },
+  { id: "review", question: "Who reviews my results?", status: "todo-clinical" },
+  { id: "abnormal", question: "What happens if something is outside the expected range?", status: "todo-clinical" },
+  { id: "gp", question: "Can I share results with my GP?", status: "todo-clinical" },
+  {
+    id: "retest",
+    question: "Can I retest?",
+    status: "draft",
+    answer: "Yes. Retesting is how SIGNAL becomes most useful: each new result is compared with your last, marker by marker. You can book a one-off retest any time, or choose Automatic Retesting after your first test.",
   },
   {
-    id: "retesting",
-    question: "What is Automatic Retesting?",
+    id: "cancel",
+    question: "Can I cancel Automatic Retesting?",
     status: "draft",
-    answer:
-      "Automatic Retesting books your next test for you, twice a year or four times a year, and discounts every test. It's optional and offered after your first purchase. It uses recurring billing: you're charged the discounted price for each test at the start of each interval, it continues until you cancel, and you can change the date, pause or cancel from your account at any time.",
+    answer: "Yes, at any time from your account, with no fees. Automatic Retesting uses recurring billing: you're charged the discounted price for each test at the start of each interval, and it continues until you cancel. We email you before every charge.",
   },
+  { id: "diagnostic", question: "Are these diagnostic tests?", status: "todo-clinical" },
+  { id: "labs", question: "Which laboratories are used?", status: "todo-clinical" },
   {
     id: "privacy",
     question: "Is my information private?",
     status: "draft",
-    answer:
-      "Yes. Your results are held in a separate clinical system, not on this website. We never share your results, which test you chose, or your quiz answers with advertising platforms. Our privacy policy explains what we collect and why.",
-  },
-  {
-    id: "who-collects",
-    question: "Who collects my blood?",
-    status: "draft",
-    answer:
-      "Qualified collectors from Express Pathology, the mobile blood collection service behind SIGNAL.",
+    answer: "Your results are held in a separate clinical system, not on this website. We never share your results, your add-on choices or your quiz answers with advertising platforms. Our privacy policy explains what we collect and why.",
   },
   {
     id: "included",
     question: "What's included in the price?",
     status: "draft",
-    // TODO-VERIFY: confirm pricing and collection-fee model.
-    answer:
-      "The price you see includes the test and the laboratory analysis. Collection options and any related details are shown clearly before you pay.",
+    // TODO-VERIFY pricing and collection-fee model.
+    answer: "The SIGNAL Test price covers the test and the laboratory analysis, review, and your explained results. Any add-ons and collection details are shown clearly before you pay.",
   },
-  { id: "fasting", question: "Do I need to fast before my test?", status: "todo-clinical" },
-  { id: "referral", question: "Do I need a referral from a doctor?", status: "todo-clinical" },
-  { id: "age", question: "Is there a minimum age?", status: "todo-clinical" },
-  { id: "doctor", question: "What happens if something in my results needs attention?", status: "todo-clinical" },
 ];
 
 export const renderableFaqItems = () => faqItems.filter((f): f is FaqItem & { answer: string } => Boolean(f.answer));

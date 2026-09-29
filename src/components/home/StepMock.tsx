@@ -1,5 +1,6 @@
 import { Icon } from "@/components/ui/Icon";
-import { resultsMock, type Step } from "@/config/home";
+import { resultsPreview, type Step } from "@/config/home";
+import { getBiomarker } from "@/config/biomarkers";
 import { media } from "@/config/media";
 import { addonsFor } from "@/config/addons";
 import { signalTest } from "@/config/products";
@@ -47,15 +48,17 @@ function ChooseMock() {
 }
 
 function UnderstandMock() {
+  const m = resultsPreview.markers[0]!;
+  const r = { marker: getBiomarker(m.markerId).name, value: m.current, unit: m.unit, status: m.note };
   return (
     <div className={styles.frame} aria-hidden="true">
       <div className={styles.readout}>
-        <span className={styles.readoutLabel}>{resultsMock.marker}</span>
+        <span className={styles.readoutLabel}>{r.marker}</span>
         <span className={styles.readoutValue}>
-          <span className="num">{resultsMock.value}</span> <small>{resultsMock.unit}</small>
+          <span className="num">{r.value}</span> <small>{r.unit}</small>
         </span>
         <span className={styles.range}><span className={styles.rangeFill} /><span className={styles.rangeDot} /></span>
-        <span className={styles.readoutStatus}><Icon name="check" size={14} /> {resultsMock.status}</span>
+        <span className={styles.readoutStatus}><Icon name="trendUp" size={14} /> {r.status}</span>
       </div>
     </div>
   );

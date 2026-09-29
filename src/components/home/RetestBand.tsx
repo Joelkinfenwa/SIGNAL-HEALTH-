@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { media } from "@/config/media";
-import { activeRetestOffer, bestDiscountBps, formatDiscount } from "@/config/retest-offer";
+import { activeRetestOffer } from "@/config/retest-offer";
 import { formatInterval } from "@/lib/retest/offer";
 import { Photo } from "./Photo";
 import styles from "./RetestBand.module.css";
@@ -20,17 +20,17 @@ export function RetestBand() {
           <Photo asset={media.couple} sizes="(min-width: 76rem) 76rem, 100vw" className={styles.photo} position="center 35%" />
           <div className={styles.copy}>
             <p className={styles.eyebrow}>Retesting</p>
-            <h2 id="retest-title" className={styles.title}>Your health isn&apos;t a snapshot.</h2>
+            <h2 id="retest-title" className={styles.title}>One test is a snapshot. Your SIGNAL changes.</h2>
             <p className={styles.body}>
-              One result shows where you are today. Testing again every {formatInterval(interval)} shows which way you&apos;re
-              heading, and whether the changes you make are working. That&apos;s why retesting is built into SIGNAL, not bolted on.
+              Measure. Understand. Retest. Every new SIGNAL is compared with your last, marker by marker, so you can see what
+              changed over {formatInterval(interval)} and what didn&apos;t.
             </p>
             <ol className={styles.timeline} aria-label={`Example schedule, every ${formatInterval(interval)}`}>
               {points.map((p, i) => (
                 <li key={p} className={i === 0 ? styles.now : undefined}>{p}</li>
               ))}
             </ol>
-            <Link href="/retesting" className={styles.link}>Automatic Retesting: save up to {formatDiscount(bestDiscountBps())} on every test</Link>
+            <Link href="/retesting" className={styles.link}>How retesting works</Link>
           </div>
         </div>
       </Container>

@@ -6,3 +6,8 @@
 .quote { font-size: var(--fs-md); line-height: 1.4; letter-spacing: -0.01em; }
 .attribution { margin-top: var(--s-3); font-size: var(--fs-sm); color: var(--muted); }
 @media (min-width: 52rem) { .reviews { grid-template-columns: repeat(3, 1fr); } }
+.placeholders { display: grid; gap: var(--s-4); }
+.placeholders li { display: grid; place-items: center; min-height: 10rem; border-radius: var(--r-md); border: 2px dashed var(--line); color: var(--muted); font-weight: 700; }
+.ugc { margin-top: var(--s-6); display: grid; gap: var(--s-4); }
+.ugcCard video { width: 100%; aspect-ratio: 9 / 16; border-radius: var(--r-md); background: var(--c-ink); }
+@media (min-width: 52rem) { .placeholders, .ugc { grid-template-columns: repeat(3, 1fr); } }

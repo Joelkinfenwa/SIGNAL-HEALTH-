@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { activeHeadline, hero, heroHeadlines } from "@/config/home";
 import { heroVideo } from "@/config/media";
-import { pickPriced } from "@/lib/home-tokens";
+import { fillHomeTokens, pickPriced } from "@/lib/home-tokens";
 import { SignalCard } from "./SignalCard";
 import styles from "./Hero.module.css";
 
@@ -32,9 +32,9 @@ export function Hero() {
 
       <Container className={styles.inner}>
         <div className={styles.copy}>
-          <p className={styles.kicker}><Icon name="sparkle" size={16} /> {hero.kicker}</p>
+          <p className={styles.kicker}>{hero.eyebrow}</p>
           <h1 id="hero-title" className={styles.title}>{headline.text}</h1>
-          <p className={styles.lede}>{pickPriced(hero.offerLine, hero.offerLineUnpriced)}</p>
+          <p className={styles.lede}>{pickPriced(hero.subheadline, hero.subheadlineUnpriced)}</p>
           <div className={styles.actions}>
             <Button href={hero.primaryCta.href} ctaId="hero_find_my_test" location="hero">
               {hero.primaryCta.label} <Icon name="arrow" size={18} />
@@ -44,7 +44,7 @@ export function Hero() {
             </Button>
           </div>
           <ul className={styles.chips} aria-label="Highlights">
-            {hero.chips.map((c) => <li key={c}><Icon name="check" size={14} /> {c}</li>)}
+            {hero.chips.map((c) => <li key={c}><Icon name="check" size={14} /> {fillHomeTokens(c)}</li>)}
           </ul>
         </div>
         <SignalCard className={styles.signal} />

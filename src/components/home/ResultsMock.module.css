@@ -24,19 +24,8 @@
 .appBar { display: flex; justify-content: space-between; align-items: center; padding-inline: var(--s-1); }
 .appTitle { font-weight: 700; }
 .example { font-size: 0.7rem; font-weight: 700; color: var(--c-stone); background: var(--c-shell); border-radius: var(--r-pill); padding: 2px 8px; }
-.markerCard { display: grid; gap: 6px; padding: var(--s-4); border-radius: 20px; background: #fff; box-shadow: var(--shadow-soft); }
-.markerName { font-size: var(--fs-xs); font-weight: 700; color: var(--c-stone); letter-spacing: 0.04em; text-transform: uppercase; }
-.markerValue { font-size: 2.5rem; font-weight: 700; letter-spacing: -0.045em; line-height: 1; }
-.markerValue small { font-size: var(--fs-sm); font-weight: 600; color: var(--c-stone); letter-spacing: 0; }
-.status { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); font-weight: 700; color: var(--c-sage); }
-.change { display: inline-flex; align-items: center; gap: 6px; margin-top: 4px; padding: 6px 10px; border-radius: var(--r-pill); background: var(--c-brand-soft); color: var(--c-sage); font-size: var(--fs-xs); font-weight: 700; justify-self: start; }
-.explain { display: grid; gap: 6px; padding: var(--s-4); border-radius: 20px; background: var(--c-brand-soft); font-size: var(--fs-sm); line-height: 1.45; }
-.explainLabel { font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-brand); }
-.history { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: var(--s-3); padding-inline: var(--s-2); font-size: 0.75rem; font-weight: 600; color: var(--c-stone); }
-.historyBar { position: relative; height: 6px; border-radius: 999px; background: var(--c-shell); }
-.historyPrev, .historyNow { position: absolute; top: 50%; width: 12px; height: 12px; border-radius: 50%; transform: translate(-50%, -50%); background: var(--c-brand); }
-.historyPrev { left: 28%; opacity: 0.4; }
-.historyNow { left: 72%; background: var(--c-signal); box-shadow: 0 0 0 4px var(--c-signal-soft); }
+.period { padding-inline: var(--s-1); font-size: var(--fs-xs); font-weight: 700; color: var(--c-stone); letter-spacing: 0.04em; text-transform: uppercase; }
+.cards { display: grid; gap: var(--s-3); }
 .caption { font-size: var(--fs-xs); color: var(--muted); }
 
 /* Deliberate motion moment #2: the phone drifts up as it scrolls into view. No JS. */
