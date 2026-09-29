@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { ProductViewTracker } from "@/components/analytics/ProductViewTracker";
 import { Faq } from "@/components/home/Faq";
 import { FinalCta } from "@/components/home/FinalCta";
-import { HowItWorks } from "@/components/home/HowItWorks";
 import { StickyCta } from "@/components/home/StickyCta";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
@@ -12,6 +11,8 @@ import { Included } from "@/components/product/Included";
 import { RetestPlans } from "@/components/retest/RetestPlans";
 import { ProductHero } from "@/components/product/ProductHero";
 import { ProductLearn } from "@/components/product/ProductLearn";
+import { WhySignal } from "@/components/product/WhySignal";
+import { WhyYou } from "@/components/product/WhyYou";
 import { getProduct, productCategoryCount, productMarkerCount, products } from "@/config/products";
 import { formatAUD } from "@/lib/money";
 
@@ -36,16 +37,22 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
   const priceLine = product.priceCents !== null ? formatAUD(product.priceCents) : `${productMarkerCount(product)} markers`;
   return (
     <>
-      <SiteHeader />
+      <SiteHeader overlay />
       <main id="main">
         <ProductHero product={product} />
+        <WhyYou product={product} />
         <ProductLearn product={product} />
+        <WhySignal />
+        <RetestPlans product={product} theme="light" />
         <AddOns product={product} />
         <Included />
-        <RetestPlans product={product} />
-        <HowItWorks />
         <Faq />
-        <FinalCta />
+        <FinalCta
+          title={`Ready to know? Choose ${product.shortName}.`}
+          body={product.question}
+          cta={{ label: `Choose ${product.shortName}`, href: `/checkout/${product.slug}` }}
+          ctaId={`final_choose_${product.slug}`}
+        />
       </main>
       <SiteFooter />
       <StickyCta priceLine={priceLine} href={`/checkout/${product.slug}`} label={`Choose ${product.shortName}`} ctaId={`sticky_choose_${product.slug}`} />

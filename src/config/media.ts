@@ -110,7 +110,16 @@ export const heroVideo: VideoAsset = {
     "8s loop, 16:9, aerial drone footage. A lone runner on an empty winding coastal road, cliffs and open ocean right beside the road, early light, slow forward tracking from behind and above. Muted bone and evergreen tones. No text. The poster image is the same frame as a still.",
 };
 
-/** Product page hero image per tier. Placeholders render as colour panels until photography exists. */
+/** Wide (16:9) product hero backgrounds. Filled in once generated; falls back to the portrait slot. */
+export const productHeroWide: Partial<Record<ProductTier, MediaAsset>> = {
+  core: { src: `${CDN2}/hf_20260929_083019_4d74607b-e127-4874-888c-b2aa0bb32f8c.png`, alt: "A couple walking their dog along a clifftop path above the ocean at sunrise" },
+  complete: { src: `${CDN2}/hf_20260929_083019_0f5eaf04-04de-4fae-b684-df1c250710fd.png`, alt: "A woman standing at the edge of an ocean pool at sunrise, looking out to sea" },
+  hormones: { src: `${CDN2}/hf_20260929_083020_08354ecb-11ab-4215-8679-183a750d0750.png`, alt: "A man on a harbour bench at dawn after a run" },
+  performance: { src: `${CDN2}/hf_20260929_083019_19afa94e-39a5-4ab3-8342-325043fc8c12.png`, alt: "A cyclist cresting a coastal climb in early light" },
+  longevity: { src: `${CDN2}/hf_20260929_083019_df5afcf9-8a02-4c13-8649-050e275d0940.png`, alt: "A couple swimming slow laps in an ocean pool in late afternoon light" },
+};
+
+/** Product page hero image per tier (portrait), used by cards and as the fallback hero. */
 export const productHeroMedia: Record<ProductTier, MediaAsset> = {
   core: media.tubes,
   complete: media.heroSwim,

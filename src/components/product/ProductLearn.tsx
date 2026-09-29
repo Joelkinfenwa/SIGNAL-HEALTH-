@@ -15,8 +15,8 @@ export function ProductLearn({ product }: { product: Product }) {
       <SectionHeader
         id="learn-title"
         eyebrow="What you'll learn"
-        title={`What ${product.shortName} tells you about your body.`}
-        intro="Grouped by the area of health each marker describes, so your results read as understanding, not line items. Every marker comes explained in plain language."
+        title={`What ${product.shortName} tells you.`}
+        intro="Grouped by the area of health each marker describes. Every one comes explained in plain language."
       />
       {product.audienceNote ? <p className={styles.note}><Icon name="sparkle" size={16} /> {product.audienceNote}</p> : null}
       <PanelLearn markers={product.markers} variant="full" highlight={added} />

@@ -111,6 +111,8 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Retesting plans: "Save 15% / 20% on every test", "Priority booking", "One at-home collector visit included each year" | Product pages, /retesting | TODO-VERIFY perks are operationally defined; legal to review recurring-billing disclosure |
 | "Every test includes" six items (accredited lab, collection, clinical review, explanations, tracking, add-ons) | Product and compare pages | TODO-VERIFY each with operations and the lab (`config/offer.ts`, `verified: false`) |
 | Retesting terms ("reminders before each charge", "no fees to change, pause or cancel") | /retesting | TODO(legal) and TODO(product): true once account management ships |
+| Product "promise", "is this you if…" and "what you walk away with" lines | Product pages (`config/products.ts`) | Understanding-only framing; marketing/legal to confirm none reads as symptom-to-diagnosis |
+| "Ten minutes, then get on with your day" (collection duration) | Product page, Why SIGNAL | TODO-VERIFY typical collection time with operations |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
