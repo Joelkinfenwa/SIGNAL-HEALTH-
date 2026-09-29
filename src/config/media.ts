@@ -110,7 +110,8 @@ export const heroVideo: VideoAsset = {
 
 /** THE SIGNAL TEST imagery: hero and supporting shots for /signal and the product card. */
 export const signalMedia = {
-  hero: { src: `${CDN2}/hf_20260929_083019_0f5eaf04-04de-4fae-b684-df1c250710fd.png`, alt: "A woman standing at the edge of an ocean pool at sunrise, looking out to sea" },
+  /** Swapped to the known-clean ocean-pool shot; the previous render carried baked-in text. */
+  hero: media.heroSwim,
   kit: media.tubes,
   collection: media.homeVisit,
   results: media.phone,
