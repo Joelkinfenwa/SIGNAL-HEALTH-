@@ -12,6 +12,8 @@
 import type { ProductTier } from "./products";
 
 const CDN = "https://d8j0ntlcm91z4.cloudfront.net/user_3DvAn6uMIdEntCnt7P71oSjYfdu";
+/* Palette v0.4 (evergreen) re-shoots. */
+const CDN2 = "https://d8j0ntlcm91z4.cloudfront.net/user_3B9OPG5IYGeU6GRFFh6iK7fzCIj";
 
 export interface MediaAsset {
   /** Image URL. Empty string = placeholder (no photography yet). */
@@ -23,7 +25,7 @@ export interface MediaAsset {
 
 export const media = {
   heroSwim: {
-    src: `${CDN}/hf_20260929_053507_8607325b-c3af-4c42-907e-61534a225f19.png`,
+    src: `${CDN2}/hf_20260929_072654_f017808e-03d4-48ea-8d35-9a2989284097.png`,
     alt: "A woman laughing after an early morning swim at an ocean pool, wrapped in a towel",
   },
   homeVisit: {
@@ -35,7 +37,7 @@ export const media = {
     alt: "A couple in their sixties laughing together on a bushwalk",
   },
   tubes: {
-    src: `${CDN}/hf_20260929_053507_fbdf36dd-62e5-4b3d-b17e-24b3e886b05b.png`,
+    src: `${CDN2}/hf_20260929_072633_237539b8-bf3d-4d92-b047-bf48c46dbe97.png`,
     alt: "Three glass sample tubes glowing in morning sunlight",
   },
   phone: {
@@ -61,14 +63,17 @@ export const media = {
     brief: "How it works, step 1. Relaxed, decisive moment. Hands, phone, coffee. Square 1:1.",
   },
   hormonesHero: {
-    src: "",
+    src: `${CDN2}/hf_20260929_072655_e6f5b443-9f39-4774-a156-836b94bbac6a.png`,
     alt: "A man in his forties at the end of a morning run, catching his breath by the water",
-    brief: "Hormones product page. Candid, confident, not gym-bro. Portrait 4:5.",
   },
   performanceHero: {
-    src: "",
+    src: `${CDN2}/hf_20260929_072654_16041d5a-47b4-481e-8629-0fe06846ba3a.png`,
     alt: "A cyclist mid-climb in early light",
-    brief: "Performance product page. Effort and focus, real athlete, not stock. Portrait 4:5.",
+  },
+  /** Alternative hero, palette v0.4. Swap into `heroSwim` to A/B the hero photo. */
+  heroBalcony: {
+    src: `${CDN2}/hf_20260929_072655_fba4e99e-8beb-436d-86c4-57a7b01fbc75.png`,
+    alt: "A man in his early thirties on an apartment balcony at sunrise, holding a coffee",
   },
   longevityHero: {
     src: "",

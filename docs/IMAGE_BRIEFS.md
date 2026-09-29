@@ -22,4 +22,4 @@ Prompts for the Higgsfield `soul_2` model (quality 2k), one per slot in `src/con
 2. Paste each CDN `src` into the matching slot in `src/config/media.ts` (slots with `src: ""` stop rendering the colour panel automatically).
 3. Before launch: move files to `/public` or the final CDN, remove the temporary host from `next.config.ts`, confirm usage rights.
 
-Status 2026-09-29: batch submission blocked by the account's daily generation limit (grace period). Re-run when it resets.
+Status 2026-09-29: generated and wired in: #0 heroSwim, #3 tubes, #8 hormonesHero, #9 performanceHero, #11 heroBalcony (alternative hero). Still to generate once the daily cap resets: #1 homeVisit, #2 couple, #4 phone, #5 nurseArrival, #6 collectionCentre, #7 chooseTest, #10 longevityHero.
