@@ -23,7 +23,7 @@ import { pickPriced } from "@/lib/home-tokens";
 export default function HomePage() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader overlay />
       <main id="main">
         <Hero />
         <ProofStrip />
