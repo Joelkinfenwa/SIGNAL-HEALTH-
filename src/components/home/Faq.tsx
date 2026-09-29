@@ -8,8 +8,9 @@ import styles from "./Faq.module.css";
  * FAQ accordion using native <details>/<summary> (no JS) with FAQPage JSON-LD.
  * Only items with a drafted answer render; clinical questions stay TODO in config.
  */
-export function Faq() {
-  const items = renderableFaqItems().map((f) => ({ ...f, answer: fillHomeTokens(f.answer) }));
+export function Faq({ ids }: { ids?: string[] } = {}) {
+  const items = renderableFaqItems().filter((f) => !ids || ids.includes(f.id)).map((f) => ({ ...f, answer: fillHomeTokens(f.answer) }));
+  if (items.length === 0) return null;
   const schema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",

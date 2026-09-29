@@ -9,7 +9,7 @@ import { productCategories, productMarkerCount, signalTest } from "@/config/prod
 import styles from "./SignalProductCard.module.css";
 
 /** F. The product: one card, one CTA. Feels like buying a product, not filling a pathology form. */
-export function SignalProductCard() {
+export function SignalProductCard({ href = "/signal", location = "product" }: { href?: string; location?: string } = {}) {
   const p = signalTest;
   const areas = productCategories(p);
   const collection = collectionMethods.filter((c) => p.collectionMethodIds.includes(c.id));
@@ -32,7 +32,7 @@ export function SignalProductCard() {
           </ul>
           <div className={styles.buy}>
             <PriceTag priceCents={p.priceCents} size="lg" />
-            <Button href="/signal" ctaId="product_get_my_signal" location="product">Get my SIGNAL <Icon name="arrow" size={18} /></Button>
+            <Button href={href} ctaId="product_get_my_signal" location={location}>Get my SIGNAL <Icon name="arrow" size={18} /></Button>
           </div>
         </div>
       </Container>

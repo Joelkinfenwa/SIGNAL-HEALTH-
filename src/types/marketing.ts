@@ -24,6 +24,7 @@ export interface LandingPage {
   productId: "signal";
   recommendedAddonIds: string[];
   preselectedAddonIds: string[];
+  benefitsTitle?: string;
   benefits: { title: string; body: string }[];
   featuredCategoryIds: string[];
   interestIds?: InterestId[];

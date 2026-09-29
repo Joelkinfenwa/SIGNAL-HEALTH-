@@ -1,0 +1,6 @@
+.grid { display: grid; gap: var(--s-4); }
+.card { display: grid; gap: var(--s-2); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); align-content: start; }
+.icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--c-brand-soft); color: var(--c-brand); margin-bottom: var(--s-1); }
+.title { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+.body { color: var(--muted); font-size: var(--fs-sm); text-wrap: pretty; }
+@media (min-width: 52rem) { .grid { grid-template-columns: repeat(3, 1fr); gap: var(--s-5); } }
