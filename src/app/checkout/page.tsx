@@ -18,7 +18,7 @@ export default function CheckoutPage() {
           <header className={styles.header}>
             <p className={styles.crumbs}><Link href="/signal">The SIGNAL Test</Link><span aria-hidden="true"> / </span><span>Checkout</span></p>
             <h1 className={styles.title}>Almost there.</h1>
-            <p className={styles.intro}>Check your SIGNAL, choose how you&apos;d like to be collected, and pay. About a minute.</p>
+            <p className={styles.intro}>Check your SIGNAL, choose how you&apos;d like to be collected, add your details, and pay. About two minutes.</p>
           </header>
           <Checkout />
         </Container>

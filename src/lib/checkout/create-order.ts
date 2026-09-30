@@ -16,13 +16,26 @@
  *  4. The webhook (payment_intent.succeeded) marks the order paid and emits
  *     the server-authoritative purchase event with event_id = order id.
  */
+import { detailsCopy } from "@/config/checkout-fields";
+import { normaliseCustomer, validateCustomer, type CustomerDetails } from "@/lib/checkout/customer";
 import { quoteConfiguration, type Configuration } from "@/lib/pricing";
 
 export type CreateOrderResult =
+  | { status: "invalid"; errors: Record<string, string> }
   | { status: "not_configured"; reason: string; quote: ReturnType<typeof quoteConfiguration> }
   | { status: "ready"; orderId: string; clientSecret: string; amountCents: number };
 
-export async function createOrder(cfg: Configuration): Promise<CreateOrderResult> {
+/**
+ * `customer` is re-validated here with the same rules as the form; the
+ * normalised record (ISO date of birth, lower-case email, digits-only phone)
+ * is what gets stored against the order and passed to the laboratory. It is
+ * never written to analytics or Stripe metadata.
+ */
+export async function createOrder(cfg: Configuration, customer: CustomerDetails): Promise<CreateOrderResult> {
+  const errors = validateCustomer(customer, { requiresAddress: cfg.collectionMethodId === "mobile" }, detailsCopy.errors);
+  if (Object.keys(errors).length) return { status: "invalid", errors };
+  const record = normaliseCustomer(customer);
+  void record; // TODO(phase 6): persist with the order.
   const quote = quoteConfiguration(cfg);
   if (!quote.pricingComplete) {
     return { status: "not_configured", reason: "Pricing is not set yet.", quote };

@@ -44,6 +44,7 @@ src/
     interests.ts       Customer interests used by the quiz and add-on recommendations
     trust.ts           Trust-bar claims: verified vs placeholder (placeholders never render in production)
     configurator.ts    Configurator copy, heading variants and microcopy (CRO knobs)
+    checkout-fields.ts Checkout "Your details" copy, options, minimum age (lib/checkout/customer.ts validates)
     internal/costs.ts  Pathology COGS — server-only; never imported by UI (test-enforced)
     experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
@@ -126,6 +127,9 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Add-on "For you if…" lines | /signal configurator, homepage add-ons (`config/addons.ts`) | Preference framing only; marketing/legal to confirm none reads as symptom-to-diagnosis |
 | Journey timings ("[Right after payment]", "[X business days after collection]") | /signal, /checkout (`config/journey.ts`) | Placeholders; render on previews only until operations confirm |
 | "Pay by card, Apple Pay or Google Pay. No account needed first." | Journey step 1, checkout | True once Stripe Payment + Express Checkout Elements ship |
+| Checkout details: "Sex … as recorded at birth. Laboratories use it to apply the right reference ranges" | /checkout step 3 (`config/checkout-fields.ts`) | TODO-VERIFY wording with the clinical lead and the laboratory's request requirements |
+| Checkout minimum age (18+) | /checkout step 3 (`MIN_AGE_YEARS`) | DECISION: policy on under-18 self-pay testing; legal to confirm |
+| Checkout consent text (terms, privacy, sharing with laboratory and collection team; marketing opt-in) | /checkout step 3 | TODO(legal): collection notice under the Privacy Act; opt-in wording for the Spam Act |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.

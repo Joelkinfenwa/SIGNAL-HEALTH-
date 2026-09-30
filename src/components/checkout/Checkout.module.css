@@ -54,7 +54,13 @@
 .total { display: flex; justify-content: space-between; align-items: baseline; padding-top: var(--s-3); border-top: 1px solid var(--line); font-weight: 700; }
 .totalValue { font-size: var(--fs-lg); letter-spacing: -0.02em; }
 .payButton { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 54px; width: 100%; padding: 0 var(--s-5); border: 0; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); font-weight: 700; cursor: pointer; }
-.payButton[disabled] { background: var(--panel-soft); color: var(--muted); cursor: not-allowed; }
+.payButton[data-ready="false"] { background: var(--panel-soft); color: var(--muted); }
+.payButton[data-ready="false"]:hover { background: var(--c-brand-soft); color: var(--fg); }
+.checklist { display: grid; gap: 6px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.checklist li { display: flex; align-items: center; gap: 6px; }
+.checklist svg { color: var(--line); flex: none; }
+.checklist .done { color: var(--c-brand); }
+.checklist .done svg { color: var(--c-brand); }
 .payNote { font-size: var(--fs-xs); color: var(--muted); text-align: center; }
 .trust { display: grid; gap: var(--s-2); padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-xs); color: var(--muted); }
 .trust li { display: flex; align-items: center; gap: var(--s-2); }

@@ -33,6 +33,10 @@ export type AnalyticsEvent =
   | { name: "configurator_completed"; props: { product_id: string; addon_ids: string[]; addon_count: number } & Partial<Money> }
   | { name: "checkout_started"; props: { product_id: string; addon_ids: string[] } & Partial<Money> }
   | { name: "collection_method_selected"; props: { product_id: string; method: CollectionMethodId } }
+  /** The details form validated for the first time. Carries no detail values by type. */
+  | { name: "checkout_details_completed"; props: { product_id: string } }
+  /** Pay attempted with invalid details; `field_count` only, never which fields or values. */
+  | { name: "checkout_details_invalid"; props: { field_count: number } }
   | { name: "purchase_completed"; props: { order_id: string; product_id: string; addon_ids: string[] } & Money }
   | { name: "retest_offer_viewed"; props: RetestOfferProps }
   | { name: "retest_offer_accepted"; props: RetestOfferProps & Money }
@@ -74,6 +78,8 @@ export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   product_recommended: { ga4: "product_recommended", meta: null, klaviyo: null, serverAuthoritative: false },
   checkout_started: { ga4: "begin_checkout", meta: "InitiateCheckout", klaviyo: "Started Checkout", serverAuthoritative: false },
   collection_method_selected: { ga4: "collection_method_selected", meta: null, klaviyo: null, serverAuthoritative: false },
+  checkout_details_completed: { ga4: "add_shipping_info", meta: null, klaviyo: null, serverAuthoritative: false },
+  checkout_details_invalid: { ga4: "checkout_details_invalid", meta: null, klaviyo: null, serverAuthoritative: false },
   purchase_completed: { ga4: "purchase", meta: "Purchase", klaviyo: "Placed Order", serverAuthoritative: true },
   retest_offer_viewed: { ga4: "retest_offer_view", meta: null, klaviyo: null, serverAuthoritative: false },
   retest_offer_accepted: { ga4: "retest_offer_accept", meta: "Subscribe", klaviyo: "Started Automatic Retesting", serverAuthoritative: true },

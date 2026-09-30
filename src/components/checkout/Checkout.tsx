@@ -1,30 +1,45 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { NextSteps } from "@/components/journey/NextSteps";
+import { CustomerDetails } from "@/components/checkout/CustomerDetails";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { addonNewMarkers, sellableAddonsFor } from "@/config/addons";
+import { detailsCopy } from "@/config/checkout-fields";
 import { getBiomarker } from "@/config/biomarkers";
 import { collectionMethods, type CollectionMethodId } from "@/config/collection";
 import { signalTest } from "@/config/products";
 import { visibleTrustClaims } from "@/config/trust";
 import { track } from "@/lib/analytics/track";
+import { emptyCustomer, validateCustomer, type CustomerDetails as Details, type CustomerField } from "@/lib/checkout/customer";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
 import { defaultConfiguration, parseConfiguration, quoteConfiguration, serializeConfiguration, toggleAddon, type Configuration } from "@/lib/pricing";
 import styles from "./Checkout.module.css";
 
+const DETAILS_KEY = "sig_checkout_details";
+
 /**
- * Checkout: order summary you can still edit, collection choice, what happens
- * next, then payment. Payment is a Stripe boundary (lib/checkout/create-order);
- * until it is connected the pay button says so honestly instead of pretending.
+ * Checkout: order summary you can still edit, collection choice, your
+ * details, what happens next, then payment. Payment is a Stripe boundary
+ * (lib/checkout/create-order); until it is connected the pay button says so
+ * honestly instead of pretending.
+ *
+ * Details persist in sessionStorage only (tab-scoped, cleared on close) so a
+ * reload or a trip back to /signal doesn't lose them. They never enter an
+ * analytics event.
  */
 export function Checkout() {
   const [cfg, setCfg] = useState<Configuration>(() => defaultConfiguration(signalTest));
   const [hydrated, setHydrated] = useState(false);
   const [addonsOpen, setAddonsOpen] = useState(false);
+  const [customer, setCustomer] = useState<Details>(emptyCustomer);
+  const [touched, setTouched] = useState<Partial<Record<CustomerField, boolean>>>({});
+  const [payMessage, setPayMessage] = useState<string | null>(null);
+  const detailsRef = useRef<HTMLElement>(null);
+  const detailsDone = useRef(false);
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
   const options = sellableAddonsFor(signalTest);
@@ -35,9 +50,47 @@ export function Checkout() {
     const parsed = parseConfiguration(new URLSearchParams(window.location.search), signalTest);
     setCfg(parsed);
     setAddonsOpen(parsed.addonIds.length === 0);
+    try {
+      const saved = sessionStorage.getItem(DETAILS_KEY);
+      if (saved) setCustomer({ ...emptyCustomer(), ...(JSON.parse(saved) as Partial<Details>) });
+    } catch { /* private mode or blocked storage: the form still works */ }
     setHydrated(true);
     track({ name: "checkout_started", props: { product_id: signalTest.id, addon_ids: parsed.addonIds } });
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    try { sessionStorage.setItem(DETAILS_KEY, JSON.stringify(customer)); } catch { /* ignore */ }
+  }, [customer, hydrated]);
+
+  const requiresAddress = cfg.collectionMethodId === "mobile";
+  const errors = useMemo(() => validateCustomer(customer, { requiresAddress }, detailsCopy.errors), [customer, requiresAddress]);
+  const errorCount = Object.keys(errors).length;
+  const detailsValid = errorCount === 0;
+
+  useEffect(() => {
+    if (detailsValid && hydrated && !detailsDone.current) {
+      detailsDone.current = true;
+      track({ name: "checkout_details_completed", props: { product_id: signalTest.id } });
+    }
+  }, [detailsValid, hydrated]);
+
+  const ALL_FIELDS = Object.keys(emptyCustomer()) as CustomerField[];
+  function attemptPay() {
+    if (!cfg.collectionMethodId) { setPayMessage("Choose a collection option first."); return; }
+    if (!detailsValid) {
+      setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
+      setPayMessage(detailsCopy.summaryError(errorCount));
+      track({ name: "checkout_details_invalid", props: { field_count: errorCount } });
+      requestAnimationFrame(() => {
+        const first = detailsRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [role='alert']");
+        first?.scrollIntoView({ behavior: "smooth", block: "center" });
+        (detailsRef.current?.querySelector<HTMLElement>("[aria-invalid='true']") ?? first)?.focus?.();
+      });
+      return;
+    }
+    setPayMessage(paymentsLive ? null : "Your details are complete. Payments open at launch.");
+  }
 
   useEffect(() => {
     if (!hydrated) return;
@@ -55,7 +108,7 @@ export function Checkout() {
     track({ name: "collection_method_selected", props: { product_id: signalTest.id, method: id } });
   }
 
-  const canPay = paymentsLive && quote.pricingComplete && Boolean(cfg.collectionMethodId);
+  const canPay = paymentsLive && quote.pricingComplete && Boolean(cfg.collectionMethodId) && detailsValid;
 
   return (
     <div className={styles.wrap}>
@@ -122,8 +175,20 @@ export function Checkout() {
           <p className={styles.hint}>You pick the exact time and place after payment. No referral paperwork to organise.</p>
         </section>
 
+        <section ref={detailsRef} className={styles.block} aria-labelledby="details-title">
+          <h2 id="details-title" className={styles.blockTitle}><span className={styles.n}>3</span> {detailsCopy.title}</h2>
+          <CustomerDetails
+            value={customer}
+            errors={errors}
+            touched={touched}
+            requiresAddress={requiresAddress}
+            onChange={(patch) => { setCustomer((c) => ({ ...c, ...patch })); setPayMessage(null); }}
+            onBlur={(f) => setTouched((t) => (t[f] ? t : { ...t, [f]: true }))}
+          />
+        </section>
+
         <section className={styles.block} aria-labelledby="next-title-inline">
-          <h2 id="next-title-inline" className={styles.blockTitle}><span className={styles.n}>3</span> What happens next</h2>
+          <h2 id="next-title-inline" className={styles.blockTitle}><span className={styles.n}>4</span> What happens next</h2>
           <NextSteps bare current="pay" only={["pay", "book", "collect", "results"]} />
         </section>
       </div>
@@ -136,13 +201,17 @@ export function Checkout() {
           ))}
         </ul>
         <div className={styles.total}><span>Total</span><span className={cx(styles.totalValue, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : "Pricing coming soon"}</span></div>
-        <button type="button" className={styles.payButton} disabled={!canPay} aria-disabled={!canPay}>
+        <ul className={styles.checklist} aria-label="Before you pay">
+          <li className={cfg.collectionMethodId ? styles.done : undefined}><Icon name="check" size={14} /> Collection {cfg.collectionMethodId ? "chosen" : "not chosen yet"}</li>
+          <li className={detailsValid ? styles.done : undefined}><Icon name="check" size={14} /> Details {detailsValid ? "complete" : "to complete"}</li>
+        </ul>
+        <button type="button" className={styles.payButton} data-ready={canPay ? "true" : "false"} onClick={attemptPay}>
           {paymentsLive ? "Pay securely" : "Payments open at launch"} <Icon name="arrow" size={18} />
         </button>
-        <p className={styles.payNote}>
-          {paymentsLive
+        <p className={styles.payNote} aria-live="polite">
+          {payMessage ?? (paymentsLive
             ? "Card, Apple Pay and Google Pay. Secured by Stripe."
-            : cfg.collectionMethodId ? "Card, Apple Pay and Google Pay will be available here." : "Choose a collection option to continue."}
+            : cfg.collectionMethodId ? "Card, Apple Pay and Google Pay will be available here." : "Choose a collection option to continue.")}
         </p>
         {trust.length ? (
           <ul className={styles.trust}>
@@ -158,7 +227,7 @@ export function Checkout() {
             <span className={styles.barLabel}>Total</span>
             <span className={cx(styles.barPrice, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : "Pricing coming soon"}</span>
           </span>
-          <button type="button" className={cx(styles.payButton, styles.barButton)} disabled={!canPay} aria-disabled={!canPay}>{paymentsLive ? "Pay" : "Opens at launch"}</button>
+          <button type="button" className={cx(styles.payButton, styles.barButton)} data-ready={canPay ? "true" : "false"} onClick={attemptPay}>{paymentsLive ? "Pay" : "Opens at launch"}</button>
         </div>
       </div>
     </div>
