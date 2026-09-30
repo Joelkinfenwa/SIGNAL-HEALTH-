@@ -26,7 +26,8 @@ import { LandingPageView } from "./LandingPageView";
  * and which FAQs show. A new angle is a new config file, never new JSX.
  */
 export function LandingPage({ page }: { page: LandingPageConfig }) {
-  const signalHref = `/signal${serializeConfiguration({ productId: page.productId, addonIds: page.preselectedAddonIds })}`;
+  // Preselected add-ons land in the basket (?addons=); recommended-only ones are highlighted (?rec=).
+  const signalHref = `/signal${serializeConfiguration({ productId: page.productId, addonIds: page.preselectedAddonIds }, { recommendedAddonIds: page.recommendedAddonIds })}`;
   const primary = { label: page.cta.primary.label, href: page.cta.primary.href || signalHref };
   const sections = page.sections.map((s) => {
     switch (s) {

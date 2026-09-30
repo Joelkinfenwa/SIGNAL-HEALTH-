@@ -26,7 +26,7 @@ Rendering strategy:
 - Checkout and post-purchase: **dynamic**, server-rendered, no caching.
 - Account: dynamic, authenticated.
 
-Configuration over code: products, the retest offer, trust claims and brand endorsement live in `src/config/`. In phase 2, products and offers move to the database (offers must be versioned — see §7) and marketing copy can move to a CMS if the team needs to edit without deploys.
+Configuration over code: the product (`products.ts`: base markers, add-on order), add-ons (`addons.ts`: markers, copy, badges, `enabled`/`launchEnabled`), configurator copy (`configurator.ts`), the retest offer, trust claims and brand endorsement live in `src/config/`. Internal cost lives in `src/config/internal/costs.ts` behind `server-only` and is never bundled to the browser. See docs/PANELS.md for the product architecture. In phase 2, products and offers move to the database (offers must be versioned — see §7) and marketing copy can move to a CMS if the team needs to edit without deploys.
 
 ---
 

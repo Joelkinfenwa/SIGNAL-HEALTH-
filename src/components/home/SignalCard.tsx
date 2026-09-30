@@ -8,9 +8,9 @@ import styles from "./SignalCard.module.css";
  * Illustrative only: no values, ranges or outcomes.
  */
 const ROWS: { label: string; points: [number, number, number] }[] = [
-  { label: "Vitamin D", points: [0.2, 0.55, 0.78] },
   { label: "Ferritin", points: [0.3, 0.42, 0.66] },
-  { label: "HbA1c", points: [0.72, 0.58, 0.5] },
+  { label: "LDL", points: [0.72, 0.55, 0.42] },
+  { label: "HbA1c", points: [0.7, 0.58, 0.5] },
 ];
 const W = 120;
 const H = 28;

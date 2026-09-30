@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { NextSteps } from "@/components/journey/NextSteps";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
-import { addonNewMarkers, addonsFor } from "@/config/addons";
+import { addonNewMarkers, sellableAddonsFor } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { collectionMethods, type CollectionMethodId } from "@/config/collection";
 import { signalTest } from "@/config/products";
@@ -27,7 +27,7 @@ export function Checkout() {
   const [addonsOpen, setAddonsOpen] = useState(false);
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
-  const options = addonsFor(signalTest);
+  const options = sellableAddonsFor(signalTest);
   const trust = visibleTrustClaims().filter((c) => c.status === "verified").slice(0, 3);
   const paymentsLive = false; // flipped by phase 6 when createOrder returns "ready"
 
@@ -88,8 +88,8 @@ export function Checkout() {
                   <li key={a.id} className={cx(styles.addonRow, on && styles.addonRowOn)}>
                     <span className={styles.addonText}>
                       <span className={styles.addonName}>{a.name} <span className={styles.addonPrice}>{a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "Price TBC"}</span></span>
-                      <span className={styles.addonFor}>{a.forWho}</span>
-                      <span className={styles.addonMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
+                      <span className={styles.addonFor}>{a.shortDescription}</span>
+                      <span className={styles.addonMarkers}><span className="num">+{addonNewMarkers(a, signalTest).length}</span> · {addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
                     </span>
                     <button type="button" className={cx(styles.addBtn, on && styles.addBtnOn)} aria-pressed={on} onClick={() => toggle(a.id)}>
                       {on ? <><Icon name="check" size={16} /> Added</> : <><Icon name="plus" size={16} /> Add</>}

@@ -1,53 +1,54 @@
-# SIGNAL panels — product brief (working spec)
+# SIGNAL product architecture — one test, five add-ons (working spec)
 
-Source of truth for what each test measures is `src/config/products.ts` (marker ids) and `src/config/biomarkers.ts` (the catalogue). This document records the intent and open decisions behind those lists.
+Source of truth: `src/config/products.ts` (base marker ids), `src/config/addons.ts` (add-ons), `src/config/biomarkers.ts` (catalogue). This document records the intent and open decisions behind those lists. The earlier five-panel model (Core / Complete / Hormones / …) is retired.
 
-**Principle: sell what they're learning, not "47 biomarkers".** Every presentation groups markers under the area of health they describe (Heart, Hormones, Metabolic, Thyroid, Nutrients, Iron, Liver, Kidneys, Inflammation, Blood, Recovery).
+**Principle: SIGNAL = breadth, add-ons = depth.** The base test must feel complete on its own. Add-ons are optional depth, never essentials held back.
 
-**Principle: derived insights are free.** Where the inputs are already measured, we calculate: non-HDL-C, eGFR, transferrin saturation, calculated free testosterone, HOMA-IR, ApoB:ApoA1, TG:HDL. They are tagged "calculated" in the UI and never sold as extra assays.
+**Principle: sell what they're learning, not "N biomarkers".** Every presentation groups markers under the area of health they describe.
 
-**Pricing:** not set. All `priceCents` are `null`; the UI renders "Pricing coming soon" until they are.
+**Principle: derived insights are free.** Where the inputs are measured we calculate (non-HDL-C, eGFR, TSAT, free testosterone, ApoB:ApoA1). Tagged "calculated" in the UI, never sold as extra assays.
 
-## 1. Core — a genuinely useful baseline, not a crippled upsell
-FBC · fasting glucose, HbA1c · total cholesterol, LDL-C, HDL-C, triglycerides, non-HDL-C (calc) · ALT, AST, ALP, GGT, bilirubin, albumin, total protein · creatinine, eGFR, urea, sodium, potassium, chloride, bicarbonate · ferritin, iron, transferrin, TSAT (calc) · TSH · B12, folate, vitamin D · CRP.
-- **Under consideration:** hs-CRP instead of CRP if commercially sensible.
+## The SIGNAL Test (base) — 10 areas, 32 markers
+| Area | Markers |
+|---|---|
+| Heart (5) | Total cholesterol, LDL-C, HDL-C, triglycerides, non-HDL-C (calc) |
+| Metabolic (2) | Fasting glucose, HbA1c |
+| Thyroid (1) | TSH |
+| Iron (4) | Ferritin, iron, transferrin, TSAT (calc) |
+| Inflammation (1) | hs-CRP (`BASE_INFLAMMATION_MARKER` flips to CRP) |
+| Liver (7) | ALT, AST, ALP, GGT, bilirubin, albumin, total protein |
+| Kidneys (3) | Creatinine, eGFR (calc), urea |
+| Electrolytes (4) | Sodium, potassium, chloride, bicarbonate |
+| Minerals (4) | Calcium, magnesium, phosphate, uric acid |
+| Blood (1) | Full blood count |
 
-## 2. Complete — the hero
-Everything in Core, plus: ApoB, ApoA1, Lp(a), ApoB:ApoA1 (calc), TG:HDL (calc) · FT4, FT3 · testosterone, SHBG, free testosterone (calc), LH, FSH, oestradiol, prolactin · fasting insulin, HOMA-IR (calc) · magnesium, calcium, phosphate, zinc · hs-CRP (replaces CRP).
-- **Under consideration:** DHEA-S (cost / clinical rationale).
-- Must feel materially better than Core, not "Core + four random tests".
+**DECISION (locked):** hormones (testosterone, SHBG, free T) and vitamins (D, B12, folate) are NOT in the base for COGS reasons. Do not add them back. They are the first two add-ons.
 
-## 3. Hormones — acquisition panel
-Initial version is male-oriented; **DECISION:** sex-specific variants later rather than one panel for everyone.
-Testosterone, SHBG, free testosterone (calc), LH, FSH, oestradiol, prolactin, DHEA-S · TSH, FT4 · FBC, ferritin, vitamin D, HbA1c · liver panel.
-- **Under consideration:** PSA, only where age / use case supports it. Never by default.
-- **Marketing guardrail:** measure and understand hormone markers. Never "find out if you need TRT" or any treatment framing.
+## Add-ons (display order = `signalTest.addonIds`, CRO-testable)
+| Add-on | Markers | Future | Flags |
+|---|---|---|---|
+| Hormones+ | Total testosterone, SHBG, free testosterone (calc), LH, FSH, oestradiol, prolactin | DHEA-S | enabled, launch |
+| Nutrients+ | Vitamin D, B12, folate | Zinc | enabled, launch |
+| Heart+ | ApoB, ApoA1, Lp(a), ApoB:ApoA1 (calc) | | enabled, launch, badge "Advanced" |
+| Thyroid+ | Free T4, free T3, TPO antibodies, thyroglobulin antibodies | | enabled, launch |
+| Performance+ | CK, cortisol, IGF-1 | | enabled, launch (**provisional**: set `launchEnabled: false` to withdraw) |
+| PSA | PSA | | `enabled: false` — never offered by default |
 
-## 4. Performance — for people who train
-FBC · full iron studies · CK · glucose, HbA1c, fasting insulin, HOMA-IR (calc) · kidney/electrolytes · liver · hs-CRP · testosterone, SHBG, free testosterone (calc), cortisol · TSH, FT4, FT3 · vitamin D, B12, folate, magnesium, zinc.
-- **Under consideration:** oestradiol (economics), IGF-1 (premium differentiator if cost/value stacks up).
-- Answers: "Is there anything measurable holding back my performance, energy or recovery?"
+Metabolic+ (insulin, HOMA-IR) is removed. Insulin and HOMA-IR stay in the catalogue, unsold.
 
-## 5. Longevity — the expensive, differentiated cardiometabolic markers
-Core foundation (with hs-CRP), plus: ApoB, ApoA1, Lp(a), ApoB:ApoA1 (calc), TG:HDL (calc) · fasting insulin, HOMA-IR (calc) · uric acid.
+Flags: `enabled: false` = does not exist for customers. `launchEnabled: false` = shown as a disabled "Coming soon" card (`SHOW_UNLAUNCHED_ADDONS`), never selectable, priced, quoted, deep-linked or recommended.
 
-## Add-ons (`src/config/addons.ts`)
-Keep niche/expensive assays out of base-panel COGS; let customers customise. An add-on is offered on a product only when it adds at least one new marker.
+## Internal cost
+Pathology COGS lives only in `src/config/internal/costs.ts` (`import "server-only"`); a test fails the build if any component or page imports it, and the add-on records carry no cost field. Never surface it in UI, analytics or API responses.
 
-| Add-on | Markers | Status |
-|---|---|---|
-| Advanced Heart | ApoB, ApoA1, Lp(a) | planned |
-| Advanced Hormones | testosterone, SHBG, free T (calc), LH, FSH, oestradiol, prolactin, DHEA-S | planned |
-| Thyroid+ | FT3, FT4, thyroid antibodies | planned |
-| Nutrients+ | zinc, magnesium, vitamin D, B12, folate | planned |
-| Iron+ | ferritin, iron, transferrin, TSAT | planned |
-| Performance+ | CK, cortisol, IGF-1 | planned |
-| PSA | PSA | under review (age / use case) |
+## Recommended vs preselected
+Landing pages carry `recommendedAddonIds` (highlighted "Recommended for you", `?rec=`) and `preselectedAddonIds` (in the basket, `?addons=`). The quiz outputs a configuration (preselected). Current pages: performance → Hormones+ & Nutrients+ (preselected); longevity → Heart+ (recommended); hormones → Hormones+ (preselected); runners → Nutrients+ & Hormones+ (recommended); supplements → Nutrients+ (preselected).
 
-Premium individual markers may follow if 4Cyte / ACL pricing supports them.
+## Pricing
+Not set. All `priceCents` are `null`; the UI renders "Pricing coming soon" / "Price TBC" until they are. Set them in `products.ts` and `addons.ts` only.
 
-## Open items
-- **TODO(pricing):** all five panels and all add-ons.
-- **TODO-VERIFY:** assay availability and naming with the lab partner; which "calculated" markers the lab reports vs. we compute.
-- **DECISION:** hs-CRP in Core; DHEA-S in Complete; oestradiol and IGF-1 in Performance; PSA add-on rules; female hormone variant.
-- **Clinical review:** every marker `about` line in `src/config/biomarkers.ts` (measurement language only, no conditions).
+## Open decisions / TODO-VERIFY
+- Assay availability for every marker with the laboratory partner (especially Lp(a), IGF-1, cortisol timing, antibodies).
+- Performance+ go / no-go.
+- Whether ApoB:ApoA1 is reported by the lab or calculated by us.
+- Per-add-on COGS from the lab quote.

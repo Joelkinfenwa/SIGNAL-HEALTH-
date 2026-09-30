@@ -43,6 +43,8 @@ src/
     collection.ts      Collection methods, availability notes, price delta
     interests.ts       Customer interests used by the quiz and add-on recommendations
     trust.ts           Trust-bar claims: verified vs placeholder (placeholders never render in production)
+    configurator.ts    Configurator copy, heading variants and microcopy (CRO knobs)
+    internal/costs.ts  Pathology COGS — server-only; never imported by UI (test-enforced)
     experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
     brand.ts           Brand lockup, endorsement prominence, trust claims
@@ -101,7 +103,9 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "Everything in Core, plus N more" | Product pages | Derived from marker lists |
 | Add-ons "coming; availability and pricing confirmed at launch" | Product and compare pages | TODO(pricing) and TODO-VERIFY assay availability |
 | "Pricing coming soon" | Everywhere a price would show | TODO(pricing): set `priceCents` per product and add-on |
-| Hormones panel "designed around male hormone markers; versions for women are planned" | Hormones product page | DECISION: confirm roadmap before publishing |
+| Add-on badges ("Advanced", "For performance"; "Popular" reserved) | /signal configurator (`config/addons.ts` `badge`) | Descriptive only; "Popular" must not be set until sales data supports it |
+| Add-on long descriptions ("a marker set largely by your genes", "the three nutrients people most often supplement") | /signal configurator "What you get" (`config/addons.ts`) | Measurement/preference framing; clinical and legal to confirm wording |
+| Homepage areas tagged "add-on" (Hormones, Nutrients, Recovery) | Homepage "What SIGNAL measures" | Derived from add-on config; makes clear these are not in the base test |
 | "You can change the date or cancel from your account at any time" | FAQ (Automatic Retesting) | True once account/retesting management ships |
 | "Recommended" / "recommended starting point" (not "most popular") | Tests section | Change only when sales data supports it |
 | "Collector visit booked, at home" pill | Hero | Illustrative UI; TODO-VERIFY home visits are offered in launch areas |
@@ -111,7 +115,7 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "Most results are ready within a few business days of collection" | FAQ | TODO-VERIFY turnaround with the laboratory |
 | "Qualified collectors from Express Pathology" | FAQ, proof strip | Confirm collector qualifications wording |
 | "Your results are held in a separate clinical system… never shared with advertising platforms" | FAQ (privacy) | True by architecture; legal to confirm wording |
-| Results mock (Vitamin D 78 nmol/L, "+24 since your last test") | Results section, How it works step 3 | Illustrative, labelled "Example"; clinical lead to confirm the plain-language wording |
+| Results mock (LDL 2.9 mmol/L, ferritin, HbA1c, "Lower than last time") | Results section, How it works step 3 | Illustrative, labelled "Example", base-test markers only; clinical lead to confirm the plain-language wording |
 | Quiz result copy ("You train seriously…", "You're thinking long term…") | `config/quiz.ts` | Recommendation framing only, not health advice; marketing/legal to confirm |
 | "Every test can be collected either way. You choose when you book." | Quiz, collection question | TODO-VERIFY against launch coverage |
 | Retesting plans: "Save 15% / 20% on every test", "Priority booking", "One at-home collector visit included each year" | Product pages, /retesting | TODO-VERIFY perks are operationally defined; legal to review recurring-billing disclosure |

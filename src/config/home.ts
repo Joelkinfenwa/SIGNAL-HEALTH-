@@ -75,7 +75,7 @@ export const resultsPreview: { previousLabel: string; currentLabel: string; mark
   previousLabel: "March",
   currentLabel: "September",
   markers: [
-    { markerId: "vit_d", unit: "nmol/L", previous: "54", current: "78", direction: "up", note: "Higher than last time." },
+    { markerId: "ldl", unit: "mmol/L", previous: "3.4", current: "2.9", direction: "down", note: "Lower than last time." },
     { markerId: "ferritin", unit: "µg/L", previous: "38", current: "61", direction: "up", note: "Iron stores have risen." },
     { markerId: "hba1c", unit: "%", previous: "5.6", current: "5.4", direction: "down", note: "Slightly lower than last time." },
   ],
