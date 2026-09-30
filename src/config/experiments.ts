@@ -20,6 +20,8 @@ export interface Experiment {
 export const experiments: Experiment[] = [
   // Example shape; inactive until the homepage has two headlines worth testing.
   { id: "home_headline", hypothesis: "'Stop guessing. Start measuring.' beats 'Know what your body is telling you.' on Get my SIGNAL clicks.", variants: [{ id: "a", weight: 1 }, { id: "b", weight: 1 }], active: false },
+  // Variant ids match config/configurator.ts heading keys; the configurator reads the assigned variant from analytics context.
+  { id: "configurator_heading", hypothesis: "'Personalise your SIGNAL' beats 'Go deeper' on add-on attach rate and configurator_completed.", variants: [{ id: "personalise", weight: 1 }, { id: "deeper", weight: 1 }], active: false },
 ];
 
 export const activeExperiments = () => experiments.filter((e) => e.active);

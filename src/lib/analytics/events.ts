@@ -25,8 +25,12 @@ export type AnalyticsEvent =
   | { name: "quiz_completed"; props: { quiz_version: string } }
   | { name: "product_recommended"; props: { quiz_version: string; product_id: string; addon_ids: string[] } }
   | { name: "configurator_started"; props: { product_id: string } }
+  /** An add-on's details were expanded (interest, not selection). */
+  | { name: "addon_viewed"; props: { addon_id: string } }
   | { name: "addon_selected"; props: { addon_id: string } }
   | { name: "addon_removed"; props: { addon_id: string } }
+  /** Continue pressed with a configuration; the basket as it leaves the configurator. */
+  | { name: "configurator_completed"; props: { product_id: string; addon_ids: string[]; addon_count: number } & Partial<Money> }
   | { name: "checkout_started"; props: { product_id: string; addon_ids: string[] } & Partial<Money> }
   | { name: "collection_method_selected"; props: { product_id: string; method: CollectionMethodId } }
   | { name: "purchase_completed"; props: { order_id: string; product_id: string; addon_ids: string[] } & Money }
@@ -59,10 +63,12 @@ export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   landing_page_viewed: { ga4: "landing_page_view", meta: null, klaviyo: null, serverAuthoritative: false },
   biomarkers_viewed: { ga4: "view_biomarkers", meta: null, klaviyo: null, serverAuthoritative: false },
   configurator_started: { ga4: "configurator_start", meta: null, klaviyo: null, serverAuthoritative: false },
+  addon_viewed: { ga4: "view_addon", meta: null, klaviyo: null, serverAuthoritative: false },
   addon_selected: { ga4: "addon_select", meta: null, klaviyo: null, serverAuthoritative: false },
   addon_removed: { ga4: "addon_remove", meta: null, klaviyo: null, serverAuthoritative: false },
+  configurator_completed: { ga4: "configurator_complete", meta: null, klaviyo: null, serverAuthoritative: false },
   cta_clicked: { ga4: "cta_click", meta: null, klaviyo: null, serverAuthoritative: false },
-  product_viewed: { ga4: "view_item", meta: "ViewContent", klaviyo: "Viewed Product", serverAuthoritative: false },
+  product_viewed: { ga4: "view_item", meta: "ViewContent", klaviyo: "Viewed Product", serverAuthoritative: false }, // brief: "view_signal"; GA4 recommended name kept for ecommerce reports
   quiz_started: { ga4: "quiz_start", meta: null, klaviyo: null, serverAuthoritative: false },
   quiz_completed: { ga4: "quiz_complete", meta: null, klaviyo: null, serverAuthoritative: false },
   product_recommended: { ga4: "product_recommended", meta: null, klaviyo: null, serverAuthoritative: false },

@@ -1,5 +1,5 @@
 import { Section, SectionHeader } from "@/components/ui/Section";
-import { addonNewMarkers, addonsFor } from "@/config/addons";
+import { addonBadgeLabels, addonNewMarkers, displayableAddonsFor, isSellable } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import styles from "./AddOns.module.css";
 
@@ -8,7 +8,7 @@ import styles from "./AddOns.module.css";
  * the configurator on /signal does the selecting.
  */
 export function AddOns({ theme = "shell", highlightIds = [] }: { theme?: "light" | "shell"; highlightIds?: string[] }) {
-  const list = addonsFor();
+  const list = displayableAddonsFor();
   const hl = new Set(highlightIds);
   if (list.length === 0) return null;
   return (
@@ -24,10 +24,10 @@ export function AddOns({ theme = "shell", highlightIds = [] }: { theme?: "light"
           <li key={a.id} className={hl.has(a.id) ? `${styles.card} ${styles.highlight}` : styles.card}>
             <div className={styles.head}>
               <h3 className={styles.name}>{a.name}</h3>
-              {hl.has(a.id) ? <span className={styles.rec}>Recommended</span> : a.status !== "live" ? <span className={styles.soon}>Coming</span> : null}
+              {hl.has(a.id) ? <span className={styles.rec}>Recommended</span> : !isSellable(a) ? <span className={styles.soon}>Coming</span> : a.badge ? <span className={styles.soon}>{addonBadgeLabels[a.badge]}</span> : null}
             </div>
             <p className={styles.summary}><strong>For you if</strong> {a.forWho}</p>
-            <p className={styles.summary}>{a.benefit}</p>
+            <p className={styles.summary}>{a.shortDescription}</p>
             <ul className={styles.markers}>
               {addonNewMarkers(a).map((id) => { const m = getBiomarker(id); return <li key={id}>{m.short ?? m.name}</li>; })}
             </ul>
