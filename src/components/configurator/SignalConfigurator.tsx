@@ -132,31 +132,32 @@ export function SignalConfigurator() {
               return (
                 <li key={a.id} id={a.slug}>
                   <article className={cx(styles.card, on && styles.cardOn, rec && styles.cardRec, !sellable && styles.cardOff)} aria-labelledby={`${a.slug}-name`}>
-                    <button
-                      type="button"
-                      className={styles.toggle}
-                      aria-pressed={on}
-                      aria-disabled={!sellable}
-                      aria-describedby={`${a.slug}-desc`}
-                      onClick={() => toggle(a)}
-                    >
-                      <span className={styles.check} aria-hidden="true">{on ? <Icon name="check" size={16} /> : <Icon name="plus" size={16} />}</span>
-                      <span className={styles.cardText}>
-                        <span className={styles.cardHead}>
-                          <span id={`${a.slug}-name`} className={styles.cardName}>{a.name}</span>
-                          {badge ? <span className={cx(styles.badge, rec && styles.badgeRec, !sellable && styles.badgeOff)}>{badge}</span> : null}
-                          <span className={styles.cardPrice}>{!sellable ? "" : a.priceCents !== null ? <span className="num">+{formatAUD(a.priceCents)}</span> : copy.priceTbc}</span>
-                        </span>
-                        <span id={`${a.slug}-desc`} className={styles.cardShort}>{a.shortDescription}</span>
-                        <span className={styles.cardMeta}>
-                          <span className={cx(styles.markersChip, "num")}>{copy.markersUnit(markers.length)}</span>
-                          <span className={styles.markersList}>{markers.map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
-                        </span>
-                        <span className={cx(styles.state, on && styles.stateOn)} aria-live="polite">
-                          {on ? <><Icon name="check" size={14} /> {copy.addedLabel}</> : !sellable ? copy.comingHint : copy.addLabel}
-                        </span>
-                      </span>
-                    </button>
+                    <div className={styles.cardBody}>
+                      <div className={styles.cardHead}>
+                        <h3 id={`${a.slug}-name`} className={styles.cardName}>{a.name}</h3>
+                        {badge ? <span className={cx(styles.badge, rec && styles.badgeRec, !sellable && styles.badgeOff)}>{badge}</span> : null}
+                        <span className={styles.cardPrice}>{!sellable ? "" : a.priceCents !== null ? <span className="num">+{formatAUD(a.priceCents)}</span> : copy.priceTbc}</span>
+                      </div>
+                      <p id={`${a.slug}-desc`} className={styles.cardShort}>{a.shortDescription}</p>
+                      <p className={styles.markersLabel}>{copy.markersLabel(markers.length)}</p>
+                      <ul className={styles.markerChips} aria-label={`Markers in ${a.name}`}>
+                        {markers.map((id) => { const m = getBiomarker(id); return <li key={id} className={cx(styles.chip, m.derivedFrom && styles.chipDerived)}>{m.short ?? m.name}</li>; })}
+                      </ul>
+                      <div className={styles.actions}>
+                        <button
+                          type="button"
+                          className={cx(styles.cta, on && styles.ctaOn)}
+                          aria-pressed={on}
+                          aria-disabled={!sellable}
+                          disabled={!sellable}
+                          aria-describedby={`${a.slug}-desc`}
+                          onClick={() => toggle(a)}
+                        >
+                          {on ? <><Icon name="check" size={16} /> {copy.addedLabel}</> : !sellable ? copy.comingLabel : <><Icon name="plus" size={16} /> {copy.addLabel}</>}
+                        </button>
+                        <span className={styles.actionHint} aria-live="polite">{on ? copy.removeHint : !sellable ? copy.comingHint : ""}</span>
+                      </div>
+                    </div>
                     <details className={styles.details} onToggle={(e) => viewed(a, (e.currentTarget as HTMLDetailsElement).open)}>
                       <summary className={styles.detailsSummary}>
                         <span>{copy.detailsLabel}</span>
@@ -166,7 +167,7 @@ export function SignalConfigurator() {
                         <p className={styles.long}>{a.longDescription}</p>
                         <p className={styles.forWho}><strong>For you if</strong> {a.forWho}</p>
                         <ul className={styles.markerGrid}>
-                          {markers.map((id) => { const m = getBiomarker(id); return <li key={id} className={m.derivedFrom ? styles.derived : undefined}>{m.name}</li>; })}
+                          {markers.map((id) => { const m = getBiomarker(id); return <li key={id} className={m.derivedFrom ? styles.derived : undefined}>{m.name}{m.derivedFrom ? <span className={styles.calc}> · calculated</span> : null}</li>; })}
                         </ul>
                         <p className={styles.detailsFoot}>{copy.additionalMarkers(markers.length)} on top of the {productMarkerCount(signalTest)} in every SIGNAL.</p>
                       </div>
