@@ -1,4 +1,4 @@
-import { addonsFor, recommendAddons, type Addon } from "./addons";
+import { recommendAddons, sellableAddonsFor, type Addon } from "./addons";
 import { interests, type InterestId } from "./interests";
 import { signalTest, type Product } from "./products";
 
@@ -11,7 +11,7 @@ import { signalTest, type Product } from "./products";
  *
  * Bump QUIZ_VERSION when questions or rules change.
  */
-export const QUIZ_VERSION = "v2";
+export const QUIZ_VERSION = "v3";
 
 export interface QuizQuestion {
   id: string;
@@ -77,12 +77,11 @@ export interface Recommendation {
 }
 
 const REASON: Record<string, string> = {
-  hormones_plus: "You want to understand your hormones. Hormones+ adds the signals behind them.",
+  hormones_plus: "You want to understand your hormones. Hormones+ adds testosterone, SHBG, free testosterone and the signals that regulate them.",
+  nutrients_plus: "Nutrition or energy is on your list. Nutrients+ adds vitamin D, B12 and folate so you can measure before you supplement.",
   heart_plus: "Heart health matters to you. Heart+ adds the particle-level cholesterol markers.",
   thyroid_plus: "Thyroid is on your list. Thyroid+ adds the active hormones and antibodies beyond TSH.",
   performance_plus: "You train seriously. Performance+ adds muscle load, stress and recovery markers.",
-  metabolic_plus: "Metabolic health matters to you. Metabolic+ adds fasting insulin and how your body responds to it.",
-  nutrients_plus: "Nutrition is on your list. Nutrients+ adds micronutrients beyond the base panel.",
 };
 
 /** Pure, rule-based. No answers are stored or transmitted. */
@@ -90,13 +89,15 @@ export function recommend(answers: QuizAnswers): Recommendation {
   const raw = answers.interests;
   const interestIds = (Array.isArray(raw) ? raw : raw ? [raw] : []).filter((i): i is InterestId => interests.some((x) => x.id === i));
   let addons = recommendAddons(interestIds, signalTest);
-  if (answers.training === "serious" && !addons.some((a) => a.id === "performance_plus")) {
-    const perf = addonsFor(signalTest).find((a) => a.id === "performance_plus");
-    if (perf) addons = [...addons, perf];
+  if (answers.training === "serious") {
+    // Serious training: the "training" interest set (nutrients + hormones), then Performance+ when sellable.
+    for (const a of [...recommendAddons(["training"], signalTest), ...sellableAddonsFor(signalTest).filter((x) => x.id === "performance_plus")]) {
+      if (!addons.some((b) => b.id === a.id)) addons = [...addons, a];
+    }
   }
   // Keep the result focused: the base test is the product; at most three add-ons.
   addons = addons.slice(0, 3);
   const reasons: Record<string, string> = {};
-  for (const a of addons) reasons[a.id] = REASON[a.id] ?? a.benefit;
+  for (const a of addons) reasons[a.id] = REASON[a.id] ?? a.shortDescription;
   return { product: signalTest, addons, reasons, interestIds };
 }

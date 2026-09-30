@@ -5,7 +5,7 @@
  *
  * Relative imports on purpose so this file runs under `node --test` without a bundler.
  */
-import { addonNewMarkers, getAddon, type Addon } from "../config/addons";
+import { addonNewMarkers, getAddon, isSellable, type Addon } from "../config/addons";
 import { getCollectionMethod, type CollectionMethodId } from "../config/collection";
 import { groupByCategory } from "../config/biomarkers";
 import { getProduct, signalTest, type Product } from "../config/products";
@@ -43,7 +43,7 @@ export function quoteConfiguration(cfg: Configuration): Quote {
   const product = getProduct(cfg.productId) ?? signalTest;
   const chosen = cfg.addonIds
     .map(getAddon)
-    .filter((a): a is Addon => Boolean(a) && product.addonIds.includes(a!.id) && a!.status !== "under-review");
+    .filter((a): a is Addon => Boolean(a) && product.addonIds.includes(a!.id) && isSellable(a!));
   const lines: QuoteLine[] = [{ kind: "product", id: product.id, label: product.name, priceCents: product.priceCents }];
   for (const a of chosen) lines.push({ kind: "addon", id: a.id, label: a.name, priceCents: a.priceCents });
   if (cfg.collectionMethodId) {
@@ -65,18 +65,35 @@ export function quoteConfiguration(cfg: Configuration): Quote {
   };
 }
 
-/** URL form: ?addons=a,b&collection=mobile — short, shareable, no health words. */
-export function serializeConfiguration(cfg: Configuration): string {
+/**
+ * URL form: ?addons=a,b&collection=mobile&rec=c — short, shareable, no health words.
+ * `addons` = preselected (in the basket). `rec` = recommended only (highlighted,
+ * not in the basket). A landing page decides which it uses; both are architected.
+ */
+export function serializeConfiguration(cfg: Configuration, opts: { recommendedAddonIds?: string[] } = {}): string {
   const p = new URLSearchParams();
   if (cfg.addonIds.length) p.set("addons", cfg.addonIds.join(","));
   if (cfg.collectionMethodId) p.set("collection", cfg.collectionMethodId);
+  const rec = (opts.recommendedAddonIds ?? []).filter((id) => !cfg.addonIds.includes(id));
+  if (rec.length) p.set("rec", rec.join(","));
   const s = p.toString();
   return s ? `?${s}` : "";
 }
 
+const sellableFor = (product: Product) => (id: string) => {
+  const a = getAddon(id);
+  return product.addonIds.includes(id) && Boolean(a) && isSellable(a!);
+};
+
+/** Recommended-only add-on ids from the URL (?rec=), limited to sellable add-ons of the product. */
+export function parseRecommended(params: URLSearchParams, product: Product = signalTest): string[] {
+  const ids = (params.get("rec") ?? "").split(",").map((s) => s.trim()).filter(sellableFor(product));
+  return Array.from(new Set(ids));
+}
+
 export function parseConfiguration(params: URLSearchParams | Record<string, string | string[] | undefined>, product: Product = signalTest): Configuration {
   const get = (k: string) => (params instanceof URLSearchParams ? params.get(k) : (Array.isArray(params[k]) ? params[k]![0] : params[k])) ?? "";
-  const addonIds = get("addons").split(",").map((s) => s.trim()).filter((id) => product.addonIds.includes(id));
+  const addonIds = get("addons").split(",").map((s) => s.trim()).filter(sellableFor(product));
   const collection = get("collection");
   return {
     productId: product.id,

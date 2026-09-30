@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { addons } from "../src/config/addons";
 import { signalTest } from "../src/config/products";
-import { parseConfiguration, quoteConfiguration, serializeConfiguration, toggleAddon } from "../src/lib/pricing";
+import { parseConfiguration, parseRecommended, quoteConfiguration, serializeConfiguration, toggleAddon } from "../src/lib/pricing";
 
 test("base configuration counts every base marker once", () => {
   const q = quoteConfiguration({ productId: "signal", addonIds: [] });
@@ -12,16 +12,34 @@ test("base configuration counts every base marker once", () => {
 });
 
 test("add-ons add only markers not already in the base panel", () => {
-  const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus", "metabolic_plus"] });
+  const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus", "nutrients_plus"] });
   const base = new Set(signalTest.markerIds);
   const added = q.markerIds.filter((m) => !base.has(m));
-  assert.ok(added.includes("apob") && added.includes("insulin"));
+  assert.ok(added.includes("apob") && added.includes("vit_d"));
   assert.equal(q.markerCount, base.size + added.length);
 });
 
-test("unknown or under-review add-ons are ignored", () => {
+test("unknown, disabled or unlaunched add-ons are ignored", () => {
   const q = quoteConfiguration({ productId: "signal", addonIds: ["psa", "nope", "heart_plus"] });
   assert.deepEqual(q.addons.map((a) => a.id), ["heart_plus"]);
+  const perf = addons.find((a) => a.id === "performance_plus")!;
+  const saved = perf.launchEnabled;
+  perf.launchEnabled = false;
+  try {
+    const q2 = quoteConfiguration({ productId: "signal", addonIds: ["performance_plus", "heart_plus"] });
+    assert.deepEqual(q2.addons.map((a) => a.id), ["heart_plus"], "unlaunched add-on never enters a quote");
+    assert.deepEqual(parseConfiguration(new URLSearchParams("?addons=performance_plus,heart_plus")).addonIds, ["heart_plus"]);
+  } finally {
+    perf.launchEnabled = saved;
+  }
+});
+
+test("recommended add-ons travel separately from preselected ones", () => {
+  const s = serializeConfiguration({ productId: "signal", addonIds: ["hormones_plus"] }, { recommendedAddonIds: ["hormones_plus", "nutrients_plus"] });
+  assert.equal(s, "?addons=hormones_plus&rec=nutrients_plus");
+  const params = new URLSearchParams(s);
+  assert.deepEqual(parseConfiguration(params).addonIds, ["hormones_plus"]);
+  assert.deepEqual(parseRecommended(params), ["nutrients_plus"]);
 });
 
 test("quote is incomplete while any price is null, complete otherwise", () => {
