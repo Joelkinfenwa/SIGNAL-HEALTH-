@@ -38,7 +38,7 @@ Configuration over code: the product (`products.ts`: base markers, add-on order)
 /find-my-signal                 Quiz (built): interests → SIGNAL + add-ons → /signal?addons=
 /lp/[slug]                      Paid landing pages from config (phase 4)
 /checkout                       Built: editable summary, collection choice, what happens next, pay panel (Stripe boundary in lib/checkout/create-order.ts; pay button honest until connected)
-/order/[orderId]                Confirmation → Automatic Retesting offer → booking (phase 8)
+/order/[orderId]                Built (UI): confirmation → instant-refund Automatic Retesting offer → booking. Server actions stubbed until Stripe; /order/demo on previews
 /retesting                      How Automatic Retesting works (built)
 /account, /account/retesting    Phase 2+
 /legal/*                        Stubs until legal
@@ -162,6 +162,8 @@ Why the Payment Element rather than hosted Checkout: the post-purchase offer mus
 ## 7. Post-purchase retest conversion
 
 Shown on `/order/[orderId]` after the webhook has confirmed payment.
+
+**The mechanic (built):** the customer has paid full price. Choosing a plan refunds that plan's discount on today's eligible lines (product and add-ons; never the collection fee) to their card immediately, and every future retest is charged at the discounted price. `quoteRetestForOrder()` computes refund and recurring amounts; `postPurchaseOffer` in `config/retest-offer.ts` holds the copy, disclosure lines, `oneTimeOnly`, `cancellationPolicy` and `reminderDaysBefore`. `components/order/RetestOffer.tsx` renders plans as radios, the disclosure beside the button, an unticked consent checkbox, and accept/decline states; `lib/retest/accept.ts` is the server boundary.
 
 **Display**
 - Load the active, eligible offer for the product; compute the quote with `quoteRetest()` (`src/lib/retest/offer.ts`) — the same function the server uses when charging, so displayed and charged amounts cannot diverge.

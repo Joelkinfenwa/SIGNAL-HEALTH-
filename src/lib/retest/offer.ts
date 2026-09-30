@@ -1,6 +1,7 @@
-import type { Product } from "@/config/products";
-import type { RetestOffer } from "@/config/retest-offer";
-import { formatAUD } from "@/lib/money";
+import type { Product } from "../../config/products";
+import type { RetestOffer } from "../../config/retest-offer";
+import { formatAUD } from "../money";
+import type { QuoteLine } from "../pricing";
 
 export interface RetestQuote {
   offerId: string;
@@ -30,6 +31,48 @@ export function quoteRetest(priceCents: number, offer: RetestOffer): RetestQuote
     recurringPriceCents: priceCents - discountCents,
     intervalMonths: offer.intervalMonths,
   };
+}
+
+/**
+ * Quote against a paid order: the discount applies to the lines the plan
+ * covers (product, optionally add-ons; never the collection fee), the refund
+ * is that discount, and the recurring price is what each future retest costs
+ * before any collection fee. Same integer maths as quoteRetest().
+ */
+export function quoteRetestForOrder(lines: QuoteLine[], offer: RetestOffer): RetestQuote & { eligibleCents: number } {
+  const eligible = lines
+    .filter((l) => l.kind === "product" || (l.kind === "addon" && offer.discountAppliesToAddons) || (l.kind === "collection" && offer.discountAppliesToCollection))
+    .reduce((n, l) => n + (l.priceCents ?? 0), 0);
+  const q = quoteRetest(eligible, offer);
+  return { ...q, eligibleCents: eligible };
+}
+
+/** Add whole months, clamping the day (31 Jan + 1 month = 28/29 Feb). */
+export function addMonths(date: Date, months: number): Date {
+  const d = new Date(date.getTime());
+  const day = d.getUTCDate();
+  d.setUTCDate(1);
+  d.setUTCMonth(d.getUTCMonth() + months);
+  const last = new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 0)).getUTCDate();
+  d.setUTCDate(Math.min(day, last));
+  return d;
+}
+
+export const formatDate = (d: Date) =>
+  new Intl.DateTimeFormat("en-AU", { day: "numeric", month: "long", year: "numeric", timeZone: "Australia/Sydney" }).format(d);
+
+/** Fill {refund} {paid} {price} {interval} {discount} {date} {reminder} in post-purchase copy. */
+export function fillOfferTokens(template: string, t: { refund: number; paid: number; price: number; intervalMonths: number; discountBps: number; nextDate: Date; reminderDays: number }): string {
+  const tokens: Record<string, string> = {
+    refund: formatAUD(t.refund),
+    paid: formatAUD(t.paid),
+    price: formatAUD(t.price),
+    interval: formatInterval(t.intervalMonths),
+    discount: `${t.discountBps / 100}%`,
+    date: formatDate(t.nextDate),
+    reminder: String(t.reminderDays),
+  };
+  return template.replace(/\{(\w+)\}/g, (m, k: string) => tokens[k] ?? m);
 }
 
 export const formatInterval = (months: number) =>

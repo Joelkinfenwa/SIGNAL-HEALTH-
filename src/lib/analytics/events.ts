@@ -39,6 +39,7 @@ export type AnalyticsEvent =
   | { name: "checkout_details_invalid"; props: { field_count: number } }
   | { name: "purchase_completed"; props: { order_id: string; product_id: string; addon_ids: string[] } & Money }
   | { name: "retest_offer_viewed"; props: RetestOfferProps }
+  | { name: "retest_plan_selected"; props: RetestOfferProps }
   | { name: "retest_offer_accepted"; props: RetestOfferProps & Money }
   | { name: "retest_offer_declined"; props: RetestOfferProps }
   | { name: "booking_started"; props: { order_id: string; method: CollectionMethodId } }
@@ -82,6 +83,7 @@ export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   checkout_details_invalid: { ga4: "checkout_details_invalid", meta: null, klaviyo: null, serverAuthoritative: false },
   purchase_completed: { ga4: "purchase", meta: "Purchase", klaviyo: "Placed Order", serverAuthoritative: true },
   retest_offer_viewed: { ga4: "retest_offer_view", meta: null, klaviyo: null, serverAuthoritative: false },
+  retest_plan_selected: { ga4: "retest_plan_select", meta: null, klaviyo: null, serverAuthoritative: false },
   retest_offer_accepted: { ga4: "retest_offer_accept", meta: "Subscribe", klaviyo: "Started Automatic Retesting", serverAuthoritative: true },
   retest_offer_declined: { ga4: "retest_offer_decline", meta: null, klaviyo: null, serverAuthoritative: false },
   booking_started: { ga4: "booking_start", meta: null, klaviyo: null, serverAuthoritative: false },

@@ -45,6 +45,7 @@ src/
     trust.ts           Trust-bar claims: verified vs placeholder (placeholders never render in production)
     configurator.ts    Configurator copy, heading variants and microcopy (CRO knobs)
     checkout-fields.ts Checkout "Your details" copy, options, minimum age (lib/checkout/customer.ts validates)
+    retest-offer.ts    Retesting plans + the post-purchase instant-refund offer copy, disclosure and policy knobs
     internal/costs.ts  Pathology COGS — server-only; never imported by UI (test-enforced)
     experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
@@ -130,6 +131,11 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Checkout details: "Sex … as recorded at birth. Laboratories use it to apply the right reference ranges" | /checkout step 3 (`config/checkout-fields.ts`) | TODO-VERIFY wording with the clinical lead and the laboratory's request requirements |
 | Checkout minimum age (18+) | /checkout step 3 (`MIN_AGE_YEARS`) | DECISION: policy on under-18 self-pay testing; legal to confirm |
 | Checkout consent text (terms, privacy, sharing with laboratory and collection team; marketing opt-in) | /checkout step 3 | TODO(legal): collection notice under the Privacy Act; opt-in wording for the Spam Act |
+| Post-purchase offer: "Get {refund} back right now" / "we refund {refund} to your card immediately" | /order/[orderId] (`postPurchaseOffer` in `config/retest-offer.ts`) | True only once the Stripe refund is issued synchronously on accept (ARCHITECTURE §7 ordering: subscription first, then refund); "5 to 10 business days" bank timing is standard card-network wording, TODO-VERIFY with Stripe |
+| "One-time offer · this page only" | /order/[orderId] | Only honest if the refund offer is never repeated at this price; flip `oneTimeOnly` if it is |
+| Retesting cancellation: "keep today's refund" | /order/[orderId] | DECISION `cancellationPolicy`: keep_refund vs reverse_refund; TODO(legal) either way |
+| "We email you 14 days before each charge" | /order/[orderId] | DECISION `reminderDaysBefore`; must match the invoice.upcoming lead time in Stripe |
+| Demo order (`/order/demo`, SIG-DEMO-0001, $349/$59/$49) | Previews only | Illustrative; production returns 404 |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
