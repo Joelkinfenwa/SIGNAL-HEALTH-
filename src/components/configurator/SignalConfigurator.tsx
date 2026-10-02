@@ -6,7 +6,9 @@ import { Icon } from "@/components/ui/Icon";
 import { addonBadgeLabels, addonNewMarkers, displayableAddonsFor, isSellable, type Addon } from "@/config/addons";
 import { getBiomarker, groupByCategory } from "@/config/biomarkers";
 import { configuratorCopy as copy, configuratorHeadings, resolveHeadingVariant } from "@/config/configurator";
+import { getCollectionMethod } from "@/config/collection";
 import { productMarkerCount, signalTest } from "@/config/products";
+import { bestDiscountBps, formatDiscount } from "@/config/retest-offer";
 import { readAnalyticsContext } from "@/lib/analytics/context";
 import { track } from "@/lib/analytics/track";
 import { cx } from "@/lib/cx";
@@ -34,7 +36,6 @@ export function SignalConfigurator() {
   const [recommended, setRecommended] = useState<string[]>([]);
   const [heading, setHeading] = useState(configuratorHeadings[copy.defaultHeading]);
   const [hydrated, setHydrated] = useState(false);
-  const [includedOpen, setIncludedOpen] = useState(false);
   const started = useRef(false);
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const options = displayableAddonsFor(signalTest);
@@ -48,7 +49,6 @@ export function SignalConfigurator() {
     setRecommended(parseRecommended(params, signalTest));
     const ctx = readAnalyticsContext();
     if (ctx.experiment_id === "configurator_heading") setHeading(configuratorHeadings[resolveHeadingVariant(ctx.variant)]);
-    setIncludedOpen(window.matchMedia("(min-width: 64rem)").matches);
     setHydrated(true);
   }, []);
 
@@ -182,39 +182,55 @@ export function SignalConfigurator() {
       </div>
 
       <aside className={styles.summary} aria-labelledby="summary-title">
-        <p id="summary-title" className={styles.summaryTitle}>{copy.summaryTitle}</p>
-        <ul className={styles.lines}>
-          {quote.lines.map((l) => (
-            <li key={l.id} className={styles.line}>
-              <span>{l.label}</span>
-              <span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span>
+        <div className={styles.summaryHead}>
+          <p id="summary-title" className={styles.summaryTitle}>{copy.summaryTitle}</p>
+          <span className={styles.coveragePill}><span className="num">{quote.categoryCount}</span> areas · <span className="num">{quote.markerCount}</span> markers</span>
+        </div>
+
+        <ul className={styles.cart}>
+          <li className={styles.cartBase}>
+            <span className={styles.cartText}>
+              <span className={styles.cartName}>{signalTest.name}</span>
+              <span className={styles.cartSub}><span className="num">{baseGroups.length}</span> areas · <span className="num">{productMarkerCount(signalTest)}</span> markers · always included</span>
+            </span>
+            <span className={cx(styles.cartPrice, "num")}>{signalTest.priceCents !== null ? formatAUD(signalTest.priceCents) : "TBC"}</span>
+          </li>
+          {quote.addons.map((a) => (
+            <li key={a.id} className={styles.cartRow}>
+              <span className={styles.cartText}>
+                <span className={styles.cartName}>{a.name} <span className={cx(styles.cartInline, "num")}>{copy.markersUnit(addonNewMarkers(a, signalTest).length)}</span></span>
+              </span>
+              <span className={cx(styles.cartPrice, "num")}>{a.priceCents !== null ? formatAUD(a.priceCents) : "TBC"}</span>
+              <button type="button" className={styles.cartRemove} onClick={() => toggle(a)} aria-label={copy.removeLabel(a.name)}><Icon name="close" size={14} /></button>
             </li>
           ))}
+          {quote.addons.length === 0 ? <li className={styles.cartEmpty}>{copy.summaryEmpty}</li> : null}
         </ul>
-        <p className={styles.coverage}><span className="num">{quote.categoryCount}</span> areas of health · <span className="num">{quote.markerCount}</span> markers</p>
-        <details className={styles.inclDetails} open={includedOpen} onToggle={(e) => setIncludedOpen((e.currentTarget as HTMLDetailsElement).open)}>
-          <summary className={styles.inclSummary}>
-            <span>{copy.whatsIncludedTitle}</span>
-            <span className={styles.detailsToggle} aria-hidden="true"><Icon name="plus" size={14} className={styles.plus} /><Icon name="minus" size={14} className={styles.minus} /></span>
-          </summary>
-          <ul className={styles.incl}>
+
+        <div className={styles.coverage}>
+          <p className={styles.coverageTitle}>{copy.coverageTitle}</p>
+          <ul className={styles.areaChips} aria-label="Areas of health in your SIGNAL">
             {included.map((g) => (
-              <li key={g.id} className={cx(styles.inclRow, g.from.length > 0 && styles.inclRowAdded)}>
-                <span className={styles.inclName}>{g.name}</span>
-                <span className={styles.inclCount}>
-                  <span className="num">{g.count}</span> {g.count === 1 ? "marker" : "markers"}
-                  {g.from.length ? <span className={styles.inclFrom}> · {g.base ? `${g.count - g.base} added by` : "with"} {g.from.map((a) => a.name).join(", ")}</span> : null}
-                </span>
+              <li key={g.id} className={cx(styles.areaChip, g.from.length > 0 && styles.areaChipAdded)} title={g.from.length ? `${g.base ? `${g.count - g.base} added by` : "With"} ${g.from.map((a) => a.name).join(", ")}` : undefined}>
+                <span>{g.name}</span>
+                <span className={cx(styles.areaCount, "num")}>{g.count}</span>
+                {g.from.length && g.base ? <span className={cx(styles.areaPlus, "num")}>+{g.count - g.base}</span> : g.from.length ? <span className={styles.areaPlus} aria-hidden="true">+</span> : null}
               </li>
             ))}
           </ul>
-        </details>
+          <a href="#what-is-tested" className={styles.coverageLink}>{copy.coverageLink}</a>
+        </div>
+
         <div className={styles.total}>
           <span>Total</span>
           <span className={cx(styles.totalValue, "num")}>{displayTotal(quote, formatAUD, copy.pricingSoon)}</span>
         </div>
         <Button href={checkoutHref} full ctaId="configurator_continue" location="configurator" onClick={complete}>{copy.continueLabel} <Icon name="arrow" size={18} /></Button>
-        <p className={styles.note}>{copy.continueNote}</p>
+        <ul className={styles.trust}>
+          {getCollectionMethod("centre").priceDeltaCents === 0 ? <li><Icon name="check" size={13} /> {copy.summaryTrust.centreIncluded}</li> : null}
+          <li><Icon name="check" size={13} /> {copy.summaryTrust.payment}</li>
+        </ul>
+        {bestDiscountBps() > 0 ? <p className={styles.note}>{copy.summaryRetestHint.replace("{discount}", formatDiscount(bestDiscountBps()))}</p> : null}
       </aside>
 
       <div className={styles.bar} data-theme="light">
