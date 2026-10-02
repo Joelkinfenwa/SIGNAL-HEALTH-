@@ -11,7 +11,7 @@ import { readAnalyticsContext } from "@/lib/analytics/context";
 import { track } from "@/lib/analytics/track";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
-import { defaultConfiguration, parseConfiguration, parseRecommended, quoteConfiguration, serializeConfiguration, toggleAddon, type Configuration } from "@/lib/pricing";
+import { defaultConfiguration, displayTotal, parseConfiguration, parseRecommended, quoteConfiguration, serializeConfiguration, toggleAddon, type Configuration } from "@/lib/pricing";
 import styles from "./SignalConfigurator.module.css";
 
 /**
@@ -211,7 +211,7 @@ export function SignalConfigurator() {
         </details>
         <div className={styles.total}>
           <span>Total</span>
-          <span className={cx(styles.totalValue, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : copy.pricingSoon}</span>
+          <span className={cx(styles.totalValue, "num")}>{displayTotal(quote, formatAUD, copy.pricingSoon)}</span>
         </div>
         <Button href={checkoutHref} full ctaId="configurator_continue" location="configurator" onClick={complete}>{copy.continueLabel} <Icon name="arrow" size={18} /></Button>
         <p className={styles.note}>{copy.continueNote}</p>
@@ -221,7 +221,7 @@ export function SignalConfigurator() {
         <div className={styles.barInner}>
           <span className={styles.barText}>
             <span className={styles.barLabel}>{copy.stickyLabel}{quote.addons.length ? ` + ${quote.addons.length}` : ""}</span>
-            <span className={cx(styles.barPrice, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : `${quote.markerCount} markers`}</span>
+            <span className={cx(styles.barPrice, "num")}>{displayTotal(quote, formatAUD, `${quote.markerCount} markers`)}</span>
           </span>
           <Button href={checkoutHref} size="sm" ctaId="configurator_continue_sticky" location="configurator_bar" className={styles.barButton} onClick={complete}>{copy.continueLabel}</Button>
         </div>

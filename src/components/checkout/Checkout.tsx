@@ -19,7 +19,7 @@ import { createOrder } from "@/lib/checkout/create-order";
 import { emptyCustomer, validateCustomer, type CustomerDetails as Details, type CustomerField } from "@/lib/checkout/customer";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
-import { defaultConfiguration, parseConfiguration, quoteConfiguration, serializeConfiguration, toggleAddon, type Configuration } from "@/lib/pricing";
+import { defaultConfiguration, displayTotal, parseConfiguration, quoteConfiguration, serializeConfiguration, toggleAddon, type Configuration } from "@/lib/pricing";
 import styles from "./Checkout.module.css";
 
 const DETAILS_KEY = "sig_checkout_details";
@@ -101,7 +101,7 @@ export function Checkout() {
       return;
     }
     if (!paymentsLive) { setPayMessage("Your details are complete. Payments open at launch."); return; }
-    if (!quote.pricingComplete) { setPayMessage("Pricing isn't set yet, so payment can't start."); return; }
+    if (!quote.pricingComplete) { setPayMessage(quote.unpricedCount ? "An add-on in your order isn't priced yet, so payment can't start." : "Pricing isn't set yet, so payment can't start."); return; }
     setStarting(true); setPayMessage(null);
     try {
       const res = await createOrder(cfg, customer);
@@ -239,7 +239,7 @@ export function Checkout() {
             <li key={l.id}><span>{l.label}</span><span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span></li>
           ))}
         </ul>
-        <div className={styles.total}><span>Total</span><span className={cx(styles.totalValue, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : "Pricing coming soon"}</span></div>
+        <div className={styles.total}><span>Total</span><span className={cx(styles.totalValue, "num")}>{displayTotal(quote, formatAUD, "Pricing coming soon")}</span></div>
         <ul className={styles.checklist} aria-label="Before you pay">
           <li className={cfg.collectionMethodId ? styles.done : undefined}><Icon name="check" size={14} /> Collection {cfg.collectionMethodId ? "chosen" : "not chosen yet"}</li>
           <li className={detailsValid ? styles.done : undefined}><Icon name="check" size={14} /> Details {detailsValid ? "complete" : "to complete"}</li>
@@ -279,7 +279,7 @@ export function Checkout() {
         <div className={styles.barInner}>
           <span className={styles.barText}>
             <span className={styles.barLabel}>Total</span>
-            <span className={cx(styles.barPrice, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : "Pricing coming soon"}</span>
+            <span className={cx(styles.barPrice, "num")}>{displayTotal(quote, formatAUD, "Pricing coming soon")}</span>
           </span>
           <button type="button" className={cx(styles.payButton, styles.barButton)} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>{payment ? "Pay" : paymentsLive ? "Continue" : "Opens at launch"}</button>
         </div>

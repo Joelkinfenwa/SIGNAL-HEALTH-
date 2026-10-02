@@ -110,13 +110,13 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "Samples are analysed by accredited Australian pathology laboratories" | `config/brand.ts` trustPoints (not rendered on the v3 homepage) | Confirm laboratory partner(s) and accreditation |
 | "The price you see includes the test… collection options shown before you pay" | Buy box price note; FAQ "What's included" | TODO-VERIFY: confirm pricing and collection-fee model |
 | "Clinical review included" / "reviewed and explained in plain language" | Proof strip, How it works, Results section | TODO-VERIFY with clinical lead |
-| "Advanced blood testing from $279, collected at home or nearby" | Hero offer line, sticky bar | Price from config; "at home or nearby" depends on launch coverage |
+| "from $299" (hero subheadline, sticky bar "From $299") | Hero, sticky bar, /signal, checkout, retesting quotes | Price set in `config/products.ts` (29900) on 2 Oct 2026; add-on and home-visit prices still TBC |
 | "{n} areas of health" / "{n} markers" | Proof strip, buy box, product pages, compare table | Derived from `config/products.ts` marker lists — TODO-VERIFY analyte availability with the lab |
 | Every marker "about" line (what it measures) | Product pages, biomarker cards | Measurement language only; clinical lead to review `config/biomarkers.ts` |
 | "Calculated for you, at no extra cost" (non-HDL-C, eGFR, TSAT, free T, HOMA-IR, ratios) | Product pages | TODO-VERIFY which the lab reports vs. we compute; no extra assay is charged |
 | "Everything in Core, plus N more" | Product pages | Derived from marker lists |
 | Add-ons "coming; availability and pricing confirmed at launch" | Product and compare pages | TODO(pricing) and TODO-VERIFY assay availability |
-| "Pricing coming soon" | Everywhere a price would show | TODO(pricing): set `priceCents` per product and add-on |
+| "Price TBC" on add-ons and the home visit | /signal configurator, checkout | TODO(pricing): set `priceCents` in `config/addons.ts` and `priceDeltaCents` in `config/collection.ts` |
 | Add-on badges ("Advanced", "For performance"; "Popular" reserved) | /signal configurator (`config/addons.ts` `badge`) | Descriptive only; "Popular" must not be set until sales data supports it |
 | Add-on long descriptions ("a marker set largely by your genes", "the three nutrients people most often supplement") | /signal configurator "What you get" (`config/addons.ts`) | Measurement/preference framing; clinical and legal to confirm wording |
 | Homepage areas tagged "add-on" (Hormones, Nutrients, Recovery) | Homepage "What SIGNAL measures" | Derived from add-on config; makes clear these are not in the base test |

@@ -29,6 +29,9 @@ export interface Quote {
   totalCents: number | null;
   /** False while any line has no price yet. */
   pricingComplete: boolean;
+  /** Sum of the lines that do have a price (the base test, once set). */
+  pricedSubtotalCents: number;
+  unpricedCount: number;
   markerIds: string[];
   markerCount: number;
   categoryCount: number;
@@ -51,13 +54,16 @@ export function quoteConfiguration(cfg: Configuration): Quote {
     lines.push({ kind: "collection", id: c.id, label: c.name, priceCents: c.priceDeltaCents });
   }
   const pricingComplete = lines.every((l) => l.priceCents !== null);
-  const sum = pricingComplete ? lines.reduce((n, l) => n + (l.priceCents ?? 0), 0) : null;
+  const pricedSubtotalCents = lines.reduce((n, l) => n + (l.priceCents ?? 0), 0);
+  const sum = pricingComplete ? pricedSubtotalCents : null;
   const markerIds = Array.from(new Set([...product.markerIds, ...chosen.flatMap((a) => addonNewMarkers(a, product))]));
   return {
     lines,
     subtotalCents: sum,
     totalCents: sum,
     pricingComplete,
+    pricedSubtotalCents,
+    unpricedCount: lines.filter((l) => l.priceCents === null).length,
     markerIds,
     markerCount: markerIds.length,
     categoryCount: groupByCategory(markerIds).length,
@@ -105,4 +111,10 @@ export function parseConfiguration(params: URLSearchParams | Record<string, stri
 export function toggleAddon(cfg: Configuration, addonId: string): Configuration {
   const has = cfg.addonIds.includes(addonId);
   return { ...cfg, addonIds: has ? cfg.addonIds.filter((a) => a !== addonId) : [...cfg.addonIds, addonId] };
+}
+
+/** Total for display: the real total, else "$299 + TBC" while some lines are unpriced, else the fallback. */
+export function displayTotal(q: Quote, format: (cents: number) => string, fallback: string): string {
+  if (q.totalCents !== null) return format(q.totalCents);
+  return q.pricedSubtotalCents > 0 ? `${format(q.pricedSubtotalCents)} + TBC` : fallback;
 }

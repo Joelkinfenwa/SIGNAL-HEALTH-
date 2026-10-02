@@ -61,7 +61,7 @@ export const signalTest: Product = {
   tagline: "One comprehensive blood test. A clearer picture of what's happening inside your body.",
   description:
     "The major areas of your health measured from one sample, collected at a centre or at home, reviewed, and explained in plain language. Go deeper where it matters to you with optional add-ons.",
-  priceCents: resolvePrice("signal", null), // TODO(pricing): set the real price here
+  priceCents: 29900, // AUD, set 2 Oct 2026
   compareAtPriceCents: null,
   markerIds: [
     // Heart (5)

@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { addons } from "../src/config/addons";
 import { signalTest } from "../src/config/products";
-import { parseConfiguration, parseRecommended, quoteConfiguration, serializeConfiguration, toggleAddon } from "../src/lib/pricing";
+import { displayTotal, parseConfiguration, parseRecommended, quoteConfiguration, serializeConfiguration, toggleAddon } from "../src/lib/pricing";
 
 test("base configuration counts every base marker once", () => {
   const q = quoteConfiguration({ productId: "signal", addonIds: [] });
@@ -75,4 +75,13 @@ test("toggleAddon adds then removes", () => {
   assert.deepEqual(cfg.addonIds, ["heart_plus"]);
   cfg = toggleAddon(cfg, "heart_plus");
   assert.deepEqual(cfg.addonIds, []);
+});
+
+test("display total shows the base price plus TBC while an add-on is unpriced", () => {
+  const fmt = (c: number) => `$${c / 100}`;
+  const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus"] });
+  assert.equal(q.pricedSubtotalCents, 29900);
+  assert.equal(q.unpricedCount, 1);
+  assert.equal(displayTotal(q, fmt, "soon"), "$299 + TBC");
+  assert.equal(displayTotal(quoteConfiguration({ productId: "signal", addonIds: [] }), fmt, "soon"), "$299");
 });
