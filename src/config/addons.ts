@@ -73,7 +73,7 @@ export const addons: Addon[] = [
     forWho: "You want to understand your hormones properly, not guess from how you feel.",
     markerIds: ["testosterone", "shbg", "free_t", "lh", "fsh", "oestradiol", "prolactin"],
     underConsideration: ["dheas"],
-    priceCents: resolvePrice("hormones_plus", null),
+    priceCents: 11900, // AUD, set 2 Oct 2026
     enabled: true,
     launchEnabled: true,
     recommendedFor: ["hormones", "energy", "training"],
@@ -89,7 +89,7 @@ export const addons: Addon[] = [
     forWho: "You take, or are thinking about taking, supplements.",
     markerIds: ["vit_d", "b12", "folate"],
     underConsideration: ["zinc"],
-    priceCents: resolvePrice("nutrients_plus", null),
+    priceCents: 10900, // AUD, set 2 Oct 2026
     enabled: true,
     launchEnabled: true,
     recommendedFor: ["nutrition", "energy", "training"],
@@ -120,7 +120,7 @@ export const addons: Addon[] = [
       "TSH, in every SIGNAL, is the control signal. Free T4 and free T3 are the hormones it controls, and two antibody markers add context that TSH alone can't. The full thyroid picture, not just the headline.",
     forWho: "You want the full thyroid picture, not just TSH.",
     markerIds: ["ft4", "ft3", "tpo_ab", "tg_ab"],
-    priceCents: resolvePrice("thyroid_plus", null),
+    priceCents: 13900, // AUD, set 2 Oct 2026
     enabled: true,
     launchEnabled: true,
     recommendedFor: ["thyroid", "energy"],
@@ -135,7 +135,7 @@ export const addons: Addon[] = [
       "Creatine kinase reflects recent muscle load, cortisol your stress response, and IGF-1 relates to growth and recovery. Useful when you're training hard and want to see how your body is coping between blocks.",
     forWho: "You train most days and want to see how your body is coping and recovering.",
     markerIds: ["ck", "cortisol", "igf1"],
-    priceCents: resolvePrice("performance_plus", null),
+    priceCents: 6900, // AUD, set 2 Oct 2026
     enabled: true,
     // PROVISIONAL: depends on laboratory availability. Flip to false to withdraw
     // it from sale without touching any component.
