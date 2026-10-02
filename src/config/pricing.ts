@@ -10,7 +10,7 @@ export const PREVIEW_PRICING = process.env.NEXT_PUBLIC_PREVIEW_PRICING === "1";
 
 /** TODO(pricing): placeholders for testing only. Not real prices. */
 export const previewPriceCents: Readonly<Record<string, number>> = {
-  mobile: 4900,
+  // Nothing left to placeholder: every price is set. Add an id here only for a new unpriced line.
 };
 
 export function resolvePrice(id: string, real: number | null): number | null {

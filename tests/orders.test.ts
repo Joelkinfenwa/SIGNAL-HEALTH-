@@ -41,7 +41,7 @@ test("order metadata round-trips configuration and snapshotted prices within Str
 
 test("preview pricing never overrides a real price and is off by default", () => {
   assert.equal(resolvePrice("signal", 29900), 29900);
-  assert.equal(resolvePrice("mobile", null), process.env.NEXT_PUBLIC_PREVIEW_PRICING === "1" ? 4900 : null);
+  assert.equal(resolvePrice("mobile", null), null);
   assert.equal(resolvePrice("unknown", null), null);
 });
 

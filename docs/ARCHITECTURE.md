@@ -42,7 +42,7 @@ Configuration over code: the product (`products.ts`: base markers, add-on order)
 /order/[orderId]                Built (UI): confirmation → instant-refund Automatic Retesting offer → booking. Server actions stubbed until Stripe; /order/demo on previews
 /retesting                      How Automatic Retesting works (built)
 /account, /account/retesting    Phase 2+
-/legal/*                        Stubs until legal
+/legal/[slug]                   Built: terms, privacy, retesting-terms from config/legal (drafts for legal review; entity details in config/legal/entity.ts)
 /api/stripe/webhook             Built: signature-verified; emits server-authoritative events (adapters phase 7)
 /api/events                     Stub (phase 7)
 /tests, /tests/*, /find-my-test 301 → /signal, /find-my-signal

@@ -3,8 +3,6 @@
  * business facts: keep them here, not in components.
  * TODO-VERIFY: launch regions, mobile availability and whether mobile carries a fee.
  */
-import { resolvePrice } from "./pricing";
-
 export type CollectionMethodId = "centre" | "mobile";
 
 export interface CollectionMethod {
@@ -35,7 +33,7 @@ export const collectionMethods: CollectionMethod[] = [
     short: "At home",
     description: "A qualified collector comes to you.",
     availabilityNote: "Available in selected areas. Enter your postcode at booking to check.",
-    priceDeltaCents: resolvePrice("mobile", null), // TODO(pricing): home-visit fee, or 0 if included
+    priceDeltaCents: 9900, // AUD, set 2 Oct 2026
     status: "limited",
   },
 ];

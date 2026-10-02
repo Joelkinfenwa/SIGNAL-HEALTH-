@@ -44,8 +44,8 @@ test("recommended add-ons travel separately from preselected ones", () => {
 
 test("quote is incomplete while any price is null, complete otherwise", () => {
   const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus"], collectionMethodId: "mobile" });
-  assert.equal(q.pricingComplete, process.env.NEXT_PUBLIC_PREVIEW_PRICING === "1");
-  if (!q.pricingComplete) assert.equal(q.totalCents, null);
+  assert.equal(q.pricingComplete, true);
+  assert.equal(q.totalCents, 29900 + 21900 + 9900);
   // Simulate priced config.
   const priced = { ...signalTest, priceCents: 34900 };
   const heart = addons.find((a) => a.id === "heart_plus")!;

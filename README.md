@@ -47,6 +47,7 @@ src/
     checkout-fields.ts Checkout "Your details" copy, options, minimum age (lib/checkout/customer.ts validates)
     retest-offer.ts    Retesting plans + the post-purchase instant-refund offer copy, disclosure and policy knobs
     funnel/men.ts      /men direct-response funnel page: all nine blocks of copy, claims flagged `verified`
+    legal/             Terms, Privacy Policy, Retesting Terms as structured sections; entity.ts holds the legal name, ABN, address, emails and jurisdiction (bracketed until filled)
     internal/costs.ts  Pathology COGS — server-only; never imported by UI (test-enforced)
     experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
@@ -118,7 +119,7 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "Everything in Core, plus N more" | Product pages | Derived from marker lists |
 | Add-ons "coming; availability and pricing confirmed at launch" | Product and compare pages | TODO(pricing) and TODO-VERIFY assay availability |
 | Add-on prices: Hormones+ $119, Nutrients+ $109, Heart+ $219, Thyroid+ $139, Performance+ $69 | /signal configurator, checkout | Set 2 Oct 2026 in `config/addons.ts` |
-| "Price TBC" on the home visit | checkout collection step | TODO(pricing): `priceDeltaCents` for `mobile` in `config/collection.ts` (0 if included) |
+| Home visit +$99 | checkout collection step, retesting disclosure | Set 2 Oct 2026 in `config/collection.ts`; not discounted by retesting plans |
 | Add-on badges ("Advanced", "For performance"; "Popular" reserved) | /signal configurator (`config/addons.ts` `badge`) | Descriptive only; "Popular" must not be set until sales data supports it |
 | Add-on long descriptions ("a marker set largely by your genes", "the three nutrients people most often supplement") | /signal configurator "What you get" (`config/addons.ts`) | Measurement/preference framing; clinical and legal to confirm wording |
 | Homepage areas tagged "add-on" (Hormones, Nutrients, Recovery) | Homepage "What SIGNAL measures" | Derived from add-on config; makes clear these are not in the base test |
@@ -157,6 +158,7 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Plan badges "Save 15% per test" / "Save 20% per test" | /men plans | Factual, derived from config. "Most popular" removed (ACL and AHPRA: no unsubstantiated claims) |
 | No testimonials on /men | /men trust facts section | AHPRA / National Law s133: advertising a regulated health service (doctor review) must not use testimonials. The section is factual only; `config/social-proof.ts` content is not rendered on this page |
 | "Retesting is optional…" note under plans | /men plans | AHPRA: avoids encouraging unnecessary use of a health service |
+| Legal pages (/legal/terms, /legal/privacy, /legal/retesting-terms) | Footer, checkout consent, guarantee, retesting offer | DRAFTS from the product as built, for an Australian lawyer to review. Entity name, ABN, address, support and privacy emails and governing State are bracketed placeholders in `config/legal/entity.ts` (preview banner lists them) |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
