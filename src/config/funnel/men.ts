@@ -45,7 +45,7 @@ export const menFunnel = {
     secondaryCta: { label: "Or see what's included first", href: "#included" },
     miniTrust: [
       { text: "No GP referral needed", verified: false },
-      { text: "Results and doctor review in ~7 days", verified: false },
+      { text: "Results and doctor review in around 7 days", verified: false },
       { text: "Clear-plan-or-it's-free guarantee", verified: false },
     ] as Claim[],
   },
@@ -53,10 +53,11 @@ export const menFunnel = {
   // 2. What you get
   included: {
     title: "What you actually get when you order SIGNAL",
+    intro: "When you order a SIGNAL test, you're not just getting numbers. You're getting a full check, a doctor's eyes on your results, and a written plan.",
     bullets: [
       { title: "One comprehensive blood panel", body: "Covering energy, hormones, heart, metabolism and key nutrients. {markers} markers across {areas} areas in the base test." },
-      { title: "Doctor-reviewed results", body: "Reviewed by an Australian-registered doctor, not just a printout of numbers." },
-      { title: "A clear, written plan", body: "What's normal, what's not, and what to do next, in plain English." },
+      { title: "Doctor-reviewed results", body: "Reviewed by an Australian-registered doctor, not just auto-generated ranges." },
+      { title: "A clear, written plan", body: "What's normal, what's not, and what to do next, explained in plain English." },
       { title: "Optional add-ons in the same blood draw", body: "Hormones, thyroid, heart and more, from {addonsFrom}. One needle, no second visit." },
     ],
   },
@@ -65,10 +66,10 @@ export const menFunnel = {
   steps: {
     title: "How SIGNAL works, start to finish",
     items: [
-      { icon: "calendar", title: "Order online in 3 minutes", body: "Pay securely and pick your preferred location." },
+      { icon: "calendar", title: "Order online in 3 minutes", body: "Pay securely and choose your preferred collection location." },
       { icon: "tube", title: "Get your blood drawn", body: "At a partner collection centre or by a mobile nurse where available. No GP referral." },
-      { icon: "shield", title: "A doctor reviews your results", body: "Checks for red flags and patterns, not just individual numbers." },
-      { icon: "chart", title: "Get your report and plan", body: "Clear results and next steps inside about 7 days." },
+      { icon: "shield", title: "A doctor reviews your results", body: "Checking for red flags and patterns, not just individual numbers." },
+      { icon: "chart", title: "Get your report and plan", body: "Your results and next-step plan delivered in around 7 days." },
     ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
   },
 
@@ -77,9 +78,9 @@ export const menFunnel = {
     title: "Who SIGNAL is (and isn't) for",
     bestForTitle: "Best for",
     bestFor: [
-      "Ages 30–60 feeling tired, flat, low drive, or “not myself”",
-      "Want clear numbers and a medical-grade view, not TikTok guesses",
-      "Happy to pay privately for clarity and a plan",
+      "Men 30–60 feeling tired, flat, low drive or “not myself”",
+      "Men who want clear numbers and a medical-grade view, not TikTok guesses",
+      "Men happy to pay privately for clarity and a plan",
     ],
     notForTitle: "Not for",
     notFor: [
@@ -90,7 +91,7 @@ export const menFunnel = {
   },
 
   // 5. Proof
-  proof: { title: "Real people, real answers", intro: "What customers say about the experience." },
+  proof: { title: "Real people, real answers", intro: "What customers say about the experience.", cta: { label: "Order your SIGNAL test – {price}", href: "/checkout" } },
 
   // 6. Pricing and options
   plans: {
@@ -103,7 +104,7 @@ export const menFunnel = {
         priceSub: "one payment",
         tagline: "Ideal if you've never had a proper check.",
         bullets: [
-          { text: "The full panel, doctor review and written plan", verified: true },
+          { text: "Full SIGNAL panel, doctor review and written plan", verified: true },
           { text: "Add-ons from {addonsFrom}", verified: true },
           { text: "Collection at a centre included", verified: true },
         ],
@@ -129,7 +130,7 @@ export const menFunnel = {
         name: "SIGNAL Track+",
         priceLine: "{track3Price} per test",
         priceSub: "4 tests a year · {track3Discount} off · charged per test",
-        tagline: "Best for high-performers or complex cases.",
+        tagline: "Best for high performers or complex cases.",
         bullets: [
           { text: "Four panels a year at the lowest per-test price", verified: true },
           { text: "Priority booking", verified: false },
@@ -141,7 +142,7 @@ export const menFunnel = {
     ] as PlanCard[],
     compare: {
       rows: [
-        { label: "Panel + doctor review + plan", values: ["✓", "✓", "✓"] },
+        { label: "Panel + doctor review + written plan", values: ["Included", "Included", "Included"] },
         { label: "Tests per year", values: ["1", "2", "4"] },
         { label: "Per-test price", values: ["{price}", "{track6Price}", "{track3Price}"] },
         { label: "See what's changing over time", values: ["–", "✓", "✓"] },
@@ -154,14 +155,14 @@ export const menFunnel = {
   safety: {
     title: "Safe, doctor-led, and TGA-compliant",
     bullets: [
-      { text: "Tests processed by accredited Australian labs.", verified: false },
-      { text: "Results reviewed by Australian-registered doctors.", verified: false },
-      { text: "We never promise specific medications. Treatment is only offered if clinically appropriate.", verified: false },
-      { text: "Your data is stored using the same standards as hospitals.", verified: false },
+      { text: "Tests processed by accredited Australian labs", verified: false },
+      { text: "Results reviewed by Australian-registered doctors", verified: false },
+      { text: "We never promise specific medications; treatment is only offered if clinically appropriate", verified: false },
+      { text: "Your data is stored using the same standards as hospitals", verified: false },
     ] as Claim[],
     guarantee: {
       title: "Clear Plan or It's Free",
-      body: "If after your blood draw and doctor consult you feel you didn't get a clear explanation or plan, email us within 7 days for a full refund of your {price} test fee.",
+      body: "If after your blood draw and doctor review you feel you didn't get a clear explanation or plan for what to do next, email us within 7 days for a full refund of your {price} test fee.",
       verified: false,
     },
   },
@@ -170,12 +171,12 @@ export const menFunnel = {
   faq: {
     title: "Questions people ask before ordering",
     items: [
-      { q: "Do I need a GP referral?", a: "No. You order online, we arrange the pathology request, and you get your blood drawn without seeing a GP first." },
-      { q: "Is this covered by Medicare or private health?", a: "No. SIGNAL is a private service you pay for directly. It isn't bulk-billed and most private health funds don't cover it." },
-      { q: "What if my results are abnormal?", a: "Your doctor review flags anything that needs attention and your plan says what to do next. If something needs urgent follow-up, we contact you directly." },
-      { q: "Will I definitely get medication?", a: "No. SIGNAL is a test, a review and a plan. We never promise medication, and treatment is only ever discussed if it's clinically appropriate for you." },
-      { q: "How long does it take from blood draw to results?", a: "Most results and the doctor review are ready within about 7 days of your blood draw. We email you the moment they're ready." },
-      { q: "Where do I go for my blood draw?", a: "A partner collection centre near you, or a mobile nurse at home or work where that's available. You pick the time and place after you order." },
+      { q: "Do I need a GP referral?", a: "No. SIGNAL is a private, out-of-pocket service, so you can order directly without a GP referral." },
+      { q: "Is this covered by Medicare or private health?", a: "No. SIGNAL is not billed to Medicare or private health. It's a private service you pay for yourself." },
+      { q: "What if my results are abnormal?", a: "If we see something concerning, we'll highlight it clearly in your report and recommend appropriate next steps, which may include seeing your GP or a relevant specialist." },
+      { q: "Will I definitely get medication?", a: "No. SIGNAL is a diagnostic and planning service. We never promise specific medications. Any treatment is only considered separately and only if clinically appropriate." },
+      { q: "How long does it take from blood draw to results?", a: "Most men receive their doctor-reviewed results and plan within about 7 days of their blood draw." },
+      { q: "Where do I go for my blood draw?", a: "You'll be able to choose a partner collection centre near you when you order. In some areas we also offer a mobile nurse visit." },
       { q: "What happens if I cancel or change my appointment?", a: "Change your collection time from your booking link at no cost. If you cancel before your blood is drawn, email us for a refund." },
       { q: "Is this suitable for women?", a: "Yes. The SIGNAL Test is the same comprehensive panel for everyone, and the Hormones+ add-on covers markers relevant to women as well as men. This page is written for men because that's who we're starting with." },
     ],

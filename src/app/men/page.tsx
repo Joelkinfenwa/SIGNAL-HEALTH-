@@ -97,6 +97,7 @@ export default function MenFunnelPage() {
           <Container className={styles.split}>
             <div>
               <h2 id="included-title" className={styles.h2}>{f.included.title}</h2>
+              <p className={styles.intro}>{fill(f.included.intro)}</p>
               <ul className={styles.stack}>
                 {f.included.bullets.map((b, i) => (
                   <li key={b.title} className={styles.stackItem}>
@@ -168,6 +169,9 @@ export default function MenFunnelPage() {
                   {wall.map((r) => <li key={r.id}><blockquote>{r.quote}</blockquote><span>{r.attribution}</span></li>)}
                 </ul>
               ) : null}
+              <div className={styles.proofCta}>
+                <Button href={f.proof.cta.href} ctaId="men_proof_cta" location="men_proof">{fill(f.proof.cta.label)} <Icon name="arrow" size={18} /></Button>
+              </div>
             </Container>
           </section>
         ) : null}

@@ -70,9 +70,10 @@ export const featuredTestimonials: FeaturedTestimonial[] = [];
  * customers. Replace by filling featuredTestimonials / approvedReviews.
  */
 export const placeholderTestimonials: FeaturedTestimonial[] = [
-  { id: "ph-1", name: "[First name]", age: 42, location: "[City]", quote: "[Placeholder: a real, approved quote about the experience, e.g. how clear the results and plan were.]", attribution: "[First name], 42, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
-  { id: "ph-2", name: "[First name]", age: 36, location: "[City]", quote: "[Placeholder: a real, approved quote about booking, collection or how fast results came back.]", attribution: "[First name], 36, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
-  { id: "ph-3", name: "[First name]", age: 51, location: "[City]", quote: "[Placeholder: a real, approved quote about the doctor review and what to do next.]", attribution: "[First name], 51, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
+  // Tile template: short, raw, specific win. e.g. "I finally understood which numbers were fine and what I actually needed to work on. The written plan made it simple." — James, 42, Brisbane
+  { id: "ph-1", name: "[First name]", age: 42, location: "[City]", quote: "[PLACEHOLDER. Real quote about clarity: which numbers were fine, what to work on, how simple the plan was.]", attribution: "[First name], 42, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
+  { id: "ph-2", name: "[First name]", age: 36, location: "[City]", quote: "[PLACEHOLDER. Real quote about speed: how quickly results and the review came back.]", attribution: "[First name], 36, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
+  { id: "ph-3", name: "[First name]", age: 51, location: "[City]", quote: "[PLACEHOLDER. Real quote about ease: ordering, booking and the blood draw.]", attribution: "[First name], 51, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
 ];
 export const placeholderReviews: ApprovedReview[] = Array.from({ length: 6 }, (_, i) => ({ id: `phr-${i}`, quote: "[Placeholder short quote about the service experience.]", attribution: "[Name], [City]", approvedBy: "PLACEHOLDER", approvedOn: "" }));
 export const ugcVideos: UgcVideo[] = [];

@@ -24,6 +24,8 @@
 
 /* shared */
 .section { padding-block: var(--section-pad); }
+.intro { margin: calc(var(--s-4) * -1) 0 var(--s-5); max-width: 40rem; font-size: var(--fs-md); color: var(--muted); text-wrap: pretty; }
+.proofCta { margin-top: var(--s-5); }
 .h2 { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; margin-bottom: var(--s-5); }
 .split { display: grid; gap: var(--s-6); align-items: center; }
 
