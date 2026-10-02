@@ -23,7 +23,9 @@ export const metadata: Metadata = { title: "Order confirmed", robots: { index: f
  */
 export default async function OrderPage({ params, searchParams }: { params: Promise<{ orderId: string }>; searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const { orderId } = await params;
-  const order = await getOrderForPage(orderId, await searchParams);
+  const sp = await searchParams;
+  const order = await getOrderForPage(orderId, sp);
+  const preselectOfferId = typeof sp.plan === "string" ? sp.plan : undefined;
   if (!order) notFound();
   const collection = order.configuration.collectionMethodId ? getCollectionMethod(order.configuration.collectionMethodId) : null;
 
@@ -48,6 +50,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
               <RetestOffer
                 order={{ id: order.id, token: order.token, lines: order.lines, amountCents: order.amountCents, paidAt: order.paidAt.toISOString() }}
                 enrolled={order.retest ? { offerId: order.retest.offerId, nextTestDate: order.retest.nextTestDate.toISOString(), refundCents: order.retest.refundCents } : undefined}
+                preselectOfferId={preselectOfferId}
               />
 
               <section className={styles.block} aria-labelledby="next-title">

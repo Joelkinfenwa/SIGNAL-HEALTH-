@@ -37,6 +37,7 @@ Configuration over code: the product (`products.ts`: base markers, add-on order)
 /signal                         Product + configurator (built): base + add-ons, live total, sticky bar; ?addons= deep links
 /find-my-signal                 Quiz (built): interests → SIGNAL + add-ons → /signal?addons=
 /lp/[slug]                      Paid landing pages from config (phase 4)
+/men                            Direct-response funnel page (hook → stack → steps → fit → proof → plans → guarantee → FAQ → close); copy in config/funnel/men.ts; Track cards pass ?plan= through checkout to the post-purchase offer
 /checkout                       Built: editable summary, collection choice, your details, Stripe Payment Element + Apple/Google Pay (lib/checkout/create-order.ts creates Customer + PaymentIntent)
 /order/[orderId]                Built (UI): confirmation → instant-refund Automatic Retesting offer → booking. Server actions stubbed until Stripe; /order/demo on previews
 /retesting                      How Automatic Retesting works (built)

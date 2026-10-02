@@ -50,9 +50,31 @@ export interface CreatorQuote {
   approvedOn: string;
 }
 
+export interface FeaturedTestimonial extends ApprovedReview {
+  /** First name only. */
+  name: string;
+  age?: number;
+  location?: string;
+  /** Path in /public, with the person's written permission on file. */
+  photo?: string;
+}
+
 /** Empty by default. Add real, approved content only. */
 export const pressLogos: PressLogo[] = [];
 export const approvedReviews: ApprovedReview[] = [];
+export const featuredTestimonials: FeaturedTestimonial[] = [];
+
+/**
+ * PREVIEW-ONLY layout placeholders for the funnel proof section. Clearly
+ * labelled, never rendered in production, never to be mistaken for real
+ * customers. Replace by filling featuredTestimonials / approvedReviews.
+ */
+export const placeholderTestimonials: FeaturedTestimonial[] = [
+  { id: "ph-1", name: "[First name]", age: 42, location: "[City]", quote: "[Placeholder: a real, approved quote about the experience, e.g. how clear the results and plan were.]", attribution: "[First name], 42, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
+  { id: "ph-2", name: "[First name]", age: 36, location: "[City]", quote: "[Placeholder: a real, approved quote about booking, collection or how fast results came back.]", attribution: "[First name], 36, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
+  { id: "ph-3", name: "[First name]", age: 51, location: "[City]", quote: "[Placeholder: a real, approved quote about the doctor review and what to do next.]", attribution: "[First name], 51, [City]", approvedBy: "PLACEHOLDER", approvedOn: "" },
+];
+export const placeholderReviews: ApprovedReview[] = Array.from({ length: 6 }, (_, i) => ({ id: `phr-${i}`, quote: "[Placeholder short quote about the service experience.]", attribution: "[Name], [City]", approvedBy: "PLACEHOLDER", approvedOn: "" }));
 export const ugcVideos: UgcVideo[] = [];
 export const creatorQuotes: CreatorQuote[] = [];
 

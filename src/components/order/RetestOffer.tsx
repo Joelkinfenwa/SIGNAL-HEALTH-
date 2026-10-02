@@ -24,10 +24,11 @@ interface Enrolled { offerId: string; nextTestDate: string; refundCents: number 
  * an explicit unticked checkbox. Amounts come from quoteRetestForOrder(),
  * the same function the server uses, so what is shown is what is refunded.
  */
-export function RetestOffer({ order, enrolled }: { order: OrderLite; enrolled?: Enrolled }) {
+export function RetestOffer({ order, enrolled, preselectOfferId }: { order: OrderLite; enrolled?: Enrolled; preselectOfferId?: string }) {
   const offers = activeRetestOffers();
   const featured = offers.find((o) => o.featured) ?? offers[0]!;
-  const [selectedId, setSelectedId] = useState(enrolled?.offerId && offers.some((o) => o.id === enrolled.offerId) ? enrolled.offerId : featured.id);
+  const initial = [enrolled?.offerId, preselectOfferId].find((id) => id && offers.some((o) => o.id === id)) ?? featured.id;
+  const [selectedId, setSelectedId] = useState(initial);
   const [consent, setConsent] = useState(false);
   const [consentTouched, setConsentTouched] = useState(false);
   const [state, setState] = useState<"idle" | "submitting" | "accepted" | "declined" | "not_configured">(enrolled ? "accepted" : "idle");

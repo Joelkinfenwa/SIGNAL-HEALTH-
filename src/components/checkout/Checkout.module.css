@@ -80,3 +80,7 @@
   .pay { position: sticky; top: var(--s-5); }
   .bar { display: none; }
 }
+
+.plan { display: grid; gap: var(--s-2); padding: var(--s-4); border-radius: var(--r-sm); background: var(--c-brand-soft); }
+.planTitle { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: var(--fs-sm); color: var(--c-brand); }
+.planBody { font-size: var(--fs-sm); color: var(--fg); text-wrap: pretty; }

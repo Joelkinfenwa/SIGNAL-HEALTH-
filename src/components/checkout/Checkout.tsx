@@ -13,6 +13,8 @@ import { detailsCopy } from "@/config/checkout-fields";
 import { getBiomarker } from "@/config/biomarkers";
 import { collectionMethods, type CollectionMethodId } from "@/config/collection";
 import { signalTest } from "@/config/products";
+import { retestOffers, formatDiscount, type RetestOffer } from "@/config/retest-offer";
+import { quoteRetestForOrder } from "@/lib/retest/offer";
 import { visibleTrustClaims } from "@/config/trust";
 import { track } from "@/lib/analytics/track";
 import { createOrder } from "@/lib/checkout/create-order";
@@ -42,20 +44,25 @@ export function Checkout() {
   const [touched, setTouched] = useState<Partial<Record<CustomerField, boolean>>>({});
   const [payMessage, setPayMessage] = useState<string | null>(null);
   const [payment, setPayment] = useState<{ orderId: string; clientSecret: string; amountCents: number; token: string } | null>(null);
+  /** Retesting plan chosen before checkout (funnel "Track" cards); confirmed with consent after payment. */
+  const [plan, setPlan] = useState<RetestOffer | null>(null);
   const [starting, setStarting] = useState(false);
   const detailsRef = useRef<HTMLElement>(null);
   const payRef = useRef<HTMLElement>(null);
   const detailsDone = useRef(false);
   const router = useRouter();
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
+  const planQuote = useMemo(() => (plan && quote.pricingComplete ? quoteRetestForOrder(quote.lines, plan) : null), [plan, quote]);
   const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
   const options = sellableAddonsFor(signalTest);
   const trust = visibleTrustClaims().filter((c) => c.status === "verified").slice(0, 3);
   const paymentsLive = Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
   useEffect(() => {
-    const parsed = parseConfiguration(new URLSearchParams(window.location.search), signalTest);
+    const params = new URLSearchParams(window.location.search);
+    const parsed = parseConfiguration(params, signalTest);
     setCfg(parsed);
+    setPlan(retestOffers.find((o) => o.active && o.id === params.get("plan")) ?? null);
     setAddonsOpen(parsed.addonIds.length === 0);
     try {
       const saved = sessionStorage.getItem(DETAILS_KEY);
@@ -128,13 +135,14 @@ export function Checkout() {
       { eventId: paymentIntentId },
     );
     try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
-    router.push(`/order/${paymentIntentId}?t=${encodeURIComponent(payment.token)}`);
+    router.push(`/order/${paymentIntentId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`);
   }
 
   useEffect(() => {
     if (!hydrated) return;
-    window.history.replaceState(null, "", `${window.location.pathname}${serializeConfiguration(cfg)}`);
-  }, [cfg, hydrated]);
+    const base = serializeConfiguration(cfg);
+    window.history.replaceState(null, "", `${window.location.pathname}${base}${plan ? `${base ? "&" : "?"}plan=${plan.id}` : ""}`);
+  }, [cfg, plan, hydrated]);
 
   function toggle(id: string) {
     const has = cfg.addonIds.includes(id);
@@ -192,6 +200,15 @@ export function Checkout() {
             </ul>
             <p className={styles.hint}>Not sure? <Link href="/find-my-signal">Answer four quick questions</Link> and we&apos;ll suggest the add-ons that fit.</p>
           </details>
+          {plan ? (
+            <div className={styles.plan}>
+              <p className={styles.planTitle}><Icon name="refresh" size={16} /> Automatic Retesting · {plan.cadence.toLowerCase()}</p>
+              <p className={styles.planBody}>
+                Pay for today&apos;s test now. Straight after payment you confirm the plan and we refund {formatDiscount(plan.discountBps)}{planQuote ? ` (${formatAUD(planQuote.refundTodayCents)})` : ""} of today&apos;s order to your card, then every retest is {formatDiscount(plan.discountBps)} off. Recurring billing, cancel any time.
+              </p>
+              <button type="button" className={styles.remove} onClick={() => setPlan(null)}>Remove plan</button>
+            </div>
+          ) : null}
         </section>
 
         <section className={styles.block} aria-labelledby="collection-title">
@@ -251,7 +268,7 @@ export function Checkout() {
               clientSecret={payment.clientSecret}
               amountCents={payment.amountCents}
               billing={{ name: `${customer.firstName.trim()} ${customer.lastName.trim()}`, email: customer.email.trim(), phone: customer.phone.trim() }}
-              returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}`}
+              returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`}
               onSuccess={onPaid}
             />
           </div>

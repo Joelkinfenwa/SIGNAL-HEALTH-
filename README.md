@@ -46,6 +46,7 @@ src/
     configurator.ts    Configurator copy, heading variants and microcopy (CRO knobs)
     checkout-fields.ts Checkout "Your details" copy, options, minimum age (lib/checkout/customer.ts validates)
     retest-offer.ts    Retesting plans + the post-purchase instant-refund offer copy, disclosure and policy knobs
+    funnel/men.ts      /men direct-response funnel page: all nine blocks of copy, claims flagged `verified`
     internal/costs.ts  Pathology COGS — server-only; never imported by UI (test-enforced)
     experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
@@ -151,6 +152,10 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Demo order (`/order/demo`, SIG-DEMO-0001, $349/$59/$49) | Previews only | Illustrative; production returns 404 |
 | Preview pricing ($349 / $59 / $49 …) | Everywhere, with a banner, when `NEXT_PUBLIC_PREVIEW_PRICING=1` | Placeholders for test payments only; the server refuses to create an order with them on Production |
 | "Your card details never touch our servers" | Checkout payment panel | True by construction (Stripe Payment Element); keep it that way |
+| **/men funnel page** (`config/funnel/men.ts`, each line has `verified`): "Australian-registered doctors", "TGA-compliant", "doctor-reviewed", "Results and doctor review in ~7 days", "No GP referral needed", "Priority doctor review", "free hormone add-on on your first draw", "Priority booking", "One at-home collector visit included each year", "Tests processed by accredited Australian labs", "We never promise specific medications. Treatment is only offered if clinically appropriate", "data stored using the same standards as hospitals" | /men | TODO-VERIFY every line with clinical, operations and legal before paid traffic. "TGA-compliant" is probably the wrong frame for a pathology service (laboratories are NATA/RCPA-accredited; TGA regulates therapeutic goods) and should be reworded. Preview shows a "?" beside each unverified line; unverified plan bullets render on previews only |
+| "Clear Plan or It's Free" guarantee (full refund within 7 days if no clear explanation or plan) | /men hero, guarantee block | DECISION + TODO(legal): needs terms, a refund process and a definition of "doctor consult" |
+| "Most popular" badge on SIGNAL Track | /men plans | DECISION: popularity claim needs sales data (ACL); one string in `config/funnel/men.ts` |
+| Testimonials and review wall | /men proof section | Renders only from `featuredTestimonials` / `approvedReviews` in `config/social-proof.ts` (real, approved, service-experience quotes). Placeholders render on previews only, clearly labelled |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
