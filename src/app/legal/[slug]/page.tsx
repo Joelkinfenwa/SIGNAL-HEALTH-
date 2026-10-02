@@ -6,6 +6,7 @@ import { SiteHeader } from "@/components/layout/SiteHeader";
 import { Container } from "@/components/ui/Container";
 import { getLegalDocument, legalDocuments } from "@/config/legal";
 import { legalEntity, legalPlaceholders } from "@/config/legal/entity";
+import { cx } from "@/lib/cx";
 import styles from "./page.module.css";
 
 export const dynamicParams = false;
@@ -32,7 +33,7 @@ export default async function LegalPage({ params }: { params: Promise<{ slug: st
             <ul className={styles.docs}>
               {legalDocuments.map((d) => <li key={d.slug}><Link href={`/legal/${d.slug}`} aria-current={d.slug === doc.slug ? "page" : undefined}>{d.title}</Link></li>)}
             </ul>
-            <p className={styles.sideTitle}>On this page</p>
+            <p className={cx(styles.sideTitle, styles.tocTitle)}>On this page</p>
             <ul className={styles.toc}>
               {doc.sections.map((s) => <li key={s.id}><a href={`#${s.id}`}>{s.title}</a></li>)}
             </ul>

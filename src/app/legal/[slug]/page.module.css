@@ -6,7 +6,7 @@
 .docs a, .toc a { display: inline-flex; align-items: center; min-height: 36px; font-size: var(--fs-sm); color: var(--muted); text-decoration: none; }
 .docs a:hover, .toc a:hover { color: var(--fg); text-decoration: underline; }
 .docs a[aria-current="page"] { color: var(--fg); font-weight: 700; }
-.toc { display: none; }
+.toc, .tocTitle { display: none; }
 .article { max-width: 44rem; }
 .draft { margin-bottom: var(--s-4); padding: var(--s-2) var(--s-3); border-radius: 8px; background: var(--c-signal-soft); font-size: var(--fs-xs); font-weight: 700; }
 .title { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; }
@@ -21,4 +21,5 @@
   .inner { grid-template-columns: 16rem 1fr; gap: var(--s-8); }
   .side { position: sticky; top: var(--s-5); }
   .toc { display: grid; }
+  .tocTitle { display: block; }
 }
