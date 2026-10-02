@@ -15,7 +15,6 @@ import { resultsPreview } from "@/config/home";
 import { menMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
-import { approvedReviews, featuredTestimonials, placeholderReviews, placeholderTestimonials } from "@/config/social-proof";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
 import { quoteRetest } from "@/lib/retest/offer";
@@ -45,6 +44,8 @@ function fill(s: string): string {
 
 export const metadata: Metadata = { title: f.seo.title, description: fill(f.seo.description), robots: { index: false, follow: false } };
 
+/** Unverified claims render on previews only (with a ? marker). Production shows verified lines alone. */
+const visible = (claims: Claim[]) => claims.filter((c) => c.verified || PREVIEW);
 const ClaimText = ({ c }: { c: Claim }) => <>{fill(c.text)}{!c.verified && PREVIEW ? <span className={styles.todo} title="Unverified claim: see README claims register">?</span> : null}</>;
 
 /**
@@ -53,10 +54,6 @@ const ClaimText = ({ c }: { c: Claim }) => <>{fill(c.text)}{!c.verified && PREVI
  * Minimal header (logo + trust strip, no nav) so the only exits are the CTAs.
  */
 export default function MenFunnelPage() {
-  const featured = featuredTestimonials.length ? featuredTestimonials : PREVIEW ? placeholderTestimonials : [];
-  const wall = approvedReviews.length ? approvedReviews : PREVIEW ? placeholderReviews : [];
-  const showProof = featured.length > 0 || wall.length > 0;
-  const placeholdersShown = PREVIEW && featuredTestimonials.length === 0 && approvedReviews.length === 0 && showProof;
   const unverified = unverifiedClaimCount();
   const primary = { label: fill(f.hero.primaryCta.label), href: f.hero.primaryCta.href };
 
@@ -66,7 +63,7 @@ export default function MenFunnelPage() {
         <Container className={styles.headerInner}>
           <Logo />
           <ul className={styles.trustStrip} aria-label="Trust">
-            {f.trustStrip.map((c) => <li key={c.text}><ClaimText c={c} /></li>)}
+            {visible(f.trustStrip).map((c) => <li key={c.text}><ClaimText c={c} /></li>)}
           </ul>
         </Container>
       </header>
@@ -84,7 +81,7 @@ export default function MenFunnelPage() {
                 <a href={f.hero.secondaryCta.href} className={styles.secondary}>{f.hero.secondaryCta.label}</a>
               </div>
               <ul className={styles.miniTrust}>
-                {f.hero.miniTrust.map((c) => <li key={c.text}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
+                {visible(f.hero.miniTrust).map((c) => <li key={c.text}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
               </ul>
             </div>
             <Photo asset={menMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 30%" />
@@ -162,32 +159,22 @@ export default function MenFunnelPage() {
           </Container>
         </section>
 
-        {/* 5. Proof: renders only with approved content (placeholders on previews) */}
-        {showProof ? (
-          <section data-theme="light" className={styles.section} aria-labelledby="proof-title">
-            <Container>
+        {/* 5. Trust facts: factual only. No testimonials (AHPRA, National Law s133). */}
+        <section data-theme="light" className={styles.section} aria-labelledby="proof-title">
+          <Container className={styles.split}>
+            <div>
               <h2 id="proof-title" className={styles.h2}>{f.proof.title}</h2>
-              {placeholdersShown ? <p className={styles.placeholderNote}>PLACEHOLDERS: layout only. Add real, approved quotes in config/social-proof.ts. Nothing here renders in production until then.</p> : null}
-              <ul className={styles.featured}>
-                {featured.map((t) => (
-                  <li key={t.id} className={styles.testimonial}>
-                    <span className={styles.avatar} aria-hidden="true">{t.photo ? null : t.name.replace(/[^A-Za-z]/g, "").slice(0, 1) || "?"}</span>
-                    <blockquote className={styles.quote}>{t.quote}</blockquote>
-                    <p className={styles.who}>{t.name}{t.age ? `, ${t.age}` : ""}{t.location ? `, ${t.location}` : ""}</p>
-                  </li>
-                ))}
+              <p className={styles.intro}>{f.proof.intro}</p>
+              <ul className={styles.facts}>
+                {visible(f.proof.facts).map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
-              {wall.length ? (
-                <ul className={styles.wall}>
-                  {wall.map((r) => <li key={r.id}><blockquote>{r.quote}</blockquote><span>{r.attribution}</span></li>)}
-                </ul>
-              ) : null}
               <div className={styles.proofCta}>
                 <Button href={f.proof.cta.href} ctaId="men_proof_cta" location="men_proof">{fill(f.proof.cta.label)} <Icon name="arrow" size={18} /></Button>
               </div>
-            </Container>
-          </section>
-        ) : null}
+            </div>
+            <Photo asset={menMedia.reading} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.sidePhoto} position="center" />
+          </Container>
+        </section>
 
         {/* 6. Pricing and options */}
         <section id="plans" data-theme="shell" className={styles.section} aria-labelledby="plans-title">
@@ -198,13 +185,13 @@ export default function MenFunnelPage() {
                 <li key={c.id} className={cx(styles.plan, c.badge && styles.planFeatured)} data-theme={c.badge ? "dark" : undefined}>
                   <div className={styles.planHead}>
                     <h3 className={styles.planName}>{c.name}</h3>
-                    {c.badge ? <span className={styles.planBadge}>{c.badge}</span> : null}
+                    {c.badge ? <span className={styles.planBadge}>{fill(c.badge)}</span> : null}
                   </div>
                   <p className={styles.planPrice}><span className="num">{fill(c.priceLine)}</span></p>
                   {c.priceSub ? <p className={styles.planPriceSub}>{fill(c.priceSub)}</p> : null}
                   <p className={styles.planTagline}>{c.tagline}</p>
                   <ul className={styles.planBullets}>
-                    {c.bullets.filter((b) => b.verified || PREVIEW).map((b) => <li key={b.text}><Icon name="check" size={14} /> <ClaimText c={b} /></li>)}
+                    {visible(c.bullets).map((b) => <li key={b.text}><Icon name="check" size={14} /> <ClaimText c={b} /></li>)}
                   </ul>
                   <Button href={c.cta.href} full variant={c.badge ? "solid" : "outline"} ctaId={`men_plan_${c.id}`} location="men_plans">{c.cta.label} <Icon name="arrow" size={18} /></Button>
                 </li>
@@ -214,6 +201,7 @@ export default function MenFunnelPage() {
               <thead><tr><th scope="col"><span className={styles.srOnly}>Feature</span></th>{f.plans.cards.map((c) => <th key={c.id} scope="col">{c.name.replace("SIGNAL ", "").replace(" SIGNAL Panel", "")}</th>)}</tr></thead>
               <tbody>{f.plans.compare.rows.map((r) => <tr key={r.label}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i} className="num">{fill(v)}</td>)}</tr>)}</tbody>
             </table>
+            <p className={styles.optionalNote}>{fill(f.plans.optionalNote)}</p>
             <p className={styles.disclosure}>{fill(f.plans.disclosure)}</p>
           </Container>
         </section>
@@ -225,13 +213,16 @@ export default function MenFunnelPage() {
               <Photo asset={menMedia.doctor} sizes="(min-width: 64rem) 50vw, 100vw" className={styles.safetyPhoto} position="center 40%" />
               <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
               <ul className={styles.safety}>
-                {f.safety.bullets.map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
+                {visible(f.safety.bullets).map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
             </div>
-            <div className={styles.guarantee}>
-              <h3 className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h3>
-              <p className={styles.guaranteeBody}>{fill(f.safety.guarantee.body)}</p>
-            </div>
+            {f.safety.guarantee.verified || PREVIEW ? (
+              <div className={styles.guarantee}>
+                <h3 className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h3>
+                <p className={styles.guaranteeBody}>{fill(f.safety.guarantee.body)}</p>
+                <p className={styles.guaranteeTerms}>{f.safety.guarantee.terms} <Link href="/legal/terms">Read the terms</Link>.</p>
+              </div>
+            ) : null}
           </Container>
         </section>
 

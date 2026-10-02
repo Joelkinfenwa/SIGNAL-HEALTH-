@@ -25,3 +25,11 @@ test("plan cards point at real retesting offers and prices are never typed into 
 test("unverified claims are counted so they cannot be forgotten", () => {
   assert.ok(unverifiedClaimCount() > 0, "nothing to clear yet means the flags were removed without verification");
 });
+
+test("funnel copy stays AHPRA-safe: no testimonials, no diagnosis or popularity claims, no TGA claim", () => {
+  const text = JSON.stringify(menFunnel).toLowerCase();
+  for (const banned of ["most popular", "tga", "diagnos", "finally explains", "medical-grade", "free hormone add-on", "testimonial\""]) assert.ok(!text.includes(banned), `found "${banned}"`);
+  assert.ok(menFunnel.proof.facts.length >= 4);
+  assert.ok(menFunnel.plans.optionalNote.toLowerCase().includes("optional"));
+  assert.ok(menFunnel.safety.guarantee.terms.length > 0);
+});

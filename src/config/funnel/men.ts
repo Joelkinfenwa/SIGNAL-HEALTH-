@@ -1,12 +1,20 @@
 /**
  * Funnel page: /men. Direct-response structure (hook → stack → steps → fit →
- * proof → offer → risk reversal → FAQ → close). Every word on the page is
- * here so sections can be rewritten and tested without touching JSX.
+ * trust facts → offer → risk reversal → FAQ → close). Every word on the page
+ * is here so sections can be rewritten and tested without touching JSX.
+ *
+ * AHPRA / National Law s133 (advertising a regulated health service):
+ *  - No testimonials or reviews about the service. This page offers doctor
+ *    review, so the proof section is factual, never quotes.
+ *  - No claims that create an unreasonable expectation of benefit (a panel
+ *    "explains your fatigue"), no "diagnostic" wording, no encouragement of
+ *    unnecessary use (retesting is framed as optional), and every discount or
+ *    guarantee states its terms.
+ *  - Titles must be accurate: "Australian-registered doctor" only once confirmed.
  *
  * Claims: each trust/guarantee line carries `verified`. Unverified lines
- * still render (this is the brief's copy) but are listed in the README
- * claims register and counted in a preview-only banner. Clear them with
- * clinical, operations and legal before sending paid traffic.
+ * render on previews only (with a ? marker) and are listed in the README
+ * claims register. Flip `verified: true` to publish a line.
  *
  * Prices are never typed here: they come from products.ts, addons.ts and
  * retest-offer.ts via the tokens {price} {addonsFrom} {track6Price}
@@ -36,11 +44,11 @@ export const menFunnel = {
   trustStrip: [
     { text: "Powered by Express Pathology", verified: true },
     { text: "Australian-registered doctors", verified: false },
-    { text: "TGA-compliant", verified: false },
+    { text: "Accredited Australian laboratories", verified: false },
   ] as Claim[],
   hero: {
-    headline: "Australian men 30–60: Get a doctor-reviewed blood panel that finally explains your fatigue, mood and energy in 7 days.",
-    subheadline: "One visit, one comprehensive panel, reviewed by an Australian-registered doctor with a clear, plain-English plan for what to do next.",
+    headline: "Australian men 30–60: get a doctor-reviewed blood panel, explained in plain English, in around 7 days.",
+    subheadline: "Feeling tired, flat or not yourself? Start with the numbers. One visit, one comprehensive panel, reviewed by an Australian-registered doctor, with a written plan for what to do next.",
     primaryCta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
     secondaryCta: { label: "Or see what's included first", href: "#included" },
     miniTrust: [
@@ -55,7 +63,7 @@ export const menFunnel = {
     title: "What you actually get when you order SIGNAL",
     intro: "When you order a SIGNAL test, you're not just getting numbers. You're getting a full check, a doctor's eyes on your results, and a written plan.",
     bullets: [
-      { title: "One comprehensive blood panel", body: "Covering energy, hormones, heart, metabolism and key nutrients. {markers} markers across {areas} areas in the base test." },
+      { title: "One comprehensive blood panel", body: "Heart, metabolism, thyroid, iron, liver, kidneys, inflammation and more. {markers} markers across {areas} areas in the base test, every one listed before you pay." },
       { title: "Doctor-reviewed results", body: "Reviewed by an Australian-registered doctor, not just auto-generated ranges." },
       { title: "A clear, written plan", body: "What's normal, what's not, and what to do next, explained in plain English." },
       { title: "Optional add-ons in the same blood draw", body: "Hormones, thyroid, heart and more, from {addonsFrom}. One needle, no second visit." },
@@ -79,7 +87,7 @@ export const menFunnel = {
     bestForTitle: "Best for",
     bestFor: [
       "Men 30–60 feeling tired, flat, low drive or “not myself”",
-      "Men who want clear numbers and a medical-grade view, not TikTok guesses",
+      "Men who want clear numbers and a doctor's view, not guesswork from social media",
       "Men happy to pay privately for clarity and a plan",
     ],
     notForTitle: "Not for",
@@ -90,8 +98,20 @@ export const menFunnel = {
     ],
   },
 
-  // 5. Proof
-  proof: { title: "Real people, real answers", intro: "What customers say about the experience.", cta: { label: "Order your SIGNAL test – {price}", href: "/checkout" } },
+  // 5. Trust facts (AHPRA: no testimonials for a doctor-reviewed service)
+  proof: {
+    title: "Straight answers, no hype",
+    intro: "We don't publish patient testimonials for a doctor-reviewed service, and Australian law agrees. Here's what we can tell you instead.",
+    facts: [
+      { text: "Samples are analysed by accredited Australian pathology laboratories", verified: false },
+      { text: "Every result is reviewed by an Australian-registered doctor before you see it", verified: false },
+      { text: "{markers} markers across {areas} areas in the base test, every one listed before you pay", verified: true },
+      { text: "One clear price. No referral, no Medicare paperwork, no surprise fees", verified: true },
+      { text: "Your results are never shared with advertising platforms", verified: true },
+      { text: "A written refund guarantee, with the terms in plain sight", verified: false },
+    ] as Claim[],
+    cta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
+  },
 
   // 6. Pricing and options
   plans: {
@@ -113,14 +133,13 @@ export const menFunnel = {
       {
         id: "retest_6m",
         name: "SIGNAL Track",
-        badge: "Most popular", // DECISION: a popularity claim needs data behind it (ACL). Change or remove here.
+        badge: "Save {track6Discount} per test", // factual; never a popularity claim without data (ACL / AHPRA)
         priceLine: "{track6Price} per test",
         priceSub: "2 tests a year · {track6Discount} off · charged per test",
         tagline: "Best if you want to keep an eye on things over time.",
         bullets: [
           { text: "Two panels a year at member pricing", verified: true },
           { text: "Priority doctor review", verified: false },
-          { text: "Member-only perk: free hormone add-on on your first draw", verified: false },
           { text: "Change the date, pause or cancel any time", verified: true },
         ],
         cta: { label: "Get started", href: "/checkout?plan=retest_6m" },
@@ -128,6 +147,7 @@ export const menFunnel = {
       {
         id: "retest_3m",
         name: "SIGNAL Track+",
+        badge: "Save {track3Discount} per test",
         priceLine: "{track3Price} per test",
         priceSub: "4 tests a year · {track3Discount} off · charged per test",
         tagline: "Best for high performers or complex cases.",
@@ -148,12 +168,13 @@ export const menFunnel = {
         { label: "See what's changing over time", values: ["–", "✓", "✓"] },
       ],
     },
+    optionalNote: "Retesting is optional. Choose a rhythm only if tracking change over time is useful for you; your doctor's review will say whether a retest is worth doing.",
     disclosure: "SIGNAL Track and Track+ use recurring billing: after today's test you confirm the plan, the member discount on today's order is refunded to your card, and each future test is charged at the member price at the start of each interval until you cancel. Change the date, pause or cancel any time from your account.",
   },
 
   // 7. Safety and guarantee
   safety: {
-    title: "Safe, doctor-led, and TGA-compliant",
+    title: "Safe and doctor-led",
     bullets: [
       { text: "Tests processed by accredited Australian labs", verified: false },
       { text: "Results reviewed by Australian-registered doctors", verified: false },
@@ -163,6 +184,7 @@ export const menFunnel = {
     guarantee: {
       title: "Clear Plan or It's Free",
       body: "If after your blood draw and doctor review you feel you didn't get a clear explanation or plan for what to do next, email us within 7 days for a full refund of your {price} test fee.",
+      terms: "Terms apply. Add-ons and collection fees are refunded too if you cancel before your blood is drawn.",
       verified: false,
     },
   },
@@ -174,7 +196,7 @@ export const menFunnel = {
       { q: "Do I need a GP referral?", a: "No. SIGNAL is a private, out-of-pocket service, so you can order directly without a GP referral." },
       { q: "Is this covered by Medicare or private health?", a: "No. SIGNAL is not billed to Medicare or private health. It's a private service you pay for yourself." },
       { q: "What if my results are abnormal?", a: "If we see something concerning, we'll highlight it clearly in your report and recommend appropriate next steps, which may include seeing your GP or a relevant specialist." },
-      { q: "Will I definitely get medication?", a: "No. SIGNAL is a diagnostic and planning service. We never promise specific medications. Any treatment is only considered separately and only if clinically appropriate." },
+      { q: "Will I definitely get medication?", a: "No. SIGNAL is a testing, review and planning service. We never promise specific medications. Any treatment is only considered separately and only if clinically appropriate." },
       { q: "How long does it take from blood draw to results?", a: "Most men receive their doctor-reviewed results and plan within about 7 days of their blood draw." },
       { q: "Where do I go for my blood draw?", a: "You'll be able to choose a partner collection centre near you when you order. In some areas we also offer a mobile nurse visit." },
       { q: "What happens if I cancel or change my appointment?", a: "Change your collection time from your booking link at no cost. If you cancel before your blood is drawn, email us for a refund." },
@@ -197,6 +219,6 @@ export const trackOffer = (id: "retest_6m" | "retest_3m") => retestOffers.find((
 /** Count of lines on the page still marked unverified, for the preview banner and the claims register. */
 export function unverifiedClaimCount(): number {
   const f = menFunnel;
-  const all: Claim[] = [...f.trustStrip, ...f.hero.miniTrust, ...f.safety.bullets, { text: f.safety.guarantee.body, verified: f.safety.guarantee.verified }, ...f.plans.cards.flatMap((c) => c.bullets)];
+  const all: Claim[] = [...f.trustStrip, ...f.hero.miniTrust, ...f.proof.facts, ...f.safety.bullets, { text: f.safety.guarantee.body, verified: f.safety.guarantee.verified }, ...f.plans.cards.flatMap((c) => c.bullets)];
   return all.filter((c) => !c.verified).length;
 }
