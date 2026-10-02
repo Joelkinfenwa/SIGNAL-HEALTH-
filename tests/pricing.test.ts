@@ -43,9 +43,9 @@ test("recommended add-ons travel separately from preselected ones", () => {
 });
 
 test("quote is incomplete while any price is null, complete otherwise", () => {
-  const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus"] });
-  assert.equal(q.pricingComplete, false);
-  assert.equal(q.totalCents, null);
+  const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus"], collectionMethodId: "mobile" });
+  assert.equal(q.pricingComplete, process.env.NEXT_PUBLIC_PREVIEW_PRICING === "1");
+  if (!q.pricingComplete) assert.equal(q.totalCents, null);
   // Simulate priced config.
   const priced = { ...signalTest, priceCents: 34900 };
   const heart = addons.find((a) => a.id === "heart_plus")!;
@@ -77,11 +77,11 @@ test("toggleAddon adds then removes", () => {
   assert.deepEqual(cfg.addonIds, []);
 });
 
-test("display total shows the base price plus TBC while an add-on is unpriced", () => {
+test("display total shows the priced part plus TBC while a line is unpriced", () => {
   const fmt = (c: number) => `$${c / 100}`;
   const q = quoteConfiguration({ productId: "signal", addonIds: ["heart_plus"] });
-  assert.equal(q.pricedSubtotalCents, 29900);
-  assert.equal(q.unpricedCount, 1);
-  assert.equal(displayTotal(q, fmt, "soon"), "$299 + TBC");
+  assert.equal(q.totalCents, 29900 + 21900);
+  const unpriced = { ...q, lines: [...q.lines, { kind: "collection" as const, id: "mobile", label: "At home", priceCents: null }], totalCents: null, pricingComplete: false, unpricedCount: 1 };
+  assert.equal(displayTotal(unpriced, fmt, "soon"), "$518 + TBC");
   assert.equal(displayTotal(quoteConfiguration({ productId: "signal", addonIds: [] }), fmt, "soon"), "$299");
 });

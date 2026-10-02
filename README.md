@@ -116,8 +116,8 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | "Calculated for you, at no extra cost" (non-HDL-C, eGFR, TSAT, free T, HOMA-IR, ratios) | Product pages | TODO-VERIFY which the lab reports vs. we compute; no extra assay is charged |
 | "Everything in Core, plus N more" | Product pages | Derived from marker lists |
 | Add-ons "coming; availability and pricing confirmed at launch" | Product and compare pages | TODO(pricing) and TODO-VERIFY assay availability |
-| Add-on prices: Hormones+ $119, Nutrients+ $109, Thyroid+ $139, Performance+ $69 | /signal configurator, checkout | Set 2 Oct 2026 in `config/addons.ts` |
-| "Price TBC" on Heart+ and the home visit | /signal configurator, checkout | TODO(pricing): `heart_plus` in `config/addons.ts`; `priceDeltaCents` for `mobile` in `config/collection.ts` |
+| Add-on prices: Hormones+ $119, Nutrients+ $109, Heart+ $219, Thyroid+ $139, Performance+ $69 | /signal configurator, checkout | Set 2 Oct 2026 in `config/addons.ts` |
+| "Price TBC" on the home visit | checkout collection step | TODO(pricing): `priceDeltaCents` for `mobile` in `config/collection.ts` (0 if included) |
 | Add-on badges ("Advanced", "For performance"; "Popular" reserved) | /signal configurator (`config/addons.ts` `badge`) | Descriptive only; "Popular" must not be set until sales data supports it |
 | Add-on long descriptions ("a marker set largely by your genes", "the three nutrients people most often supplement") | /signal configurator "What you get" (`config/addons.ts`) | Measurement/preference framing; clinical and legal to confirm wording |
 | Homepage areas tagged "add-on" (Hormones, Nutrients, Recovery) | Homepage "What SIGNAL measures" | Derived from add-on config; makes clear these are not in the base test |

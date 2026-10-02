@@ -10,7 +10,6 @@ export const PREVIEW_PRICING = process.env.NEXT_PUBLIC_PREVIEW_PRICING === "1";
 
 /** TODO(pricing): placeholders for testing only. Not real prices. */
 export const previewPriceCents: Readonly<Record<string, number>> = {
-  heart_plus: 9900,
   mobile: 4900,
 };
 

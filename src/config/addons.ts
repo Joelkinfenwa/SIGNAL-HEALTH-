@@ -18,7 +18,6 @@
  * assay availability with the laboratory partner. TODO(pricing): prices null until set.
  */
 import type { InterestId } from "./interests";
-import { resolvePrice } from "./pricing";
 import { signalTest, type Product } from "./products";
 
 /** Badge vocabulary. Use sparingly: at most one or two badges across the list. */
@@ -104,7 +103,7 @@ export const addons: Addon[] = [
       "ApoB counts the particles that carry cholesterol, ApoA1 the ones that help clear it, and Lp(a) is a marker set largely by your genes that most people have never had measured. Together they add depth to the standard lipid panel in every SIGNAL.",
     forWho: "Heart health matters to you and you want more than the standard cholesterol panel.",
     markerIds: ["apob", "apoa1", "lpa", "apob_apoa1"],
-    priceCents: resolvePrice("heart_plus", null),
+    priceCents: 21900, // AUD, set 2 Oct 2026
     enabled: true,
     launchEnabled: true,
     badge: "advanced",
