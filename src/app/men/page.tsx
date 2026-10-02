@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type Claim } from "@/config/funnel/men";
-import { signalMedia } from "@/config/media";
+import { menMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
 import { approvedReviews, featuredTestimonials, placeholderReviews, placeholderTestimonials } from "@/config/social-proof";
@@ -86,7 +86,7 @@ export default function MenFunnelPage() {
               </ul>
             </div>
             <div className={styles.heroVisual}>
-              <Photo asset={signalMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 30%" />
+              <Photo asset={menMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 25%" />
               <SignalCard className={styles.heroCard} />
             </div>
           </Container>
@@ -109,7 +109,7 @@ export default function MenFunnelPage() {
               <Button href={primary.href} ctaId="men_included_cta" location="men_included">{primary.label} <Icon name="arrow" size={18} /></Button>
             </div>
             <div className={styles.reportVisual}>
-              <Photo asset={signalMedia.results} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.reportPhoto} position="center 35%" />
+              <Photo asset={menMedia.results} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.reportPhoto} position="center 30%" />
               <SignalCard className={styles.reportCard} />
             </div>
           </Container>
@@ -122,10 +122,15 @@ export default function MenFunnelPage() {
             <ol className={styles.steps}>
               {f.steps.items.map((s, i) => (
                 <li key={s.title} className={styles.step}>
-                  <span className={styles.stepIcon}><Icon name={s.icon} size={22} /></span>
-                  <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
-                  <h3 className={styles.stepTitle}>{s.title}</h3>
-                  <p className={styles.stepBody}>{fill(s.body)}</p>
+                  <div className={styles.stepPhotoWrap}>
+                    <Photo asset={menMedia.steps[s.photo]} sizes="(min-width: 64rem) 22vw, (min-width: 48rem) 45vw, 100vw" className={styles.stepPhoto} position="center" />
+                    <span className={styles.stepIcon}><Icon name={s.icon} size={20} /></span>
+                    <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
+                  </div>
+                  <div className={styles.stepText}>
+                    <h3 className={styles.stepTitle}>{s.title}</h3>
+                    <p className={styles.stepBody}>{fill(s.body)}</p>
+                  </div>
                 </li>
               ))}
             </ol>
@@ -209,6 +214,7 @@ export default function MenFunnelPage() {
         <section data-theme="light" className={styles.section} aria-labelledby="safety-title">
           <Container className={styles.split}>
             <div>
+              <Photo asset={menMedia.steps.review} sizes="(min-width: 64rem) 50vw, 100vw" className={styles.safetyPhoto} position="center 40%" />
               <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
               <ul className={styles.safety}>
                 {f.safety.bullets.map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
@@ -241,6 +247,8 @@ export default function MenFunnelPage() {
 
         {/* 9. Close */}
         <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
+          <div className={styles.closePhotoWrap} aria-hidden="true"><Photo asset={menMedia.close} sizes="100vw" className={styles.closePhoto} position="center 60%" /></div>
+          <div className={styles.closeScrim} aria-hidden="true" />
           <Container className={styles.closeInner}>
             <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
             <p className={styles.closeSub}>{f.close.sub}</p>

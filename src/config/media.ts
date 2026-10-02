@@ -129,3 +129,25 @@ export const signalMedia = {
     laps: { src: `${CDN2}/hf_20260929_083019_df5afcf9-8a02-4c13-8649-050e275d0940.png`, alt: "A couple swimming slow laps in an ocean pool in late afternoon light" },
   },
 } as const;
+
+/**
+ * /men funnel page renders (Higgsfield soul_2, 2 Oct 2026). Concept imagery:
+ * never presented as real customers or staff. QA each at full size for
+ * baked-in text before launch; regenerate any that fail.
+ */
+const HF2 = `${CDN2}/hf_20261002_020641_`;
+export const menMedia = {
+  hero: { src: `${HF2}855481d0-a7bd-45e5-9556-76d00cf70811.png`, alt: "A man in his forties on a coastal clifftop path at sunrise" },
+  heroAlt: {
+    kitchen: { src: `${HF2}989e9405-28ca-4ff0-b1cc-da91a59011d7.png`, alt: "A man in his late thirties with a coffee at a bright kitchen bench" },
+    swim: { src: `${HF2}daf320d4-529f-41bf-8739-759682526350.png`, alt: "A man around fifty with a towel over his shoulder after an ocean swim" },
+  },
+  results: { src: `${HF2}8e3cc2b6-0dd8-41e7-935a-c319be0b153a.png`, alt: "A man reading results on his phone on a balcony in morning light" },
+  steps: {
+    order: { src: `${HF2}51911b51-706a-4d22-9a09-d3b69ccae3ec.png`, alt: "A printed health report and a glass of water on a timber table" },
+    draw: { src: `${HF2}1b19a77f-3908-42ae-9fbc-e3b93164c69b.png`, alt: "A collector chatting with a seated man before a blood collection" },
+    review: { src: `${HF2}d3cc5d3c-64c9-45cf-bd79-427ffbc4ec87.png`, alt: "A doctor reviewing results on a monitor at a tidy desk" },
+    nurse: { src: `${HF2}e5864b89-5609-44f7-b9b8-3c6f523b4684.png`, alt: "A mobile nurse arriving at the front door of a suburban home" },
+  },
+  close: { src: `${HF2}943ef0dd-448a-4564-a8d6-b50e83f3d27a.png`, alt: "A lone runner at a coastal lookout at dawn above an empty road" },
+} as const satisfies Record<string, MediaAsset | Record<string, MediaAsset>>;
