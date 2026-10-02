@@ -66,11 +66,11 @@ export const menFunnel = {
   steps: {
     title: "How SIGNAL works, start to finish",
     items: [
-      { icon: "calendar", photo: "nurse", title: "Order online in 3 minutes", body: "Pay securely and choose your preferred collection location." },
-      { icon: "tube", photo: "draw", title: "Get your blood drawn", body: "At a partner collection centre or by a mobile nurse where available. No GP referral." },
-      { icon: "shield", photo: "review", title: "A doctor reviews your results", body: "Checking for red flags and patterns, not just individual numbers." },
-      { icon: "chart", photo: "order", title: "Get your report and plan", body: "Your results and next-step plan delivered in around 7 days." },
-    ] as { icon: "calendar" | "tube" | "shield" | "chart"; photo: "order" | "draw" | "review" | "nurse"; title: string; body: string }[],
+      { icon: "calendar", title: "Order online in 3 minutes", body: "Pay securely and choose your preferred collection location." },
+      { icon: "tube", title: "Get your blood drawn", body: "At a partner collection centre or by a mobile nurse where available. No GP referral." },
+      { icon: "shield", title: "A doctor reviews your results", body: "Checking for red flags and patterns, not just individual numbers." },
+      { icon: "chart", title: "Get your report and plan", body: "Your results and next-step plan delivered in around 7 days." },
+    ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
   },
 
   // 4. Who it's for

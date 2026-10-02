@@ -2,14 +2,16 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { Photo } from "@/components/home/Photo";
-import { SignalCard } from "@/components/home/SignalCard";
 import { StickyCta } from "@/components/home/StickyCta";
+import { TrendCard } from "@/components/home/TrendCard";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type Claim } from "@/config/funnel/men";
+import { getBiomarker } from "@/config/biomarkers";
+import { resultsPreview } from "@/config/home";
 import { menMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
@@ -85,10 +87,7 @@ export default function MenFunnelPage() {
                 {f.hero.miniTrust.map((c) => <li key={c.text}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
               </ul>
             </div>
-            <div className={styles.heroVisual}>
-              <Photo asset={menMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 25%" />
-              <SignalCard className={styles.heroCard} />
-            </div>
+            <Photo asset={menMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 30%" />
           </Container>
         </section>
 
@@ -98,42 +97,51 @@ export default function MenFunnelPage() {
             <div>
               <h2 id="included-title" className={styles.h2}>{f.included.title}</h2>
               <p className={styles.intro}>{fill(f.included.intro)}</p>
-              <ul className={styles.stack}>
-                {f.included.bullets.map((b, i) => (
+              <ol className={styles.stack}>
+                {f.included.bullets.map((b) => (
                   <li key={b.title} className={styles.stackItem}>
-                    <span className={styles.stackNum}><span className="num">{i + 1}</span></span>
-                    <span><strong>{fill(b.title)}</strong><span className={styles.stackBody}>{fill(b.body)}</span></span>
+                    <strong>{fill(b.title)}</strong>
+                    <span className={styles.stackBody}>{fill(b.body)}</span>
                   </li>
                 ))}
-              </ul>
+              </ol>
               <Button href={primary.href} ctaId="men_included_cta" location="men_included">{primary.label} <Icon name="arrow" size={18} /></Button>
             </div>
-            <div className={styles.reportVisual}>
-              <Photo asset={menMedia.results} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.reportPhoto} position="center 30%" />
-              <SignalCard className={styles.reportCard} />
-            </div>
+            <figure className={styles.report} aria-label="Illustrative example of a results page">
+              <div className={styles.reportHead}>
+                <span>Example results page</span>
+                <span className={styles.reportTag}>Example</span>
+              </div>
+              <p className={styles.reportPeriod}>{resultsPreview.previousLabel} → {resultsPreview.currentLabel}</p>
+              <div className={styles.reportCards}>
+                {resultsPreview.markers.map((m) => (
+                  <TrendCard key={m.markerId} name={getBiomarker(m.markerId).name} unit={m.unit} previous={m.previous} current={m.current} direction={m.direction} note={m.note} />
+                ))}
+              </div>
+              <p className={styles.reportPlan}><strong>Your plan.</strong> Every marker explained in plain English, what's worth acting on, and what to do next.</p>
+              <figcaption className={styles.reportCaption}>Illustrative example only. Not real results.</figcaption>
+            </figure>
           </Container>
         </section>
 
         {/* 3. How it works */}
         <section data-theme="light" className={styles.section} aria-labelledby="steps-title">
-          <Container>
-            <h2 id="steps-title" className={styles.h2}>{f.steps.title}</h2>
-            <ol className={styles.steps}>
-              {f.steps.items.map((s, i) => (
-                <li key={s.title} className={styles.step}>
-                  <div className={styles.stepPhotoWrap}>
-                    <Photo asset={menMedia.steps[s.photo]} sizes="(min-width: 64rem) 22vw, (min-width: 48rem) 45vw, 100vw" className={styles.stepPhoto} position="center" />
-                    <span className={styles.stepIcon}><Icon name={s.icon} size={20} /></span>
+          <Container className={styles.split}>
+            <div>
+              <h2 id="steps-title" className={styles.h2}>{f.steps.title}</h2>
+              <ol className={styles.steps}>
+                {f.steps.items.map((s, i) => (
+                  <li key={s.title} className={styles.step}>
                     <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
-                  </div>
-                  <div className={styles.stepText}>
-                    <h3 className={styles.stepTitle}>{s.title}</h3>
-                    <p className={styles.stepBody}>{fill(s.body)}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
+                    <div>
+                      <h3 className={styles.stepTitle}>{s.title}</h3>
+                      <p className={styles.stepBody}>{fill(s.body)}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+            </div>
+            <Photo asset={menMedia.collection} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.sidePhoto} position="center" />
           </Container>
         </section>
 
@@ -214,14 +222,13 @@ export default function MenFunnelPage() {
         <section data-theme="light" className={styles.section} aria-labelledby="safety-title">
           <Container className={styles.split}>
             <div>
-              <Photo asset={menMedia.steps.review} sizes="(min-width: 64rem) 50vw, 100vw" className={styles.safetyPhoto} position="center 40%" />
+              <Photo asset={menMedia.doctor} sizes="(min-width: 64rem) 50vw, 100vw" className={styles.safetyPhoto} position="center 40%" />
               <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
               <ul className={styles.safety}>
                 {f.safety.bullets.map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
             </div>
             <div className={styles.guarantee}>
-              <span className={styles.guaranteeIcon}><Icon name="shield" size={26} /></span>
               <h3 className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h3>
               <p className={styles.guaranteeBody}>{fill(f.safety.guarantee.body)}</p>
             </div>
@@ -247,8 +254,6 @@ export default function MenFunnelPage() {
 
         {/* 9. Close */}
         <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
-          <div className={styles.closePhotoWrap} aria-hidden="true"><Photo asset={menMedia.close} sizes="100vw" className={styles.closePhoto} position="center 60%" /></div>
-          <div className={styles.closeScrim} aria-hidden="true" />
           <Container className={styles.closeInner}>
             <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
             <p className={styles.closeSub}>{f.close.sub}</p>

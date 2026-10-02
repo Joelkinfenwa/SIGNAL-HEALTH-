@@ -136,7 +136,18 @@ export const signalMedia = {
  * baked-in text before launch; regenerate any that fail.
  */
 const HF2 = `${CDN2}/hf_20261002_020641_`;
+const HF3 = `${CDN2}/hf_20261002_02151`;
+/** Documentary set (35mm film look, overcast light, ordinary people). The live set for /men. */
 export const menMedia = {
+  hero: { src: `${HF3}9_09d761c9-5f96-41ef-bc5d-dca5a18fab8b.png`, alt: "A man in his mid forties in his backyard early in the morning, holding a mug" },
+  heroAlt: { src: `${HF3}9_f3550d8a-e30f-4b60-a920-f1ef23a69559.png`, alt: "A man in his fifties on a back step lacing up running shoes" },
+  collection: { src: `${HF3}20_3a1f1ee3-5af9-44b7-9433-de57add5f6f2.png`, alt: "A collector's gloved hands placing a small bandage on a man's arm after a blood collection" },
+  doctor: { src: `${HF3}20_72f10b4a-3abe-46f1-8744-0a59eb1c1488.png`, alt: "Over the shoulder of a doctor reading a printed results page at a desk" },
+  reading: { src: `${HF3}9_a80d67c3-4572-44e8-ba78-a93cbc10789a.png`, alt: "A man at a kitchen table reading a printed report with a cup of tea" },
+} as const satisfies Record<string, MediaAsset>;
+
+/** Earlier polished set, kept for comparison / A-B. */
+export const menMediaPolished = {
   hero: { src: `${HF2}855481d0-a7bd-45e5-9556-76d00cf70811.png`, alt: "A man in his forties on a coastal clifftop path at sunrise" },
   heroAlt: {
     kitchen: { src: `${HF2}989e9405-28ca-4ff0-b1cc-da91a59011d7.png`, alt: "A man in his late thirties with a coffee at a bright kitchen bench" },
