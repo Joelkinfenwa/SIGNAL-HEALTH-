@@ -1,5 +1,6 @@
 import { groupByCategory } from "./biomarkers";
 import type { CollectionMethodId } from "./collection";
+import { resolvePrice } from "./pricing";
 
 /**
  * THE SIGNAL TEST — the one flagship product. SIGNAL = breadth; add-ons = depth.
@@ -60,7 +61,7 @@ export const signalTest: Product = {
   tagline: "One comprehensive blood test. A clearer picture of what's happening inside your body.",
   description:
     "The major areas of your health measured from one sample, collected at a centre or at home, reviewed, and explained in plain language. Go deeper where it matters to you with optional add-ons.",
-  priceCents: null,
+  priceCents: resolvePrice("signal", null), // TODO(pricing): set the real price here
   compareAtPriceCents: null,
   markerIds: [
     // Heart (5)

@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { NextSteps } from "@/components/journey/NextSteps";
 import { CustomerDetails } from "@/components/checkout/CustomerDetails";
+import { PaymentPanel } from "@/components/checkout/PaymentPanel";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { addonNewMarkers, sellableAddonsFor } from "@/config/addons";
@@ -13,6 +15,7 @@ import { collectionMethods, type CollectionMethodId } from "@/config/collection"
 import { signalTest } from "@/config/products";
 import { visibleTrustClaims } from "@/config/trust";
 import { track } from "@/lib/analytics/track";
+import { createOrder } from "@/lib/checkout/create-order";
 import { emptyCustomer, validateCustomer, type CustomerDetails as Details, type CustomerField } from "@/lib/checkout/customer";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
@@ -38,13 +41,17 @@ export function Checkout() {
   const [customer, setCustomer] = useState<Details>(emptyCustomer);
   const [touched, setTouched] = useState<Partial<Record<CustomerField, boolean>>>({});
   const [payMessage, setPayMessage] = useState<string | null>(null);
+  const [payment, setPayment] = useState<{ orderId: string; clientSecret: string; amountCents: number; token: string } | null>(null);
+  const [starting, setStarting] = useState(false);
   const detailsRef = useRef<HTMLElement>(null);
+  const payRef = useRef<HTMLElement>(null);
   const detailsDone = useRef(false);
+  const router = useRouter();
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
   const options = sellableAddonsFor(signalTest);
   const trust = visibleTrustClaims().filter((c) => c.status === "verified").slice(0, 3);
-  const paymentsLive = false; // flipped by phase 6 when createOrder returns "ready"
+  const paymentsLive = Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
   useEffect(() => {
     const parsed = parseConfiguration(new URLSearchParams(window.location.search), signalTest);
@@ -63,6 +70,9 @@ export function Checkout() {
     try { sessionStorage.setItem(DETAILS_KEY, JSON.stringify(customer)); } catch { /* ignore */ }
   }, [customer, hydrated]);
 
+  // Any change to what's being bought or who's buying invalidates a started payment.
+  useEffect(() => { setPayment(null); }, [cfg, customer]);
+
   const requiresAddress = cfg.collectionMethodId === "mobile";
   const errors = useMemo(() => validateCustomer(customer, { requiresAddress }, detailsCopy.errors), [customer, requiresAddress]);
   const errorCount = Object.keys(errors).length;
@@ -76,7 +86,8 @@ export function Checkout() {
   }, [detailsValid, hydrated]);
 
   const ALL_FIELDS = Object.keys(emptyCustomer()) as CustomerField[];
-  function attemptPay() {
+  async function attemptPay() {
+    if (payment) { payRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
     if (!cfg.collectionMethodId) { setPayMessage("Choose a collection option first."); return; }
     if (!detailsValid) {
       setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
@@ -89,7 +100,35 @@ export function Checkout() {
       });
       return;
     }
-    setPayMessage(paymentsLive ? null : "Your details are complete. Payments open at launch.");
+    if (!paymentsLive) { setPayMessage("Your details are complete. Payments open at launch."); return; }
+    if (!quote.pricingComplete) { setPayMessage("Pricing isn't set yet, so payment can't start."); return; }
+    setStarting(true); setPayMessage(null);
+    try {
+      const res = await createOrder(cfg, customer);
+      if (res.status === "ready") {
+        setPayment({ orderId: res.orderId, clientSecret: res.clientSecret, amountCents: res.amountCents, token: res.token });
+        requestAnimationFrame(() => payRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      } else if (res.status === "invalid") {
+        setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
+        setPayMessage(Object.values(res.errors)[0] ?? "Check your details.");
+      } else {
+        setPayMessage(res.reason);
+      }
+    } catch {
+      setPayMessage("We couldn't start the payment. Please try again.");
+    } finally {
+      setStarting(false);
+    }
+  }
+
+  function onPaid(paymentIntentId: string) {
+    if (!payment) return;
+    track(
+      { name: "purchase_completed", props: { order_id: paymentIntentId, product_id: signalTest.id, addon_ids: cfg.addonIds, value: payment.amountCents / 100, currency: "AUD" } },
+      { eventId: paymentIntentId },
+    );
+    try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
+    router.push(`/order/${paymentIntentId}?t=${encodeURIComponent(payment.token)}`);
   }
 
   useEffect(() => {
@@ -205,14 +244,29 @@ export function Checkout() {
           <li className={cfg.collectionMethodId ? styles.done : undefined}><Icon name="check" size={14} /> Collection {cfg.collectionMethodId ? "chosen" : "not chosen yet"}</li>
           <li className={detailsValid ? styles.done : undefined}><Icon name="check" size={14} /> Details {detailsValid ? "complete" : "to complete"}</li>
         </ul>
-        <button type="button" className={styles.payButton} data-ready={canPay ? "true" : "false"} onClick={attemptPay}>
-          {paymentsLive ? "Pay securely" : "Payments open at launch"} <Icon name="arrow" size={18} />
-        </button>
-        <p className={styles.payNote} aria-live="polite">
-          {payMessage ?? (paymentsLive
-            ? "Card, Apple Pay and Google Pay. Secured by Stripe."
-            : cfg.collectionMethodId ? "Card, Apple Pay and Google Pay will be available here." : "Choose a collection option to continue.")}
-        </p>
+        {payment ? (
+          <div ref={payRef as React.RefObject<HTMLDivElement>} className={styles.paymentMount}>
+            <PaymentPanel
+              key={payment.clientSecret}
+              clientSecret={payment.clientSecret}
+              amountCents={payment.amountCents}
+              billing={{ name: `${customer.firstName.trim()} ${customer.lastName.trim()}`, email: customer.email.trim(), phone: customer.phone.trim() }}
+              returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}`}
+              onSuccess={onPaid}
+            />
+          </div>
+        ) : (
+          <>
+            <button type="button" className={styles.payButton} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>
+              {starting ? "Starting payment…" : paymentsLive ? "Continue to payment" : "Payments open at launch"} <Icon name="arrow" size={18} />
+            </button>
+            <p className={styles.payNote} aria-live="polite">
+              {payMessage ?? (paymentsLive
+                ? "Card, Apple Pay and Google Pay. Secured by Stripe."
+                : cfg.collectionMethodId ? "Card, Apple Pay and Google Pay will be available here." : "Choose a collection option to continue.")}
+            </p>
+          </>
+        )}
         {trust.length ? (
           <ul className={styles.trust}>
             {trust.map((c) => <li key={c.id}><Icon name={c.icon} size={14} /> {c.text}</li>)}
@@ -227,7 +281,7 @@ export function Checkout() {
             <span className={styles.barLabel}>Total</span>
             <span className={cx(styles.barPrice, "num")}>{quote.totalCents !== null ? formatAUD(quote.totalCents) : "Pricing coming soon"}</span>
           </span>
-          <button type="button" className={cx(styles.payButton, styles.barButton)} data-ready={canPay ? "true" : "false"} onClick={attemptPay}>{paymentsLive ? "Pay" : "Opens at launch"}</button>
+          <button type="button" className={cx(styles.payButton, styles.barButton)} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>{payment ? "Pay" : paymentsLive ? "Continue" : "Opens at launch"}</button>
         </div>
       </div>
     </div>

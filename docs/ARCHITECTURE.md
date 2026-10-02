@@ -37,12 +37,13 @@ Configuration over code: the product (`products.ts`: base markers, add-on order)
 /signal                         Product + configurator (built): base + add-ons, live total, sticky bar; ?addons= deep links
 /find-my-signal                 Quiz (built): interests → SIGNAL + add-ons → /signal?addons=
 /lp/[slug]                      Paid landing pages from config (phase 4)
-/checkout                       Built: editable summary, collection choice, what happens next, pay panel (Stripe boundary in lib/checkout/create-order.ts; pay button honest until connected)
+/checkout                       Built: editable summary, collection choice, your details, Stripe Payment Element + Apple/Google Pay (lib/checkout/create-order.ts creates Customer + PaymentIntent)
 /order/[orderId]                Built (UI): confirmation → instant-refund Automatic Retesting offer → booking. Server actions stubbed until Stripe; /order/demo on previews
 /retesting                      How Automatic Retesting works (built)
 /account, /account/retesting    Phase 2+
 /legal/*                        Stubs until legal
-/api/stripe/webhook, /api/events  Stubs (phases 6–7)
+/api/stripe/webhook             Built: signature-verified; emits server-authoritative events (adapters phase 7)
+/api/events                     Stub (phase 7)
 /tests, /tests/*, /find-my-test 301 → /signal, /find-my-signal
 ```
 

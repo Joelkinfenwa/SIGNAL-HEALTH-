@@ -56,6 +56,7 @@
 .payButton { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 54px; width: 100%; padding: 0 var(--s-5); border: 0; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); font-weight: 700; cursor: pointer; }
 .payButton[data-ready="false"] { background: var(--panel-soft); color: var(--muted); }
 .payButton[data-ready="false"]:hover { background: var(--c-brand-soft); color: var(--fg); }
+.paymentMount { scroll-margin-top: var(--s-5); }
 .checklist { display: grid; gap: 6px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
 .checklist li { display: flex; align-items: center; gap: 6px; }
 .checklist svg { color: var(--line); flex: none; }

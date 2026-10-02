@@ -12,7 +12,8 @@ import { acceptRetestOffer, declineRetestOffer } from "@/lib/retest/accept";
 import { addMonths, fillOfferTokens, formatInterval, quoteRetestForOrder } from "@/lib/retest/offer";
 import styles from "./RetestOffer.module.css";
 
-interface OrderLite { id: string; lines: QuoteLine[]; amountCents: number; paidAt: string }
+interface OrderLite { id: string; token: string; lines: QuoteLine[]; amountCents: number; paidAt: string }
+interface Enrolled { offerId: string; nextTestDate: string; refundCents: number }
 
 /**
  * The post-purchase Automatic Retesting offer. The hook: choose a plan and
@@ -23,14 +24,15 @@ interface OrderLite { id: string; lines: QuoteLine[]; amountCents: number; paidA
  * an explicit unticked checkbox. Amounts come from quoteRetestForOrder(),
  * the same function the server uses, so what is shown is what is refunded.
  */
-export function RetestOffer({ order }: { order: OrderLite }) {
+export function RetestOffer({ order, enrolled }: { order: OrderLite; enrolled?: Enrolled }) {
   const offers = activeRetestOffers();
   const featured = offers.find((o) => o.featured) ?? offers[0]!;
-  const [selectedId, setSelectedId] = useState(featured.id);
+  const [selectedId, setSelectedId] = useState(enrolled?.offerId && offers.some((o) => o.id === enrolled.offerId) ? enrolled.offerId : featured.id);
   const [consent, setConsent] = useState(false);
   const [consentTouched, setConsentTouched] = useState(false);
-  const [state, setState] = useState<"idle" | "submitting" | "accepted" | "declined" | "not_configured">("idle");
+  const [state, setState] = useState<"idle" | "submitting" | "accepted" | "declined" | "not_configured">(enrolled ? "accepted" : "idle");
   const [message, setMessage] = useState<string | null>(null);
+  const [result, setResult] = useState<{ nextTestDate: Date; refundCents: number; refundPending: boolean } | null>(enrolled ? { nextTestDate: new Date(enrolled.nextTestDate), refundCents: enrolled.refundCents, refundPending: false } : null);
   const paidAt = useMemo(() => new Date(order.paidAt), [order.paidAt]);
 
   const quotes = useMemo(() => Object.fromEntries(offers.map((o) => [o.id, quoteRetestForOrder(order.lines, o)])), [offers, order.lines]);
@@ -44,7 +46,7 @@ export function RetestOffer({ order }: { order: OrderLite }) {
   const fill = (s: string) => fillOfferTokens(s, t);
   const evProps = (o: Offer) => ({ order_id: order.id, offer_id: o.id, offer_version: o.version });
 
-  useEffect(() => { track({ name: "retest_offer_viewed", props: evProps(featured) }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!enrolled) track({ name: "retest_offer_viewed", props: evProps(featured) }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function choose(o: Offer) {
     setSelectedId(o.id);
@@ -55,8 +57,17 @@ export function RetestOffer({ order }: { order: OrderLite }) {
     setConsentTouched(true);
     if (!consent) { setMessage("Tick the box to confirm you understand the recurring billing."); return; }
     setState("submitting"); setMessage(null);
-    const res = await acceptRetestOffer({ orderId: order.id, offerId: selected.id, offerVersion: selected.version, consentTextVersion: cfg.consentTextVersion, consentAccepted: consent });
-    if (res.status === "accepted") { setState("accepted"); track({ name: "retest_offer_accepted", props: { ...evProps(selected), value: q.recurringPriceCents / 100, currency: "AUD" } }); }
+    let res;
+    try {
+      res = await acceptRetestOffer({ orderId: order.id, token: order.token, offerId: selected.id, offerVersion: selected.version, consentTextVersion: cfg.consentTextVersion, consentAccepted: consent });
+    } catch {
+      setState("idle"); setMessage("Something went wrong setting that up. Nothing was charged or refunded. Please try again."); return;
+    }
+    if (res.status === "accepted") {
+      setResult({ nextTestDate: new Date(res.nextTestDate), refundCents: res.refundCents, refundPending: res.refundPending });
+      setState("accepted");
+      track({ name: "retest_offer_accepted", props: { ...evProps(selected), value: res.recurringCents / 100, currency: "AUD" } }, { eventId: `${order.id}:retest` });
+    } else if (res.status === "already_enrolled") { setResult({ nextTestDate: new Date(res.nextTestDate), refundCents: q.refundTodayCents, refundPending: false }); setState("accepted"); }
     else if (res.status === "not_configured") { setState("not_configured"); setMessage(res.reason); }
     else { setState("idle"); setMessage(res.reason); }
   }
@@ -64,16 +75,18 @@ export function RetestOffer({ order }: { order: OrderLite }) {
   async function decline() {
     setState("declined");
     track({ name: "retest_offer_declined", props: evProps(selected) });
-    await declineRetestOffer({ orderId: order.id, offerId: selected.id, offerVersion: selected.version });
+    try { await declineRetestOffer({ orderId: order.id, token: order.token, offerId: selected.id, offerVersion: selected.version }); } catch { /* best effort */ }
   }
 
   if (state === "accepted" || state === "not_configured") {
+    const done = result ? { ...t, refund: result.refundCents, nextDate: result.nextTestDate } : t;
+    const fillDone = (s: string) => fillOfferTokens(s, done);
     return (
       <section className={cx(styles.wrap, styles.done)} aria-live="polite" data-theme="dark">
         <span className={styles.doneTick} aria-hidden="true"><Icon name="check" size={20} /></span>
-        <h2 className={styles.doneTitle}>{state === "accepted" ? fill(cfg.accepted.headline) : "Almost. Retesting enrolment isn't connected yet."}</h2>
-        <p className={styles.doneBody}>{state === "accepted" ? fill(cfg.accepted.body) : `${message} On launch this refunds ${formatAUD(q.refundTodayCents)} immediately and books your next SIGNAL for around ${fill("{date}")} at ${formatAUD(q.recurringPriceCents)}.`}</p>
-        {state === "accepted" ? <p className={styles.doneFine}>{cfg.refundTiming}</p> : null}
+        <h2 className={styles.doneTitle}>{state === "accepted" ? (result?.refundPending ? "Done. Your retesting is set up and your refund is processing." : fillDone(cfg.accepted.headline)) : "Almost. Retesting enrolment isn't connected yet."}</h2>
+        <p className={styles.doneBody}>{state === "accepted" ? fillDone(cfg.accepted.body) : `${message} On launch this refunds ${formatAUD(q.refundTodayCents)} immediately and books your next SIGNAL for around ${fill("{date}")} at ${formatAUD(q.recurringPriceCents)}.`}</p>
+        {state === "accepted" ? <p className={styles.doneFine}>{result?.refundPending ? "The refund didn't go through on the first attempt. It will be completed automatically, and we'll email you when it's done." : cfg.refundTiming}</p> : null}
       </section>
     );
   }

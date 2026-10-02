@@ -35,7 +35,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
           {order.demo ? <p className={styles.demo}>Preview only: illustrative order and amounts. Payments aren&apos;t connected yet.</p> : null}
           <header className={styles.header}>
             <span className={styles.tick} aria-hidden="true"><Icon name="check" size={22} /></span>
-            <p className={styles.eyebrow}>Payment received · {order.reference}</p>
+            <p className={styles.eyebrow}>{order.status === "processing" ? "Payment processing" : "Payment received"} · {order.reference}</p>
             <h1 className={styles.title}>{order.firstName ? `Thanks, ${order.firstName}.` : "Thank you."} Your SIGNAL is ordered.</h1>
             <p className={styles.intro}>
               {order.emailMasked ? <>A receipt and your booking link are on their way to {order.emailMasked}. </> : null}
@@ -45,7 +45,10 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
 
           <div className={styles.grid}>
             <div className={styles.primary}>
-              <RetestOffer order={{ id: order.id, lines: order.lines, amountCents: order.amountCents, paidAt: order.paidAt.toISOString() }} />
+              <RetestOffer
+                order={{ id: order.id, token: order.token, lines: order.lines, amountCents: order.amountCents, paidAt: order.paidAt.toISOString() }}
+                enrolled={order.retest ? { offerId: order.retest.offerId, nextTestDate: order.retest.nextTestDate.toISOString(), refundCents: order.retest.refundCents } : undefined}
+              />
 
               <section className={styles.block} aria-labelledby="next-title">
                 <h2 id="next-title" className={styles.blockTitle}>What happens next</h2>

@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import type { ReactNode } from "react";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
+import { PreviewPricingBanner } from "@/components/layout/PreviewPricingBanner";
 import "./globals.css";
 
 /** Self-hosted and preloaded by Next; no render-blocking Google Fonts stylesheet. */
@@ -36,6 +37,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <AttributionCapture />
+        <PreviewPricingBanner />
         {children}
       </body>
     </html>

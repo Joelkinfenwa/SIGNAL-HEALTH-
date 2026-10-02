@@ -18,6 +18,7 @@
  * assay availability with the laboratory partner. TODO(pricing): prices null until set.
  */
 import type { InterestId } from "./interests";
+import { resolvePrice } from "./pricing";
 import { signalTest, type Product } from "./products";
 
 /** Badge vocabulary. Use sparingly: at most one or two badges across the list. */
@@ -72,7 +73,7 @@ export const addons: Addon[] = [
     forWho: "You want to understand your hormones properly, not guess from how you feel.",
     markerIds: ["testosterone", "shbg", "free_t", "lh", "fsh", "oestradiol", "prolactin"],
     underConsideration: ["dheas"],
-    priceCents: null,
+    priceCents: resolvePrice("hormones_plus", null),
     enabled: true,
     launchEnabled: true,
     recommendedFor: ["hormones", "energy", "training"],
@@ -88,7 +89,7 @@ export const addons: Addon[] = [
     forWho: "You take, or are thinking about taking, supplements.",
     markerIds: ["vit_d", "b12", "folate"],
     underConsideration: ["zinc"],
-    priceCents: null,
+    priceCents: resolvePrice("nutrients_plus", null),
     enabled: true,
     launchEnabled: true,
     recommendedFor: ["nutrition", "energy", "training"],
@@ -103,7 +104,7 @@ export const addons: Addon[] = [
       "ApoB counts the particles that carry cholesterol, ApoA1 the ones that help clear it, and Lp(a) is a marker set largely by your genes that most people have never had measured. Together they add depth to the standard lipid panel in every SIGNAL.",
     forWho: "Heart health matters to you and you want more than the standard cholesterol panel.",
     markerIds: ["apob", "apoa1", "lpa", "apob_apoa1"],
-    priceCents: null,
+    priceCents: resolvePrice("heart_plus", null),
     enabled: true,
     launchEnabled: true,
     badge: "advanced",
@@ -119,7 +120,7 @@ export const addons: Addon[] = [
       "TSH, in every SIGNAL, is the control signal. Free T4 and free T3 are the hormones it controls, and two antibody markers add context that TSH alone can't. The full thyroid picture, not just the headline.",
     forWho: "You want the full thyroid picture, not just TSH.",
     markerIds: ["ft4", "ft3", "tpo_ab", "tg_ab"],
-    priceCents: null,
+    priceCents: resolvePrice("thyroid_plus", null),
     enabled: true,
     launchEnabled: true,
     recommendedFor: ["thyroid", "energy"],
@@ -134,7 +135,7 @@ export const addons: Addon[] = [
       "Creatine kinase reflects recent muscle load, cortisol your stress response, and IGF-1 relates to growth and recovery. Useful when you're training hard and want to see how your body is coping between blocks.",
     forWho: "You train most days and want to see how your body is coping and recovering.",
     markerIds: ["ck", "cortisol", "igf1"],
-    priceCents: null,
+    priceCents: resolvePrice("performance_plus", null),
     enabled: true,
     // PROVISIONAL: depends on laboratory availability. Flip to false to withdraw
     // it from sale without touching any component.

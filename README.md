@@ -88,6 +88,18 @@ docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, 
 
 Slots with an empty `src` are placeholders with a shot `brief`; the `Photo` component renders a warm colour panel until photography exists. Currently: `nurseArrival` (postcode checker), `collectionCentre`, `chooseTest`.
 
+## Connecting Stripe
+
+Stripe is the order store until a database exists: the PaymentIntent carries the configuration, snapshotted line prices and attribution; the Customer carries contact and identity details. Confirmation links are `/order/<payment_intent_id>?t=<signed token>`; the id alone never opens an order.
+
+1. **Keys.** In the Stripe dashboard (test mode first): Developers → API keys. In Vercel → Settings → Environment Variables, add to **Preview**: `STRIPE_SECRET_KEY` (sk_test_…), `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (pk_test_…), `ORDER_TOKEN_SECRET` (any long random string), and `NEXT_PUBLIC_PREVIEW_PRICING=1` (placeholder prices so you can pay before pricing is set; never set this on Production).
+2. **Webhook.** Developers → Webhooks → Add endpoint: `https://<your preview or production domain>/api/stripe/webhook`. Select events `payment_intent.succeeded`, `payment_intent.payment_failed`, `charge.refunded`, `invoice.upcoming`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.updated`, `customer.subscription.deleted`. Copy the signing secret into `STRIPE_WEBHOOK_SECRET`. Preview deployments get a new URL per branch, so point the test webhook at the branch alias (the `…-git-<branch>-…vercel.app` URL) rather than a single deployment.
+3. **Apple Pay.** Settings → Payment methods → Apple Pay → add the domain. Google Pay needs nothing.
+4. **Redeploy** so the public key is baked into the build, then pay on `/checkout` with test card `4242 4242 4242 4242`. The confirmation page shows the refund offer; accepting it creates the subscription (first charge deferred one interval) and then the partial refund, in that order.
+5. **Go live.** Repeat with live keys on **Production** only, leave `NEXT_PUBLIC_PREVIEW_PRICING` unset there, and set real prices in `config/products.ts`, `config/addons.ts` and `config/collection.ts`.
+
+What Stripe holds and why: name, email, phone and address on the Customer (receipts, booking); date of birth and sex in Customer metadata because the pathology request needs them and there is no database yet (TODO: move to the clinical system / database before launch; Stripe is a processor under its DPA). Consent to retesting billing is recorded on the subscription metadata with the wording version and hash.
+
 ## Claims register (must be cleared before launch)
 
 Every public claim needs substantiation under Australian Consumer Law. `trustPoints` in `config/brand.ts` carry a `substantiated` flag.
@@ -136,6 +148,8 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Retesting cancellation: "keep today's refund" | /order/[orderId] | DECISION `cancellationPolicy`: keep_refund vs reverse_refund; TODO(legal) either way |
 | "We email you 14 days before each charge" | /order/[orderId] | DECISION `reminderDaysBefore`; must match the invoice.upcoming lead time in Stripe |
 | Demo order (`/order/demo`, SIG-DEMO-0001, $349/$59/$49) | Previews only | Illustrative; production returns 404 |
+| Preview pricing ($349 / $59 / $49 …) | Everywhere, with a banner, when `NEXT_PUBLIC_PREVIEW_PRICING=1` | Placeholders for test payments only; the server refuses to create an order with them on Production |
+| "Your card details never touch our servers" | Checkout payment panel | True by construction (Stripe Payment Element); keep it that way |
 | Footer disclaimer | Footer | Clinical and legal review |
 
 Clinical FAQ questions (fasting, referral, minimum age, what happens if a result needs attention) are in `config/faq.ts` with `status: "todo-clinical"` and are **not rendered** until an approved answer is supplied.
