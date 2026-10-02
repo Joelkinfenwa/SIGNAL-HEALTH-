@@ -22,8 +22,8 @@ test("plan cards point at real retesting offers and prices are never typed into 
   assert.equal(addonsFromCents(), Math.min(...addons.filter((a) => a.enabled && a.launchEnabled && a.priceCents !== null).map((a) => a.priceCents!)));
 });
 
-test("unverified claims are counted so they cannot be forgotten", () => {
-  assert.ok(unverifiedClaimCount() > 0, "nothing to clear yet means the flags were removed without verification");
+test("all funnel claims are verified (confirmed 2 Oct 2026); any new line must be re-confirmed", () => {
+  assert.equal(unverifiedClaimCount(), 0);
 });
 
 test("funnel copy stays AHPRA-safe: no testimonials, no diagnosis or popularity claims, no TGA claim", () => {

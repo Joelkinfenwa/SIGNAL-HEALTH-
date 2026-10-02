@@ -14,7 +14,8 @@
  *
  * Claims: each trust/guarantee line carries `verified`. Unverified lines
  * render on previews only (with a ? marker) and are listed in the README
- * claims register. Flip `verified: true` to publish a line.
+ * claims register. All lines were confirmed by the Director on 2 Oct 2026;
+ * set `verified: false` on any line that changes until it is re-confirmed.
  *
  * Prices are never typed here: they come from products.ts, addons.ts and
  * retest-offer.ts via the tokens {price} {addonsFrom} {track6Price}
@@ -43,8 +44,8 @@ export const menFunnel = {
   // 1. Above the fold
   trustStrip: [
     { text: "Powered by Express Pathology", verified: true },
-    { text: "Australian-registered doctors", verified: false },
-    { text: "Accredited Australian laboratories", verified: false },
+    { text: "Australian-registered doctors", verified: true },
+    { text: "Accredited Australian laboratories", verified: true },
   ] as Claim[],
   hero: {
     headline: "Australian men 30–60: get a doctor-reviewed blood panel, explained in plain English, in around 7 days.",
@@ -52,9 +53,9 @@ export const menFunnel = {
     primaryCta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
     secondaryCta: { label: "Or see what's included first", href: "#included" },
     miniTrust: [
-      { text: "No GP referral needed", verified: false },
-      { text: "Results and doctor review in around 7 days", verified: false },
-      { text: "Clear-plan-or-it's-free guarantee", verified: false },
+      { text: "No GP referral needed", verified: true },
+      { text: "Results and doctor review in around 7 days", verified: true },
+      { text: "Clear-plan-or-it's-free guarantee", verified: true },
     ] as Claim[],
   },
 
@@ -103,12 +104,12 @@ export const menFunnel = {
     title: "Straight answers, no hype",
     intro: "We don't publish patient testimonials for a doctor-reviewed service, and Australian law agrees. Here's what we can tell you instead.",
     facts: [
-      { text: "Samples are analysed by accredited Australian pathology laboratories", verified: false },
-      { text: "Every result is reviewed by an Australian-registered doctor before you see it", verified: false },
+      { text: "Samples are analysed by accredited Australian pathology laboratories", verified: true },
+      { text: "Every result is reviewed by an Australian-registered doctor before you see it", verified: true },
       { text: "{markers} markers across {areas} areas in the base test, every one listed before you pay", verified: true },
       { text: "One clear price. No referral, no Medicare paperwork, no surprise fees", verified: true },
       { text: "Your results are never shared with advertising platforms", verified: true },
-      { text: "A written refund guarantee, with the terms in plain sight", verified: false },
+      { text: "A written refund guarantee, with the terms in plain sight", verified: true },
     ] as Claim[],
     cta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
   },
@@ -139,7 +140,7 @@ export const menFunnel = {
         tagline: "Best if you want to keep an eye on things over time.",
         bullets: [
           { text: "Two panels a year at member pricing", verified: true },
-          { text: "Priority doctor review", verified: false },
+          { text: "Priority doctor review", verified: true },
           { text: "Change the date, pause or cancel any time", verified: true },
         ],
         cta: { label: "Get started", href: "/checkout?plan=retest_6m" },
@@ -153,8 +154,8 @@ export const menFunnel = {
         tagline: "Best for high performers or complex cases.",
         bullets: [
           { text: "Four panels a year at the lowest per-test price", verified: true },
-          { text: "Priority booking", verified: false },
-          { text: "One at-home collector visit included each year", verified: false },
+          { text: "Priority booking", verified: true },
+          { text: "One at-home collector visit included each year", verified: true },
           { text: "Change the date, pause or cancel any time", verified: true },
         ],
         cta: { label: "Get started", href: "/checkout?plan=retest_3m" },
@@ -176,16 +177,16 @@ export const menFunnel = {
   safety: {
     title: "Safe and doctor-led",
     bullets: [
-      { text: "Tests processed by accredited Australian labs", verified: false },
-      { text: "Results reviewed by Australian-registered doctors", verified: false },
-      { text: "We never promise specific medications; treatment is only offered if clinically appropriate", verified: false },
-      { text: "Your data is stored using the same standards as hospitals", verified: false },
+      { text: "Tests processed by accredited Australian labs", verified: true },
+      { text: "Results reviewed by Australian-registered doctors", verified: true },
+      { text: "We never promise specific medications; treatment is only offered if clinically appropriate", verified: true },
+      { text: "Your data is stored using the same standards as hospitals", verified: true },
     ] as Claim[],
     guarantee: {
       title: "Clear Plan or It's Free",
       body: "If after your blood draw and doctor review you feel you didn't get a clear explanation or plan for what to do next, email us within 7 days for a full refund of your {price} test fee.",
       terms: "Terms apply. Add-ons and collection fees are refunded too if you cancel before your blood is drawn.",
-      verified: false,
+      verified: true,
     },
   },
 

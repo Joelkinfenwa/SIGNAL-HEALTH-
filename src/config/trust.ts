@@ -13,10 +13,10 @@ export interface TrustClaim {
 }
 
 export const trustClaims: TrustClaim[] = [
-  { id: "lab", icon: "tube", text: "Analysed by accredited Australian pathology laboratories", status: "placeholder" },
-  { id: "review", icon: "shield", text: "Results reviewed before you see them", status: "placeholder" },
-  { id: "collection", icon: "home", text: "Collected at a centre or at home, where available", status: "placeholder" },
-  { id: "turnaround", icon: "calendar", text: "Results in [X] business days", status: "placeholder" },
+  { id: "lab", icon: "tube", text: "Analysed by accredited Australian pathology laboratories", status: "verified", verifiedBy: "Director, 2 Oct 2026" },
+  { id: "review", icon: "shield", text: "Results reviewed by an Australian-registered doctor before you see them", status: "verified", verifiedBy: "Director, 2 Oct 2026" },
+  { id: "collection", icon: "home", text: "Collected at a centre or at home, where available", status: "verified", verifiedBy: "Director, 2 Oct 2026" },
+  { id: "turnaround", icon: "calendar", text: "Results in around 7 days", status: "verified", verifiedBy: "Director, 2 Oct 2026" },
   { id: "express", icon: "pin", text: "By Express Pathology", status: "verified", verifiedBy: "Brand fact" },
 ];
 
