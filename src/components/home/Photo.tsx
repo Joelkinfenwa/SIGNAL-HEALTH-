@@ -11,8 +11,19 @@ interface PhotoProps {
   position?: string;
 }
 
-/** Rounded, fill-mode photo. The parent (or className) sets the aspect ratio. */
+/**
+ * Rounded, fill-mode photo. The parent (or className) sets the aspect ratio.
+ * A placeholder slot (empty `src`) renders a warm colour panel so layouts can
+ * be reviewed before photography exists.
+ */
 export function Photo({ asset, sizes, priority, className, position = "center" }: PhotoProps) {
+  if (!asset.src) {
+    return (
+      <div className={cx(styles.photo, styles.placeholder, className)} role="img" aria-label={asset.alt}>
+        <span className={styles.placeholderNote} aria-hidden="true">Photography to come</span>
+      </div>
+    );
+  }
   return (
     <div className={cx(styles.photo, className)}>
       <Image src={asset.src} alt={asset.alt} fill sizes={sizes} priority={priority} style={{ objectFit: "cover", objectPosition: position }} />

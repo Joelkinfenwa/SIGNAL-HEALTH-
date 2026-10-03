@@ -10,7 +10,7 @@ import styles from "./Logo.module.css";
  */
 export function Logo({ level = brand.endorsementLevel, className }: { level?: EndorsementLevel; className?: string }) {
   return (
-    <Link href="/" className={cx(styles.logo, className)} aria-label={`${brand.name} ${brand.endorsement}, home`}>
+    <Link href="/" className={cx(styles.logo, className)} title="Home">
       <span className={styles.row}>
         <SignalMark className={styles.mark} />
         <span className={styles.word}>{brand.name}</span>
@@ -28,7 +28,7 @@ export function SignalMark({ className }: { className?: string }) {
       <polyline points="3,15 14,9 25,5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <circle cx="3" cy="15" r="2.6" fill="currentColor" />
       <circle cx="14" cy="9" r="2.6" fill="currentColor" />
-      <circle cx="25" cy="5" r="3.2" fill="var(--accent)" />
+      <circle cx="25" cy="5" r="3.2" fill="var(--c-signal)" />
     </svg>
   );
 }

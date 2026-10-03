@@ -1,12 +1,11 @@
 import { Logo } from "@/components/brand/Logo";
 import { Container } from "@/components/ui/Container";
 import { brand } from "@/config/brand";
-import { products } from "@/config/products";
 import styles from "./SiteFooter.module.css";
 
 const GROUPS = [
-  { title: "Tests", links: [...products.map((p) => ({ href: `/tests/${p.slug}`, label: p.name })), { href: "/find-my-test", label: "Find my test" }] },
-  { title: "SIGNAL", links: [{ href: "/#how-it-works", label: "How it works" }, { href: "/retesting", label: "Automatic Retesting" }, { href: "/biomarkers", label: "Biomarkers" }, { href: "/faq", label: "FAQ" }] },
+  { title: "The test", links: [{ href: "/signal", label: "The SIGNAL Test" }, { href: "/signal#add-ons", label: "Add-ons" }, { href: "/find-my-signal", label: "Find my SIGNAL" }] },
+  { title: "SIGNAL", links: [{ href: "/#how-it-works", label: "How it works" }, { href: "/#what-is-tested", label: "What's tested" }, { href: "/retesting", label: "Retesting" }, { href: "/#faq", label: "FAQ" }] },
   { title: "Legal", links: [{ href: "/legal/privacy", label: "Privacy policy" }, { href: "/legal/terms", label: "Terms of service" }, { href: "/legal/retesting-terms", label: "Retesting terms" }] },
 ];
 

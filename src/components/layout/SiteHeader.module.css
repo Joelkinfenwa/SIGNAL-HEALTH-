@@ -1,6 +1,12 @@
 .header {
   padding-block: var(--s-4);
 }
+.overlay {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 20;
+  background: transparent;
+}
+.overlay .nav a { color: rgba(246, 245, 241, 0.85); }
+.overlay .nav a:hover { color: #fff; }
 .inner {
   display: flex;
   align-items: center;
@@ -16,6 +22,7 @@
   gap: var(--s-6);
 }
 .nav a {
+  display: inline-flex; align-items: center; min-height: 44px;
   font-size: var(--fs-sm);
   font-weight: 500;
   text-decoration: none;

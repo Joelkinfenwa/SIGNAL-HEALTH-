@@ -1,0 +1,11 @@
+.card { display: grid; gap: 6px; padding: var(--s-4); border-radius: 16px; background: #fff; box-shadow: var(--shadow-soft); color: var(--c-ink); }
+.name { font-size: var(--fs-xs); font-weight: 700; color: var(--c-stone); letter-spacing: 0.04em; text-transform: uppercase; }
+.values { display: flex; align-items: baseline; gap: var(--s-2); }
+.prev { font-size: var(--fs-md); font-weight: 600; color: var(--c-stone); text-decoration: line-through; text-decoration-color: rgba(95, 102, 97, 0.5); }
+.arrow { color: var(--c-stone); align-self: center; }
+.now { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
+.now small { font-size: var(--fs-xs); font-weight: 600; color: var(--c-stone); letter-spacing: 0; }
+.note { display: inline-flex; align-items: center; gap: 4px; font-size: var(--fs-xs); font-weight: 600; color: var(--c-stone); }
+.up { color: var(--c-brand); }
+.down { color: var(--c-brand); }
+.flip { transform: scaleY(-1); }
