@@ -11,7 +11,7 @@ import type { NormalisedCustomer } from "../checkout/customer";
 import type { Configuration, QuoteLine } from "../pricing";
 
 export interface AttributionTouch { utm_source?: string; utm_medium?: string; utm_campaign?: string; utm_term?: string; utm_content?: string; gclid?: string; gbraid?: string; wbraid?: string; fbclid?: string; landing_path?: string }
-export interface OrderContext { lp_slug?: string; experiment_id?: string; variant?: string; first?: AttributionTouch; last?: AttributionTouch }
+export interface OrderContext { lp_slug?: string; experiment_id?: string; variant?: string; first?: AttributionTouch; last?: AttributionTouch; fbp?: string; fbc?: string; ga_cid?: string }
 
 const clip = (v: string | undefined, n = 480) => (v ?? "").slice(0, n);
 
@@ -25,6 +25,9 @@ export function encodeOrderMetadata(cfg: Configuration, lines: QuoteLine[], ctx:
     source: "initial",
     lp_slug: clip(ctx.lp_slug, 80),
     experiment: ctx.experiment_id ? `${ctx.experiment_id}:${ctx.variant ?? ""}` : "",
+    fbp: clip(ctx.fbp, 120),
+    fbc: clip(ctx.fbc, 200),
+    ga_cid: clip(ctx.ga_cid, 60),
   };
   const touch = (prefix: string, t?: AttributionTouch) => {
     if (!t) return;

@@ -7,8 +7,10 @@ import { RetestOffer } from "@/components/order/RetestOffer";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
+import { bookingUrlFor } from "@/config/booking";
 import { getCollectionMethod } from "@/config/collection";
 import { getOrderForPage } from "@/lib/orders/get-order";
+import { postPurchaseOffer } from "@/config/retest-offer";
 import { formatAUD } from "@/lib/money";
 import { formatDate } from "@/lib/retest/offer";
 import styles from "./page.module.css";
@@ -41,7 +43,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
             <h1 className={styles.title}>{order.firstName ? `Thanks, ${order.firstName}.` : "Thank you."} Your SIGNAL is ordered.</h1>
             <p className={styles.intro}>
               {order.emailMasked ? <>A receipt and your booking link are on their way to {order.emailMasked}. </> : null}
-              Next, take a look at this. It&apos;s only offered here.
+              Next, take a look at this. It&apos;s open for {postPurchaseOffer.windowHours} hours.
             </p>
           </header>
 
@@ -57,8 +59,8 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
                 <h2 id="next-title" className={styles.blockTitle}>What happens next</h2>
                 <NextSteps bare current="book" only={["book", "collect", "results"]} />
                 <div className={styles.bookRow}>
-                  <Button href="/account" ctaId="order_book_collection" location="order">Book my collection <Icon name="arrow" size={18} /></Button>
-                  <p className={styles.bookNote}>{collection ? `You chose: ${collection.name}. ` : ""}Pick the time and place that suit you. The link is also in your email.</p>
+                  {bookingUrlFor(order.id) ? <Button href={bookingUrlFor(order.id)!} ctaId="order_book_collection" location="order">Book my collection <Icon name="arrow" size={18} /></Button> : null}
+                  <p className={styles.bookNote}>{collection ? `You chose: ${collection.name}. ` : ""}{bookingUrlFor(order.id) ? "Pick the time and place that suit you. The link is also in your email." : "Your booking link is on its way by email. Pick the time and place that suit you."}</p>
                 </div>
               </section>
             </div>

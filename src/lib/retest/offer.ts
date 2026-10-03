@@ -90,3 +90,7 @@ export function renderOfferCopy(template: string, product: Product & { priceCent
   };
   return template.replace(/\{(\w+)\}/g, (m, k: string) => tokens[k] ?? m);
 }
+
+export const offerDeadline = (paidAt: Date, windowHours: number) => new Date(paidAt.getTime() + windowHours * 3600 * 1000);
+export const formatDeadline = (d: Date) =>
+  new Intl.DateTimeFormat("en-AU", { weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", timeZone: "Australia/Sydney" }).format(d);

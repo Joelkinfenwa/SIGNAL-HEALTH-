@@ -102,6 +102,20 @@ Stripe is the order store until a database exists: the PaymentIntent carries the
 
 What Stripe holds and why: name, email, phone and address on the Customer (receipts, booking); date of birth and sex in Customer metadata because the pathology request needs them and there is no database yet (TODO: move to the clinical system / database before launch; Stripe is a processor under its DPA). Consent to retesting billing is recorded on the subscription metadata with the wording version and hash.
 
+## Launch checklist
+
+Code is complete for launch. What remains is configuration and content only:
+
+1. **Legal entity** — fill `src/config/legal/entity.ts` (legal name, ABN, address, support and privacy emails, governing State). The legal pages show a preview banner until these are in.
+2. **Stripe live** — live keys, webhook endpoint on the production domain with the eight events listed under "Connecting Stripe", `ORDER_TOKEN_SECRET`. Enable Apple Pay for the production domain.
+3. **Email** — Resend API key and a verified sending domain in `EMAIL_FROM`. The confirmation email carries the booking link and the 48-hour retesting offer link.
+4. **Booking** — `NEXT_PUBLIC_BOOKING_URL` for the Express Pathology booking system. Until set, the order page and email say the link is coming by email, which then has to happen manually.
+5. **Analytics and ads** — `NEXT_PUBLIC_GA4_ID` + `GA4_API_SECRET`, `NEXT_PUBLIC_META_PIXEL_ID` + `META_CAPI_ACCESS_TOKEN`. Browser and server send the same `event_id`, so Meta and GA4 de-duplicate; Meta receives only value, currency and order reference, plus hashed email on purchase.
+6. **Domain** — `NEXT_PUBLIC_SITE_URL` set to the production domain; add it in Vercel and point DNS.
+7. **Merge** `claude/homepage-v3-rebuild-k2c0mg` into `main`; Vercel deploys Production from `main`.
+
+Not yet built (post-launch): results dashboard and account pages (results are delivered by the clinical team until then), retest lifecycle emails from `invoice.upcoming` / `invoice.paid`, a database (Stripe is the order store; date of birth and sex live in Stripe customer metadata and should move to the clinical system).
+
 ## Claims register (must be cleared before launch)
 
 Every public claim needs substantiation under Australian Consumer Law. `trustPoints` in `config/brand.ts` carry a `substantiated` flag.

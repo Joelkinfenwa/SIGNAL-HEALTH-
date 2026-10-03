@@ -1,7 +1,15 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
+import { getAddon } from "@/config/addons";
+import { getCollectionMethod } from "@/config/collection";
+import { getProduct } from "@/config/products";
+import { postPurchaseOffer } from "@/config/retest-offer";
 import { recordServerEvent } from "@/lib/analytics/server";
+import { orderConfirmationEmail } from "@/lib/email/order-confirmation";
+import { sendEmail } from "@/lib/email/send";
 import { decodeOrderMetadata } from "@/lib/orders/metadata";
+import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
+import { offerDeadline } from "@/lib/retest/offer";
 import { getStripe } from "@/lib/stripe/server";
 
 /**
@@ -33,15 +41,34 @@ export async function POST(req: Request) {
     case "payment_intent.succeeded": {
       const pi = event.data.object;
       const order = decodeOrderMetadata(pi.metadata);
-      if (order) {
-        await recordServerEvent("purchase_completed", order.eventId || pi.id, {
-          order_id: pi.id,
-          product_id: order.configuration.productId,
-          addon_ids: order.configuration.addonIds,
-          value: pi.amount_received / 100,
-          currency: "AUD",
-          source: pi.metadata.source ?? "initial",
+      if (!order) break;
+      const customer = typeof pi.customer === "string" ? await stripe.customers.retrieve(pi.customer).catch(() => null) : pi.customer;
+      const cust = customer && !("deleted" in customer && customer.deleted) ? customer : null;
+      // The browser fired purchase_completed with event_id = pi.id; the server sends the same id.
+      await recordServerEvent("purchase_completed", pi.id, {
+        order_id: pi.id, product_id: order.configuration.productId, addon_ids: order.configuration.addonIds,
+        value: pi.amount_received / 100, currency: "AUD", source: pi.metadata.source ?? "initial",
+      }, {
+        email: cust?.email ?? pi.receipt_email, fbp: pi.metadata.fbp, fbc: pi.metadata.fbc, gaClientId: pi.metadata.ga_cid,
+        clientIp: cust?.metadata?.order_ip, userAgent: cust?.metadata?.order_ua,
+      });
+      // Confirmation email with booking link and the time-limited retesting offer.
+      const to = cust?.email ?? pi.receipt_email;
+      if (to && !pi.metadata.confirmation_sent) {
+        const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
+        const orderUrl = `${site}/order/${pi.id}?t=${encodeURIComponent(signOrderToken(pi.id, orderTokenSecret()))}`;
+        const label = (kind: string, id: string) => kind === "product" ? getProduct(id)?.name ?? "The SIGNAL Test" : kind === "addon" ? getAddon(id)?.name ?? id : id === "centre" || id === "mobile" ? getCollectionMethod(id).name : id;
+        const mail = orderConfirmationEmail({
+          firstName: cust?.metadata?.first_name || undefined,
+          reference: `SIG-${pi.id.replace(/^pi_/, "").slice(-8).toUpperCase()}`,
+          orderUrl, orderId: pi.id,
+          lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
+          amountCents: pi.amount_received,
+          collectionMethodId: order.configuration.collectionMethodId,
+          offerDeadline: offerDeadline(new Date(pi.created * 1000), postPurchaseOffer.windowHours),
         });
+        const sent = await sendEmail({ to, ...mail });
+        if (sent.sent) await stripe.paymentIntents.update(pi.id, { metadata: { confirmation_sent: sent.id ?? "1" } }).catch(() => undefined);
       }
       break;
     }

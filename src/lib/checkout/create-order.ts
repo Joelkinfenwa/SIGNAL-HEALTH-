@@ -14,11 +14,12 @@
  *
  * Stripe is the order store until a database exists (docs/ARCHITECTURE.md §5).
  */
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { randomUUID } from "node:crypto";
 import { detailsCopy } from "@/config/checkout-fields";
 import { PREVIEW_PRICING } from "@/config/pricing";
 import { normaliseCustomer, validateCustomer, type CustomerDetails } from "@/lib/checkout/customer";
+import { gaClientIdFromCookie } from "@/lib/analytics/server-adapters";
 import { customerParams, encodeOrderMetadata, type OrderContext } from "@/lib/orders/metadata";
 import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
 import { quoteConfiguration, type Configuration } from "@/lib/pricing";
@@ -38,7 +39,7 @@ async function readContext(): Promise<OrderContext> {
   };
   const ctx = parse<{ lp_slug?: string; experiment_id?: string; variant?: string }>("sig_ctx") ?? {};
   const attr = parse<{ first?: OrderContext["first"]; last?: OrderContext["last"] }>("sig_attr") ?? {};
-  return { ...ctx, first: attr.first, last: attr.last };
+  return { ...ctx, first: attr.first, last: attr.last, fbp: jar.get("_fbp")?.value, fbc: jar.get("_fbc")?.value, ga_cid: gaClientIdFromCookie(jar.get("_ga")?.value) ?? undefined };
 }
 
 export async function createOrder(cfg: Configuration, customer: CustomerDetails): Promise<CreateOrderResult> {
@@ -56,7 +57,8 @@ export async function createOrder(cfg: Configuration, customer: CustomerDetails)
   const eventId = randomUUID();
   const ctx = await readContext();
 
-  const stripeCustomer = await stripe.customers.create(customerParams(record));
+  const h = await headers();
+  const stripeCustomer = await stripe.customers.create({ ...customerParams(record), metadata: { ...customerParams(record).metadata, order_ip: h.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "", order_ua: (h.get("user-agent") ?? "").slice(0, 200) } });
   const intent = await stripe.paymentIntents.create(
     {
       amount: quote.totalCents,

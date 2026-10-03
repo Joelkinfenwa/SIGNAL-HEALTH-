@@ -49,3 +49,8 @@ test("DOB and sex never ride on the PaymentIntent metadata", () => {
   const m = encodeOrderMetadata({ productId: "signal", addonIds: [] }, [], {}, "e");
   for (const k of Object.keys(m)) assert.ok(!/dob|sex|gender|name|email|phone/.test(k), k);
 });
+
+test("ad and analytics identifiers ride on the order for server-side de-duplication, never health data", () => {
+  const m = encodeOrderMetadata({ productId: "signal", addonIds: [] }, [], { fbp: "fb.1.1", fbc: "fb.1.2.abc", ga_cid: "123.456" }, "e");
+  assert.equal(m.fbp, "fb.1.1"); assert.equal(m.fbc, "fb.1.2.abc"); assert.equal(m.ga_cid, "123.456");
+});

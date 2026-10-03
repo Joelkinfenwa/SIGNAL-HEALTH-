@@ -43,8 +43,8 @@ Configuration over code: the product (`products.ts`: base markers, add-on order)
 /retesting                      How Automatic Retesting works (built)
 /account, /account/retesting    Phase 2+
 /legal/[slug]                   Built: terms, privacy, retesting-terms from config/legal (drafts for legal review; entity details in config/legal/entity.ts)
-/api/stripe/webhook             Built: signature-verified; emits server-authoritative events (adapters phase 7)
-/api/events                     Stub (phase 7)
+/api/stripe/webhook             Built: signature-verified; purchase → Meta CAPI + GA4 MP with the browser's event_id, confirmation email via Resend
+/api/events                     Built: validated browser-event mirror → Meta CAPI (redacted) + GA4 MP
 /tests, /tests/*, /find-my-test 301 → /signal, /find-my-signal
 ```
 

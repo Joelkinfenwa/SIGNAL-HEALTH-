@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { retestOffers } from "../src/config/retest-offer";
+import { postPurchaseOffer, retestOffers } from "../src/config/retest-offer";
 import type { QuoteLine } from "../src/lib/pricing";
-import { addMonths, fillOfferTokens, quoteRetest, quoteRetestForOrder } from "../src/lib/retest/offer";
+import { addMonths, fillOfferTokens, offerDeadline, quoteRetest, quoteRetestForOrder } from "../src/lib/retest/offer";
 
 const lines: QuoteLine[] = [
   { kind: "product", id: "signal", label: "The SIGNAL Test", priceCents: 34900 },
@@ -40,4 +40,11 @@ test("offer copy tokens fill with formatted money, interval and date", () => {
     refund: 6120, paid: 45700, price: 34680, intervalMonths: 6, discountBps: 1500, nextDate: new Date(Date.UTC(2027, 2, 30, 12)), reminderDays: 14,
   });
   assert.equal(s, "Get $61.20 back. Then $346.80 every 6 months from 30 March 2027. 15% off. 14 days.");
+});
+
+test("the refund offer window is 48 hours from payment", () => {
+  const paid = new Date(Date.UTC(2026, 9, 3, 2, 0));
+  const d = offerDeadline(paid, postPurchaseOffer.windowHours);
+  assert.equal(postPurchaseOffer.windowHours, 48);
+  assert.equal(d.toISOString(), "2026-10-05T02:00:00.000Z");
 });

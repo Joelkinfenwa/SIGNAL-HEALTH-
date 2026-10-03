@@ -5,7 +5,7 @@ import { postPurchaseOffer, retestOffers } from "@/config/retest-offer";
 import { recordServerEvent } from "@/lib/analytics/server";
 import { decodeOrderMetadata } from "@/lib/orders/metadata";
 import { orderTokenSecret, verifyOrderToken } from "@/lib/orders/token";
-import { addMonths, quoteRetestForOrder } from "@/lib/retest/offer";
+import { addMonths, offerDeadline, quoteRetestForOrder } from "@/lib/retest/offer";
 import { getStripe } from "@/lib/stripe/server";
 import { createHash } from "node:crypto";
 
@@ -24,6 +24,7 @@ export type AcceptResult =
   | { status: "invalid"; reason: string }
   | { status: "not_configured"; reason: string }
   | { status: "already_enrolled"; nextTestDate: string }
+  | { status: "expired" }
   | { status: "accepted"; enrolmentId: string; refundCents: number; recurringCents: number; nextTestDate: string; refundPending: boolean };
 
 interface Input { orderId: string; token: string; offerId: string; offerVersion: number; consentTextVersion: string; consentAccepted: boolean }
@@ -42,6 +43,7 @@ export async function acceptRetestOffer(input: Input): Promise<AcceptResult> {
   const pi = await stripe.paymentIntents.retrieve(input.orderId, { expand: ["latest_charge"] });
   if (pi.status !== "succeeded") return { status: "invalid", reason: "This order has not been paid yet." };
   if (pi.metadata.retest_subscription) return { status: "already_enrolled", nextTestDate: new Date(Number(pi.metadata.retest_next_test) * 1000).toISOString() };
+  if (Date.now() > offerDeadline(new Date(pi.created * 1000), postPurchaseOffer.windowHours).getTime()) return { status: "expired" };
   const decoded = decodeOrderMetadata(pi.metadata);
   const product = decoded ? getProduct(decoded.configuration.productId) : undefined;
   if (!decoded || !product) return { status: "invalid", reason: "This order can't be enrolled." };

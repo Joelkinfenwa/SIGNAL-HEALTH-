@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Figtree } from "next/font/google";
 import type { ReactNode } from "react";
+import { Analytics } from "@/components/analytics/Analytics";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
 import { PreviewPricingBanner } from "@/components/layout/PreviewPricingBanner";
 import "./globals.css";
@@ -37,6 +38,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <AttributionCapture />
+        <Analytics />
         <PreviewPricingBanner />
         {children}
       </body>

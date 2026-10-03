@@ -9,7 +9,7 @@ import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
 import type { QuoteLine } from "@/lib/pricing";
 import { acceptRetestOffer, declineRetestOffer } from "@/lib/retest/accept";
-import { addMonths, fillOfferTokens, formatInterval, quoteRetestForOrder } from "@/lib/retest/offer";
+import { addMonths, fillOfferTokens, formatDeadline, formatInterval, offerDeadline, quoteRetestForOrder } from "@/lib/retest/offer";
 import styles from "./RetestOffer.module.css";
 
 interface OrderLite { id: string; token: string; lines: QuoteLine[]; amountCents: number; paidAt: string }
@@ -31,7 +31,9 @@ export function RetestOffer({ order, enrolled, preselectOfferId }: { order: Orde
   const [selectedId, setSelectedId] = useState(initial);
   const [consent, setConsent] = useState(false);
   const [consentTouched, setConsentTouched] = useState(false);
-  const [state, setState] = useState<"idle" | "submitting" | "accepted" | "declined" | "not_configured">(enrolled ? "accepted" : "idle");
+  const deadline = useMemo(() => offerDeadline(new Date(order.paidAt), cfg.windowHours), [order.paidAt]);
+  const expiredOnLoad = !enrolled && Date.now() > deadline.getTime();
+  const [state, setState] = useState<"idle" | "submitting" | "accepted" | "declined" | "not_configured" | "expired">(enrolled ? "accepted" : expiredOnLoad ? "expired" : "idle");
   const [message, setMessage] = useState<string | null>(null);
   const [result, setResult] = useState<{ nextTestDate: Date; refundCents: number; refundPending: boolean } | null>(enrolled ? { nextTestDate: new Date(enrolled.nextTestDate), refundCents: enrolled.refundCents, refundPending: false } : null);
   const paidAt = useMemo(() => new Date(order.paidAt), [order.paidAt]);
@@ -47,7 +49,7 @@ export function RetestOffer({ order, enrolled, preselectOfferId }: { order: Orde
   const fill = (s: string) => fillOfferTokens(s, t);
   const evProps = (o: Offer) => ({ order_id: order.id, offer_id: o.id, offer_version: o.version });
 
-  useEffect(() => { if (!enrolled) track({ name: "retest_offer_viewed", props: evProps(featured) }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!enrolled && !expiredOnLoad) track({ name: "retest_offer_viewed", props: evProps(featured) }); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   function choose(o: Offer) {
     setSelectedId(o.id);
@@ -70,6 +72,7 @@ export function RetestOffer({ order, enrolled, preselectOfferId }: { order: Orde
       track({ name: "retest_offer_accepted", props: { ...evProps(selected), value: res.recurringCents / 100, currency: "AUD" } }, { eventId: `${order.id}:retest` });
     } else if (res.status === "already_enrolled") { setResult({ nextTestDate: new Date(res.nextTestDate), refundCents: q.refundTodayCents, refundPending: false }); setState("accepted"); }
     else if (res.status === "not_configured") { setState("not_configured"); setMessage(res.reason); }
+    else if (res.status === "expired") { setState("expired"); }
     else { setState("idle"); setMessage(res.reason); }
   }
 
@@ -92,18 +95,19 @@ export function RetestOffer({ order, enrolled, preselectOfferId }: { order: Orde
     );
   }
 
-  if (state === "declined") {
+  if (state === "declined" || state === "expired") {
+    const copy = state === "declined" ? cfg.declined : cfg.expired;
     return (
       <section className={cx(styles.wrap, styles.quiet)} aria-live="polite">
-        <h2 className={styles.quietTitle}>{cfg.declined.headline}</h2>
-        <p className={styles.quietBody}>{cfg.declined.body}</p>
+        <h2 className={styles.quietTitle}>{copy.headline}</h2>
+        <p className={styles.quietBody}>{copy.body.replace("{hours}", String(cfg.windowHours))}</p>
       </section>
     );
   }
 
   return (
     <section className={styles.wrap} aria-labelledby="offer-title">
-      <p className={styles.eyebrow}><Icon name="sparkle" size={14} /> {cfg.oneTimeOnly ? cfg.eyebrow : cfg.eyebrowRepeatable}</p>
+      <p className={styles.eyebrow}><Icon name="sparkle" size={14} /> {cfg.eyebrow.replace("{deadline}", formatDeadline(deadline))}</p>
       <h2 id="offer-title" className={styles.title}>{fill(cfg.headline)}</h2>
       <p className={styles.body}>{fill(cfg.body)}</p>
 

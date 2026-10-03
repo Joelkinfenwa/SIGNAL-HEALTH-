@@ -105,7 +105,8 @@ export const formatDiscount = (bps: number) => `${bps / 100}%`;
  * discounted price. Copy tokens: {refund} {paid} {price} {interval} {discount} {date}.
  *
  * DECISIONS to confirm before launch (see README claims register):
- *  - oneTimeOnly: the offer is not repeated at this price. Only say it if it is true.
+ *  - windowHours: how long after payment the refund offer stays open. The page,
+ *    the email and the server all read this one number.
  *  - cancellationPolicy: what happens to today's refund if they cancel before
  *    the first retest. "keep_refund" is simplest and needs no clawback logic;
  *    "reverse_refund" requires the terms and a charge mechanism. TODO(legal).
@@ -114,13 +115,13 @@ export const formatDiscount = (bps: number) => `${bps / 100}%`;
 export type CancellationPolicy = "keep_refund" | "reverse_refund";
 
 export const postPurchaseOffer = {
-  oneTimeOnly: true,
+  windowHours: 48,
   cancellationPolicy: "keep_refund" as CancellationPolicy,
   reminderDaysBefore: 14,
   /** Consent wording version. Bump when any disclosure line changes; the consent record stores it. */
   consentTextVersion: "retest-consent-v1",
-  eyebrow: "One-time offer · this page only",
-  eyebrowRepeatable: "Automatic Retesting",
+  eyebrow: "Available until {deadline}",
+  expired: { headline: "This offer has ended.", body: "You can still set up Automatic Retesting later from your account; the refund on this order was available for {hours} hours after payment." },
   headline: "Get {refund} back right now.",
   body: "You paid {paid} today. Set up Automatic Retesting and we refund {refund} to your card immediately, then every retest is {discount} off.",
   planRefundLabel: "Refund today",
