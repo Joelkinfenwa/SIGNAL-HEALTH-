@@ -87,7 +87,7 @@ export default function MenFunnelPage() {
               </div>
               <p className={styles.supporting}>{fill(f.hero.supporting)}</p>
               <ul className={styles.miniTrust}>
-                {visible(f.hero.miniTrust).map((c) => <li key={c.text}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
+                {visible(f.hero.miniTrust).map((c, i) => <li key={i}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
               </ul>
             </div>
             <Photo asset={menMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 30%" />
@@ -212,7 +212,7 @@ export default function MenFunnelPage() {
               <h2 id="proof-title" className={styles.h2}>{f.proof.title}</h2>
               <p className={styles.intro}>{f.proof.intro}</p>
               <ul className={styles.facts}>
-                {visible(f.proof.facts).map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
+                {visible(f.proof.facts).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
               <div className={styles.proofCta}>
                 <Button href={f.proof.cta.href} ctaId="men_proof_cta" location="men_proof">{fill(f.proof.cta.label)} <Icon name="arrow" size={18} /></Button>
@@ -238,7 +238,7 @@ export default function MenFunnelPage() {
                   {c.priceSub ? <p className={styles.planPriceSub}>{fill(c.priceSub)}</p> : null}
                   <p className={styles.planTagline}>{c.tagline}</p>
                   <ul className={styles.planBullets}>
-                    {visible(c.bullets).map((b) => <li key={b.text}><Icon name="check" size={14} /> <ClaimText c={b} /></li>)}
+                    {visible(c.bullets).map((b, i) => <li key={i}><Icon name="check" size={14} /> <ClaimText c={b} /></li>)}
                   </ul>
                   <Button href={c.cta.href} full variant={c.badge ? "solid" : "outline"} ctaId={`men_plan_${c.id}`} location="men_plans">{c.cta.label} <Icon name="arrow" size={18} /></Button>
                 </li>
@@ -260,7 +260,7 @@ export default function MenFunnelPage() {
               <Photo asset={menMedia.doctor} sizes="(min-width: 64rem) 50vw, 100vw" className={styles.safetyPhoto} position="center 40%" />
               <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
               <ul className={styles.safety}>
-                {visible(f.safety.bullets).map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
+                {visible(f.safety.bullets).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
             </div>
             <div className={styles.disclaimer}>
