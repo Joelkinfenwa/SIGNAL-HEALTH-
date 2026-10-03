@@ -43,8 +43,8 @@ export const detailsCopy = {
   email: { label: "Email", help: "Your confirmation, booking link and results notification go here." },
   phone: { label: "Mobile", help: "For booking reminders and if the collector needs to reach you." },
   address: {
-    legend: "Collection address",
-    help: "Where the collector will come to. Street address, not a PO box.",
+    legend: "Home address",
+    help: "Printed on your pathology request form so the laboratory can match your sample to you. For at-home collection it's also where the collector comes to. Street address, not a PO box.",
     line1: "Street address",
     line2: "Unit, level or building",
     suburb: "Suburb",

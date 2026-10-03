@@ -27,7 +27,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ orderId:
   let pi;
   try { pi = await stripe.paymentIntents.retrieve(orderId, { expand: ["customer"] }); } catch { return new NextResponse(null, { status: 404 }); }
   if (pi.status !== "succeeded") return new NextResponse(null, { status: 404 });
-  const bytes = await requestFormForIntent(pi);
-  if (!bytes) return new NextResponse(null, { status: 404 });
-  return pdfResponse(bytes, `SIGNAL-request-${orderReference(pi.id)}.pdf`);
+  const r = await requestFormForIntent(pi);
+  if (!r.ok) {
+    console.error(`[request-form] ${pi.id} cannot be issued; missing ${r.missing.join(", ")}`);
+    return new NextResponse("Your request form is being prepared by our team and will be emailed to you. Reply to your confirmation email if you need it sooner.", { status: 409, headers: { "content-type": "text/plain; charset=utf-8" } });
+  }
+  return pdfResponse(r.pdf, `SIGNAL-request-${orderReference(pi.id)}.pdf`);
 }

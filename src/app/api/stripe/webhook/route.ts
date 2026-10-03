@@ -11,6 +11,7 @@ import { decodeOrderMetadata } from "@/lib/orders/metadata";
 import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
 import { pathologyConfig } from "@/config/pathology";
 import { orderReference, requestFormForIntent } from "@/lib/pathology/order-request";
+import { opsAlert } from "@/lib/email/ops-alert";
 import { offerDeadline } from "@/lib/retest/offer";
 import { getStripe } from "@/lib/stripe/server";
 
@@ -62,15 +63,27 @@ export async function POST(req: Request) {
         const orderUrl = `${site}/order/${pi.id}?t=${token}`;
         const formUrl = `${site}/api/orders/${pi.id}/request-form?t=${token}`;
         // Request form: issued at payment under the practice protocol ("auto"); in "review" mode it is sent after approval.
+        // The form is only attached when every identity field the laboratory needs is present and well formed.
+        // Anything else is held, recorded on the order (request_form) and raised with operations: never a blank form.
         let form: Uint8Array | null = null;
+        let formStatus = "held:review_mode";
         if (pathologyConfig.issue === "auto") {
-          try { form = await requestFormForIntent({ ...pi, customer: cust ?? pi.customer } as typeof pi); } catch (err) { console.warn("[request-form] generation failed", err); }
+          try {
+            const r = await requestFormForIntent({ ...pi, customer: cust });
+            if (r.ok) { form = r.pdf; formStatus = "attached"; }
+            else { formStatus = `held:${r.missing.join("+")}`; await opsAlert(`Request form held for ${orderReference(pi.id)}`, `Order ${pi.id} paid but the pathology request form could not be generated. Missing or invalid: ${r.missing.join(", ")}. Fix the Stripe Customer (${cust?.id ?? "unknown"}) and the customer can download the form from their order page, or send it manually.`); }
+          } catch (err) {
+            formStatus = "held:error";
+            console.warn("[request-form] generation failed", err);
+            await opsAlert(`Request form failed for ${orderReference(pi.id)}`, `Order ${pi.id}: ${(err as Error).message}`);
+          }
         }
+        await stripe.paymentIntents.update(pi.id, { metadata: { request_form: formStatus.slice(0, 120) } }).catch(() => undefined);
         const label = (kind: string, id: string) => kind === "product" ? getProduct(id)?.name ?? "The SIGNAL Test" : kind === "addon" ? getAddon(id)?.name ?? id : id === "centre" || id === "mobile" ? getCollectionMethod(id).name : id;
         const mail = orderConfirmationEmail({
           firstName: cust?.metadata?.first_name || undefined,
           reference: orderReference(pi.id),
-          orderUrl, orderId: pi.id, formAttached: Boolean(form), formUrl,
+          orderUrl, orderId: pi.id, formAttached: Boolean(form), formUrl: form ? formUrl : undefined,
           lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
           amountCents: pi.amount_received,
           collectionMethodId: order.configuration.collectionMethodId,

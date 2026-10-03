@@ -32,7 +32,9 @@ export function orderConfirmationEmail(i: ConfirmationInput): { subject: string;
   const greeting = i.firstName ? `Thanks, ${i.firstName}.` : "Thanks.";
   const fasting = pathologyConfig.collection.fastingRequired ? pathologyConfig.collection.fastingInstruction : "";
   const steps = [
-    `1. Your pathology request form is ${i.formAttached ? "attached to this email" : "ready to download"}${i.formUrl ? ` (${i.formUrl})` : ""}. ${pathologyConfig.collection.bring}`,
+    i.formAttached || i.formUrl
+      ? `1. Your pathology request form is ${i.formAttached ? "attached to this email" : "ready to download"}${i.formUrl ? ` (${i.formUrl})` : ""}. ${pathologyConfig.collection.bring}`
+      : "1. Our team is preparing your pathology request form and will email it to you within one business day. You need it before your collection.",
     `2. Book your ${collection.toLowerCase()}.${booking ? ` ${booking}` : " We'll email your booking link shortly."}`,
     fasting ? `3. Before collection: ${fasting}` : "",
     `${fasting ? 4 : 3}. Your results and the doctor's review arrive in your dashboard in around 7 days.`,

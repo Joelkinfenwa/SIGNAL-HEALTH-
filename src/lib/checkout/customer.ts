@@ -72,7 +72,7 @@ export function normalisePhone(raw: string): string {
 export const isAustralianMobile = (raw: string) => /^04\d{8}$/.test(normalisePhone(raw));
 
 export interface ValidateOptions {
-  /** At-home collection needs a full address; a centre needs only a postcode. */
+  /** The request form prints the full address, so checkout always sets this true. Kept for tests. */
   requiresAddress: boolean;
   today?: Date;
 }

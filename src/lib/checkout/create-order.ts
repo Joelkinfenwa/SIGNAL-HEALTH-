@@ -43,7 +43,7 @@ async function readContext(): Promise<OrderContext> {
 }
 
 export async function createOrder(cfg: Configuration, customer: CustomerDetails): Promise<CreateOrderResult> {
-  const errors = validateCustomer(customer, { requiresAddress: cfg.collectionMethodId === "mobile" }, detailsCopy.errors);
+  const errors = validateCustomer(customer, { requiresAddress: true }, detailsCopy.errors);
   if (Object.keys(errors).length) return { status: "invalid", errors };
   if (!cfg.collectionMethodId) return { status: "invalid", errors: { collection: "Choose a collection option." } };
 

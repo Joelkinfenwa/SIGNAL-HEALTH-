@@ -80,7 +80,8 @@ export function Checkout() {
   // Any change to what's being bought or who's buying invalidates a started payment.
   useEffect(() => { setPayment(null); }, [cfg, customer]);
 
-  const requiresAddress = cfg.collectionMethodId === "mobile";
+  // Always: the laboratory prints the address on the request form as an identifier, whichever way the sample is collected.
+  const requiresAddress = true;
   const errors = useMemo(() => validateCustomer(customer, { requiresAddress }, detailsCopy.errors), [customer, requiresAddress]);
   const errorCount = Object.keys(errors).length;
   const detailsValid = errorCount === 0;
