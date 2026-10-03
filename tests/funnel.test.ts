@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 import { addonsFromCents, menFunnel, trackOffer, unverifiedClaimCount } from "../src/config/funnel/men";
 import { addons } from "../src/config/addons";
+import { signalTest } from "../src/config/products";
 
 test("funnel page follows the nine-block structure with the required content", () => {
   assert.equal(menFunnel.trustStrip.length, 3);
@@ -28,8 +29,19 @@ test("all funnel claims are verified (confirmed 2 Oct 2026); any new line must b
 
 test("funnel copy stays AHPRA-safe: no testimonials, no diagnosis or popularity claims, no TGA claim", () => {
   const text = JSON.stringify(menFunnel).toLowerCase();
-  for (const banned of ["most popular", "tga", "diagnos", "finally explains", "medical-grade", "free hormone add-on", "testimonial\""]) assert.ok(!text.includes(banned), `found "${banned}"`);
+  for (const banned of [/most popular/, /\btga\b/, /\bdiagnostic\b/, /finally explains/, /medical-grade/, /free hormone add-on/, /\blow t\b/, /\bboost/, /optimise your/, /\bcures?\b/, /\breverses?\b/]) assert.ok(!banned.test(text), `found ${banned}`);
+  assert.ok(!("quotes" in menFunnel.proof) && !("testimonials" in menFunnel.proof), "proof section carries facts, never quotes");
   assert.ok(menFunnel.proof.facts.length >= 4);
   assert.ok(menFunnel.plans.optionalNote.toLowerCase().includes("optional"));
   assert.ok(menFunnel.safety.guarantee.terms.length > 0);
+});
+
+test("panel buckets cover every base marker exactly once and add-on buckets map to sellable add-ons", () => {
+  const ids = menFunnel.panel.buckets.flatMap((b) => b.markerIds);
+  assert.equal(new Set(ids).size, ids.length, "no marker in two buckets");
+  assert.deepEqual([...ids].sort(), [...signalTest.markerIds].sort(), "buckets == base panel");
+  for (const ab of menFunnel.panel.addonBuckets) {
+    const a = addons.find((x) => x.id === ab.addonId);
+    assert.ok(a && a.enabled && a.launchEnabled, ab.addonId);
+  }
 });

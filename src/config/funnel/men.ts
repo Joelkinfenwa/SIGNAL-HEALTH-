@@ -48,10 +48,12 @@ export const menFunnel = {
     { text: "Accredited Australian laboratories", verified: true },
   ] as Claim[],
   hero: {
-    headline: "Australian men 30–60: get a doctor-reviewed blood panel, explained in plain English, in around 7 days.",
-    subheadline: "Feeling tired, flat or not yourself? Start with the numbers. One visit, one comprehensive panel, reviewed by an Australian-registered doctor, with a written plan for what to do next.",
+    eyebrow: "For Australian men 30–60",
+    headline: "Tired, flat or not yourself? Start with the numbers.",
+    subheadline: "A comprehensive men's health blood panel, reviewed by an Australian-registered doctor, with a plain-English report and plan in around 7 days. One visit. No GP referral.",
+    supporting: "{markers} markers across {buckets} key areas of men's health. Add hormones, thyroid or heart depth in the same blood draw.",
     primaryCta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
-    secondaryCta: { label: "Or see what's included first", href: "#included" },
+    secondaryCta: { label: "Or see what's included first", href: "#panel" },
     miniTrust: [
       { text: "No GP referral needed", verified: true },
       { text: "Results and doctor review in around 7 days", verified: true },
@@ -64,10 +66,33 @@ export const menFunnel = {
     title: "What you actually get when you order SIGNAL",
     intro: "When you order a SIGNAL test, you're not just getting numbers. You're getting a full check, a doctor's eyes on your results, and a written plan.",
     bullets: [
-      { title: "One comprehensive blood panel", body: "Heart, metabolism, thyroid, iron, liver, kidneys, inflammation and more. {markers} markers across {areas} areas in the base test, every one listed before you pay." },
-      { title: "Doctor-reviewed results", body: "Reviewed by an Australian-registered doctor, not just auto-generated ranges." },
-      { title: "A clear, written plan", body: "What's normal, what's not, and what to do next, explained in plain English." },
-      { title: "Optional add-ons in the same blood draw", body: "Hormones, thyroid, heart and more, from {addonsFrom}. One needle, no second visit." },
+      { title: "One comprehensive blood panel", body: "{markers} markers across {buckets} key areas: energy and iron, heart and cholesterol, metabolism and blood sugar, thyroid, liver and kidneys, electrolytes and minerals, and inflammation. Every marker is listed before you pay." },
+      { title: "Doctor-reviewed results", body: "An Australian-registered doctor reads your results as a whole, looking at patterns across markers, not just whether each number sits inside a range." },
+      { title: "A clear, written plan", body: "What's in the expected range, what isn't, and what to do next, in plain English. If something needs follow-up with your GP or a specialist, the plan says so." },
+      { title: "Optional add-ons in the same blood draw", body: "Go deeper on hormones and drive, thyroid, heart and cholesterol, key nutrients, or training and recovery. One needle, no second visit, from {addonsFrom}." },
+    ],
+  },
+
+  // 2b. Panel detail: plain-English buckets over the real marker config. Marker names render from biomarkers.ts.
+  panel: {
+    title: "See what's included in the panel",
+    intro: "Every result is explained in plain English and reviewed by a doctor. The panel measures where things sit and helps identify patterns that may need further follow-up. It doesn't diagnose conditions on its own.",
+    buckets: [
+      { id: "energy", name: "Energy and iron", explanation: "Looks at the cells that carry oxygen and the iron that makes them, the most common place to start when energy is low.", markerIds: ["fbc", "ferritin", "iron", "transferrin", "tsat"] },
+      { id: "heart", name: "Heart and cholesterol", explanation: "Looks at the fats in your blood and the particles that carry them.", markerIds: ["tc", "ldl", "hdl", "tg", "non_hdl"] },
+      { id: "metabolism", name: "Metabolism and blood sugar", explanation: "Looks at where your blood sugar sits today and on average over the last three months.", markerIds: ["glucose", "hba1c"] },
+      { id: "thyroid", name: "Thyroid", explanation: "Looks at the signal that controls the gland setting your metabolic pace.", markerIds: ["tsh"] },
+      { id: "liver-kidneys", name: "Liver and kidneys", explanation: "Looks at how your liver is working and how well your kidneys are filtering.", markerIds: ["alt", "ast", "alp", "ggt", "bilirubin", "albumin", "total_protein", "creatinine", "egfr", "urea"] },
+      { id: "electrolytes", name: "Electrolytes and minerals", explanation: "Looks at the salts and minerals your fluid balance, nerves, muscles and bones depend on.", markerIds: ["sodium", "potassium", "chloride", "bicarbonate", "calcium", "magnesium", "phosphate", "uric_acid"] },
+      { id: "inflammation", name: "Inflammation", explanation: "Looks at your general level of inflammation right now, which adds context to the heart and metabolic results.", markerIds: ["hscrp"] },
+    ],
+    addonsTitle: "Add more depth in the same draw",
+    addonBuckets: [
+      { addonId: "hormones_plus", name: "Hormones and drive", explanation: "Looks at key hormone levels that can influence energy, mood and sex drive, and the signals that regulate them." },
+      { addonId: "thyroid_plus", name: "Thyroid in depth", explanation: "Looks at the hormones TSH controls, plus antibody markers that add context TSH alone can't." },
+      { addonId: "heart_plus", name: "Heart in depth", explanation: "Looks at the particle-level cholesterol markers most check-ups never run, including one largely set by your genes." },
+      { addonId: "nutrients_plus", name: "Key nutrients", explanation: "Looks at the three nutrients men most often supplement without knowing where they sit." },
+      { addonId: "performance_plus", name: "Training and recovery", explanation: "Looks at muscle load, stress response and recovery, for men who train hard." },
     ],
   },
 
@@ -182,6 +207,15 @@ export const menFunnel = {
       { text: "We never promise specific medications; treatment is only offered if clinically appropriate", verified: true },
       { text: "Your data is stored using the same standards as hospitals", verified: true },
     ] as Claim[],
+    disclaimer: {
+      title: "Medical information and limits",
+      body: [
+        "SIGNAL provides general health information based on your blood results. It is not a personalised diagnosis or a full medical assessment, and it does not replace your GP.",
+        "Results outside the expected range may need follow-up with your GP or a specialist, and your report will say so.",
+        "Any treatment, including any medication, is only ever considered separately, by a doctor, and only if it is clinically appropriate for you.",
+        "Samples are analysed by accredited Australian pathology laboratories and every result is reviewed by an Australian-registered doctor.",
+      ],
+    },
     guarantee: {
       title: "Clear Plan or It's Free",
       body: "If after your blood draw and doctor review you feel you didn't get a clear explanation or plan for what to do next, email us within 7 days for a full refund of your {price} test fee.",

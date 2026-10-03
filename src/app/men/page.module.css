@@ -11,6 +11,8 @@
 /* 1. hero */
 .hero { padding-block: var(--s-7) var(--s-8); }
 .heroInner { display: grid; gap: var(--s-6); align-items: center; }
+.eyebrow { margin-bottom: var(--s-3); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-brand); }
+.supporting { margin-top: var(--s-4); font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
 .title { font-size: clamp(1.75rem, 1.1rem + 3vw, 3.25rem); line-height: 1.08; font-weight: 700; letter-spacing: -0.035em; text-wrap: balance; max-width: 22ch; }
 .lede { margin-top: var(--s-4); font-size: var(--fs-md); line-height: 1.5; color: var(--muted); max-width: 34rem; text-wrap: pretty; }
 .actions { margin-top: var(--s-5); display: grid; gap: var(--s-3); justify-items: stretch; }
@@ -44,6 +46,29 @@
 .reportCards { display: grid; gap: var(--s-2); }
 .reportPlan { padding: var(--s-3) var(--s-4); border-left: 3px solid var(--c-brand); font-size: var(--fs-sm); color: var(--fg); text-wrap: pretty; }
 .reportCaption { font-size: var(--fs-xs); color: var(--muted); }
+
+/* 2b. panel buckets */
+.h3 { margin-top: var(--s-6); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
+.buckets { display: grid; }
+.bucket { border-top: 1px solid var(--line); }
+.buckets li:last-child .bucket { border-bottom: 1px solid var(--line); }
+.bucketSummary { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 64px; padding: var(--s-3) 0; cursor: pointer; list-style: none; }
+.bucketSummary::-webkit-details-marker { display: none; }
+.bucketSummary:focus-visible { outline-offset: -3px; border-radius: 8px; }
+.bucketText { display: grid; gap: 2px; }
+.bucketName { font-weight: 700; }
+.bucketCount { font-size: var(--fs-xs); color: var(--muted); }
+.bucket[open] .plus { display: none; }
+.bucket[open] .minus { display: block; }
+.bucketBody { display: grid; gap: var(--s-3); padding: 0 0 var(--s-4); color: var(--muted); max-width: 60ch; }
+.markerChips { display: flex; flex-wrap: wrap; gap: 6px; }
+.markerChips li { padding: 5px 10px; border-radius: 999px; background: var(--panel-soft); font-size: var(--fs-xs); font-weight: 600; color: var(--fg); }
+.addonBuckets { display: grid; gap: var(--s-3); margin-top: var(--s-4); }
+.addonBucket { display: grid; gap: 4px; padding: var(--s-4); border-radius: var(--r-md); background: var(--panel-soft); }
+.addonBucketHead { display: flex; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
+.addonBucketPrice { font-size: var(--fs-sm); font-weight: 700; color: var(--c-brand); }
+.addonBucketBody { font-size: var(--fs-sm); color: var(--muted); }
+.addonBucketMarkers { font-size: var(--fs-xs); font-weight: 600; color: var(--fg); }
 
 /* 3. steps */
 .steps { display: grid; }
@@ -96,6 +121,8 @@
 .safety { display: grid; gap: var(--s-3); font-size: var(--fs-base); }
 .safety li { display: flex; gap: var(--s-2); align-items: flex-start; }
 .safety svg { flex: none; margin-top: 5px; color: var(--c-brand); }
+.disclaimer { display: grid; gap: var(--s-2); margin-top: var(--s-5); padding: var(--s-4); border-radius: var(--r-md); background: var(--panel-soft); font-size: var(--fs-sm); color: var(--muted); }
+.disclaimerTitle { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); }
 .guarantee { display: grid; gap: var(--s-3); padding: var(--s-6) var(--s-5); border-radius: var(--r-md); border: 2px solid var(--fg); }
 .guaranteeTitle { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.03em; }
 .guaranteeBody { text-wrap: pretty; }
@@ -137,5 +164,6 @@
   .heroPhoto { aspect-ratio: 3 / 4; max-height: 34rem; }
   .split { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); }
   .plans { grid-template-columns: repeat(3, 1fr); gap: var(--s-5); }
+  .addonBuckets { grid-template-columns: repeat(2, 1fr); }
   .faqInner { grid-template-columns: 1fr 1.6fr; align-items: start; }
 }

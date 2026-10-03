@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type Claim } from "@/config/funnel/men";
+import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { resultsPreview } from "@/config/home";
 import { menMedia } from "@/config/media";
@@ -38,6 +39,7 @@ function fill(s: string): string {
     track3Discount: t3 ? formatDiscount(t3.discountBps) : "",
     markers: String(productMarkerCount(signalTest)),
     areas: String(productCategoryCount(signalTest)),
+    buckets: String(f.panel.buckets.length),
   };
   return s.replace(/\{(\w+)\}/g, (m, k: string) => tokens[k] ?? m);
 }
@@ -74,12 +76,14 @@ export default function MenFunnelPage() {
         <section id="hero" data-theme="light" className={styles.hero} aria-labelledby="hero-title">
           <Container className={styles.heroInner}>
             <div>
+              <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
               <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
               <p className={styles.lede}>{f.hero.subheadline}</p>
               <div className={styles.actions}>
                 <Button href={primary.href} ctaId="men_hero_primary" location="men_hero">{primary.label} <Icon name="arrow" size={18} /></Button>
                 <a href={f.hero.secondaryCta.href} className={styles.secondary}>{f.hero.secondaryCta.label}</a>
               </div>
+              <p className={styles.supporting}>{fill(f.hero.supporting)}</p>
               <ul className={styles.miniTrust}>
                 {visible(f.hero.miniTrust).map((c) => <li key={c.text}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
               </ul>
@@ -118,6 +122,46 @@ export default function MenFunnelPage() {
               <p className={styles.reportPlan}><strong>Your plan.</strong> Every marker explained in plain English, what's worth acting on, and what to do next.</p>
               <figcaption className={styles.reportCaption}>Illustrative example only. Not real results.</figcaption>
             </figure>
+          </Container>
+        </section>
+
+        {/* 2b. Panel detail by plain-English bucket; marker names from the catalogue */}
+        <section id="panel" data-theme="light" className={styles.section} aria-labelledby="panel-title">
+          <Container>
+            <h2 id="panel-title" className={styles.h2}>{f.panel.title}</h2>
+            <p className={styles.intro}>{f.panel.intro}</p>
+            <ul className={styles.buckets}>
+              {f.panel.buckets.map((b) => (
+                <li key={b.id}>
+                  <details className={styles.bucket}>
+                    <summary className={styles.bucketSummary}>
+                      <span className={styles.bucketText}><span className={styles.bucketName}>{b.name}</span><span className={styles.bucketCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span></span>
+                      <span className={styles.faqToggle} aria-hidden="true"><Icon name="plus" size={18} className={styles.plus} /><Icon name="minus" size={18} className={styles.minus} /></span>
+                    </summary>
+                    <div className={styles.bucketBody}>
+                      <p>{b.explanation}</p>
+                      <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
+                    </div>
+                  </details>
+                </li>
+              ))}
+            </ul>
+            <h3 className={styles.h3}>{f.panel.addonsTitle}</h3>
+            <ul className={styles.addonBuckets}>
+              {f.panel.addonBuckets.map((ab) => {
+                const a = getAddon(ab.addonId);
+                if (!a || !a.launchEnabled) return null;
+                const markers = addonNewMarkers(a, signalTest);
+                return (
+                  <li key={ab.addonId} className={styles.addonBucket}>
+                    <div className={styles.addonBucketHead}><span className={styles.bucketName}>{ab.name}</span><span className={styles.addonBucketPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span></div>
+                    <p className={styles.addonBucketBody}>{ab.explanation}</p>
+                    <p className={styles.addonBucketMarkers}>{markers.map((id) => getBiomarker(id).name).join(", ")}</p>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className={styles.proofCta}><Button href={primary.href} ctaId="men_panel_cta" location="men_panel">{primary.label} <Icon name="arrow" size={18} /></Button></div>
           </Container>
         </section>
 
@@ -215,6 +259,10 @@ export default function MenFunnelPage() {
               <ul className={styles.safety}>
                 {visible(f.safety.bullets).map((c) => <li key={c.text}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
+            </div>
+            <div className={styles.disclaimer}>
+              <h3 className={styles.disclaimerTitle}>{f.safety.disclaimer.title}</h3>
+              {f.safety.disclaimer.body.map((t) => <p key={t}>{t}</p>)}
             </div>
             {f.safety.guarantee.verified || PREVIEW ? (
               <div className={styles.guarantee}>
