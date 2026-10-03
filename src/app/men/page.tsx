@@ -12,6 +12,7 @@ import { Icon } from "@/components/ui/Icon";
 import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type Claim } from "@/config/funnel/men";
 import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
+import { getCollectionMethod } from "@/config/collection";
 import { resultsPreview } from "@/config/home";
 import { menMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
@@ -40,6 +41,7 @@ function fill(s: string): string {
     markers: String(productMarkerCount(signalTest)),
     areas: String(productCategoryCount(signalTest)),
     buckets: String(f.panel.buckets.length),
+    homeVisit: getCollectionMethod("mobile").priceDeltaCents !== null ? formatAUD(getCollectionMethod("mobile").priceDeltaCents!) : "TBC",
   };
   return s.replace(/\{(\w+)\}/g, (m, k: string) => tokens[k] ?? m);
 }
@@ -96,7 +98,7 @@ export default function MenFunnelPage() {
         <section id="included" data-theme="shell" className={styles.section} aria-labelledby="included-title">
           <Container className={styles.split}>
             <div>
-              <h2 id="included-title" className={styles.h2}>{f.included.title}</h2>
+              <h2 id="included-title" className={styles.h2}>{fill(f.included.title)}</h2>
               <p className={styles.intro}>{fill(f.included.intro)}</p>
               <ol className={styles.stack}>
                 {f.included.bullets.map((b) => (
@@ -224,6 +226,7 @@ export default function MenFunnelPage() {
         <section id="plans" data-theme="shell" className={styles.section} aria-labelledby="plans-title">
           <Container>
             <h2 id="plans-title" className={styles.h2}>{f.plans.title}</h2>
+            <p className={styles.intro}>{f.plans.intro}</p>
             <ul className={styles.plans}>
               {f.plans.cards.map((c) => (
                 <li key={c.id} className={cx(styles.plan, c.badge && styles.planFeatured)} data-theme={c.badge ? "dark" : undefined}>

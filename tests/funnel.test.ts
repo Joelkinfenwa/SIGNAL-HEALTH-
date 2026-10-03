@@ -7,10 +7,10 @@ import { signalTest } from "../src/config/products";
 test("funnel page follows the nine-block structure with the required content", () => {
   assert.equal(menFunnel.trustStrip.length, 3);
   assert.equal(menFunnel.hero.miniTrust.length, 3);
-  assert.equal(menFunnel.included.bullets.length, 4);
+  assert.equal(menFunnel.included.bullets.length, 5);
   assert.ok(menFunnel.steps.items.length <= 4 && menFunnel.steps.items.length >= 3);
-  assert.equal(menFunnel.fit.bestFor.length, 3);
-  assert.equal(menFunnel.fit.notFor.length, 3);
+  assert.equal(menFunnel.fit.bestFor.length, 4);
+  assert.equal(menFunnel.fit.notFor.length, 4);
   assert.deepEqual(menFunnel.plans.cards.map((c) => c.id), ["one_time", "retest_6m", "retest_3m"]);
   assert.equal(menFunnel.faq.items.length, 8);
   for (const i of menFunnel.faq.items) assert.ok(i.a.split(/[.!?]\s/).length <= 4, `FAQ answer stays short: ${i.q}`);
