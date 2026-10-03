@@ -9,6 +9,7 @@ import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { bookingUrlFor } from "@/config/booking";
 import { getCollectionMethod } from "@/config/collection";
+import { pathologyConfig } from "@/config/pathology";
 import { getOrderForPage } from "@/lib/orders/get-order";
 import { postPurchaseOffer } from "@/config/retest-offer";
 import { formatAUD } from "@/lib/money";
@@ -54,6 +55,15 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
                 enrolled={order.retest ? { offerId: order.retest.offerId, nextTestDate: order.retest.nextTestDate.toISOString(), refundCents: order.retest.refundCents } : undefined}
                 preselectOfferId={preselectOfferId}
               />
+
+              <section className={styles.block} aria-labelledby="form-title">
+                <h2 id="form-title" className={styles.blockTitle}>Your pathology request form</h2>
+                <p className={styles.bookNote}>{pathologyConfig.collection.bring}{pathologyConfig.collection.fastingRequired ? ` ${pathologyConfig.collection.fastingInstruction}` : ""}</p>
+                <div className={styles.bookRow}>
+                  <Button href={`/api/orders/${order.id}/request-form?t=${encodeURIComponent(order.token)}${order.demo ? `&addons=${order.configuration.addonIds.join(",")}&collection=${order.configuration.collectionMethodId ?? "centre"}` : ""}`} variant="outline" ctaId="order_request_form" location="order">Download request form (PDF) <Icon name="arrow" size={18} /></Button>
+                  <p className={styles.bookNote}>It&apos;s also attached to your confirmation email.</p>
+                </div>
+              </section>
 
               <section className={styles.block} aria-labelledby="next-title">
                 <h2 id="next-title" className={styles.blockTitle}>What happens next</h2>

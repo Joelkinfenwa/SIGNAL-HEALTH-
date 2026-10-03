@@ -9,6 +9,8 @@ import { orderConfirmationEmail } from "@/lib/email/order-confirmation";
 import { sendEmail } from "@/lib/email/send";
 import { decodeOrderMetadata } from "@/lib/orders/metadata";
 import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
+import { pathologyConfig } from "@/config/pathology";
+import { orderReference, requestFormForIntent } from "@/lib/pathology/order-request";
 import { offerDeadline } from "@/lib/retest/offer";
 import { getStripe } from "@/lib/stripe/server";
 
@@ -56,18 +58,25 @@ export async function POST(req: Request) {
       const to = cust?.email ?? pi.receipt_email;
       if (to && !pi.metadata.confirmation_sent) {
         const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-        const orderUrl = `${site}/order/${pi.id}?t=${encodeURIComponent(signOrderToken(pi.id, orderTokenSecret()))}`;
+        const token = encodeURIComponent(signOrderToken(pi.id, orderTokenSecret()));
+        const orderUrl = `${site}/order/${pi.id}?t=${token}`;
+        const formUrl = `${site}/api/orders/${pi.id}/request-form?t=${token}`;
+        // Request form: issued at payment under the practice protocol ("auto"); in "review" mode it is sent after approval.
+        let form: Uint8Array | null = null;
+        if (pathologyConfig.issue === "auto") {
+          try { form = await requestFormForIntent({ ...pi, customer: cust ?? pi.customer } as typeof pi); } catch (err) { console.warn("[request-form] generation failed", err); }
+        }
         const label = (kind: string, id: string) => kind === "product" ? getProduct(id)?.name ?? "The SIGNAL Test" : kind === "addon" ? getAddon(id)?.name ?? id : id === "centre" || id === "mobile" ? getCollectionMethod(id).name : id;
         const mail = orderConfirmationEmail({
           firstName: cust?.metadata?.first_name || undefined,
-          reference: `SIG-${pi.id.replace(/^pi_/, "").slice(-8).toUpperCase()}`,
-          orderUrl, orderId: pi.id,
+          reference: orderReference(pi.id),
+          orderUrl, orderId: pi.id, formAttached: Boolean(form), formUrl,
           lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
           amountCents: pi.amount_received,
           collectionMethodId: order.configuration.collectionMethodId,
           offerDeadline: offerDeadline(new Date(pi.created * 1000), postPurchaseOffer.windowHours),
         });
-        const sent = await sendEmail({ to, ...mail });
+        const sent = await sendEmail({ to, ...mail, attachments: form ? [{ filename: `SIGNAL-request-${orderReference(pi.id)}.pdf`, content: form }] : undefined });
         if (sent.sent) await stripe.paymentIntents.update(pi.id, { metadata: { confirmation_sent: sent.id ?? "1" } }).catch(() => undefined);
       }
       break;

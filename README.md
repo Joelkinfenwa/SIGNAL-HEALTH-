@@ -48,6 +48,7 @@ src/
     retest-offer.ts    Retesting plans + the post-purchase instant-refund offer copy, disclosure and policy knobs
     funnel/men.ts      /men direct-response funnel page: all nine blocks of copy, claims flagged `verified`
     legal/             Terms, Privacy Policy, Retesting Terms as structured sections; entity.ts holds the legal name, ABN, address, emails and jurisdiction (bracketed until filled)
+    pathology.ts       Pathology request form: practice, requesting doctor + provider number, lab, billing line, fasting instructions, issue mode (auto | review). Bracketed until filled; the PDF carries a DRAFT watermark while any remain
     internal/costs.ts  Pathology COGS — server-only; never imported by UI (test-enforced)
     experiments.ts     CRO experiments (assignment + analytics context)
     retest-offer.ts    Automatic Retesting plans (6-monthly 15%, 3-monthly 20% + perks): discount, interval, perks, copy
@@ -108,7 +109,8 @@ Code is complete for launch. What remains is configuration and content only:
 
 1. **Legal entity** — fill `src/config/legal/entity.ts` (legal name, ABN, address, support and privacy emails, governing State). The legal pages show a preview banner until these are in.
 2. **Stripe live** — live keys, webhook endpoint on the production domain with the eight events listed under "Connecting Stripe", `ORDER_TOKEN_SECRET`. Enable Apple Pay for the production domain.
-3. **Email** — Resend API key and a verified sending domain in `EMAIL_FROM`. The confirmation email carries the booking link and the 48-hour retesting offer link.
+3. **Email** — Resend API key and a verified sending domain in `EMAIL_FROM`. The confirmation email carries what-happens-next steps, the pathology request form as a PDF attachment, the booking link and the 48-hour retesting offer link.
+3a. **Pathology request form** — fill `src/config/pathology.ts` (practice address and phone, requesting doctor's name, qualifications and provider number, laboratory name and account number) and confirm the issue mode with the practice: `auto` issues the form at payment under the practice protocol; `review` holds it for doctor approval (needs the dashboard). Confirm the laboratory accepts this form layout, or send me theirs.
 4. **Booking** — `NEXT_PUBLIC_BOOKING_URL` for the Express Pathology booking system. Until set, the order page and email say the link is coming by email, which then has to happen manually.
 5. **Analytics and ads** — `NEXT_PUBLIC_GA4_ID` + `GA4_API_SECRET`, `NEXT_PUBLIC_META_PIXEL_ID` + `META_CAPI_ACCESS_TOKEN`. Browser and server send the same `event_id`, so Meta and GA4 de-duplicate; Meta receives only value, currency and order reference, plus hashed email on purchase.
 6. **Domain** — `NEXT_PUBLIC_SITE_URL` set to the production domain; add it in Vercel and point DNS.

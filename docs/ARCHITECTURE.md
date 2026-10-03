@@ -45,6 +45,7 @@ Configuration over code: the product (`products.ts`: base markers, add-on order)
 /legal/[slug]                   Built: terms, privacy, retesting-terms from config/legal (drafts for legal review; entity details in config/legal/entity.ts)
 /api/stripe/webhook             Built: signature-verified; purchase → Meta CAPI + GA4 MP with the browser's event_id, confirmation email via Resend
 /api/events                     Built: validated browser-event mirror → Meta CAPI (redacted) + GA4 MP
+/api/orders/[id]/request-form   Built: pathology request PDF (pdf-lib, Code 128 request number) generated on demand from Stripe; token-gated; attached to the confirmation email at payment
 /tests, /tests/*, /find-my-test 301 → /signal, /find-my-signal
 ```
 
