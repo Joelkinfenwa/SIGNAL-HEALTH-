@@ -3,7 +3,7 @@ import type Stripe from "stripe";
 import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { getCollectionMethod } from "@/config/collection";
-import { pathologyConfig, pathologyPlaceholders } from "@/config/pathology";
+import { pathologyConfig } from "@/config/pathology";
 import { getProduct, signalTest } from "@/config/products";
 import { decodeOrderMetadata } from "@/lib/orders/metadata";
 import type { Configuration } from "@/lib/pricing";
@@ -25,12 +25,15 @@ export function testsFor(cfg: Configuration): RequestFormInput["tests"] {
 
 function base(reference: string, issuedAt: Date, cfg: Configuration): Omit<RequestFormInput, "patient"> {
   const c = pathologyConfig;
+  const method = cfg.collectionMethodId ? getCollectionMethod(cfg.collectionMethodId).name : "Collection centre";
   return {
-    reference, issuedAt, draft: pathologyPlaceholders().length > 0,
+    reference, issuedAt,
     tests: testsFor(cfg),
-    collectionMethod: cfg.collectionMethodId ? getCollectionMethod(cfg.collectionMethodId).name : "Collection centre",
-    practice: c.practice, requester: c.requester, lab: c.lab, clinicalNotes: c.clinicalNotes,
-    fasting: { required: c.collection.fastingRequired, instruction: c.collection.fastingInstruction, bring: c.collection.bring },
+    fasting: c.collection.fastingRequired,
+    notes: `${c.notes} Collection: ${method}.`,
+    formTitle: c.formTitle, referrer: c.referrer, labs: c.labs, billing: c.billing, compliance: c.compliance,
+    collectorCertification: c.collectorCertification,
+    collection: { fastingInstruction: c.collection.fastingInstruction, bring: c.collection.bring, instructions: c.collection.instructions },
   };
 }
 
