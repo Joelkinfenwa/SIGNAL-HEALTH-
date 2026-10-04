@@ -1,4 +1,27 @@
 .wrap { display: grid; gap: var(--s-6); align-items: start; }
+.header { grid-column: 1 / -1; max-width: 40rem; }
+.crumbs { font-size: var(--fs-sm); color: var(--muted); }
+.crumbs a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
+.crumbs a:hover { text-decoration: underline; }
+.title { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; }
+.intro { margin-top: var(--s-3); color: var(--muted); text-wrap: pretty; }
+
+/* Payment step: its own screen. Card form first, order summary beside it on desktop. */
+.payStep { display: grid; gap: var(--s-5); }
+.back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; padding: 0; border: 0; background: none; cursor: pointer; font: inherit; font-size: var(--fs-sm); font-weight: 700; color: var(--muted); }
+.back:hover { color: var(--fg); }
+.backIcon { transform: rotate(180deg); }
+.payGrid { display: grid; gap: var(--s-5); align-items: start; }
+.payCard { padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-card); }
+.paySummary { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
+.payWho { display: grid; gap: var(--s-2); padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-sm); }
+.payWho div { display: flex; justify-content: space-between; gap: var(--s-3); }
+.payWho dt { color: var(--muted); flex: none; }
+.payWho dd { text-align: right; overflow-wrap: anywhere; }
+@media (min-width: 64rem) {
+  .payGrid { grid-template-columns: minmax(0, 36rem) 20rem; justify-content: start; gap: var(--s-8); }
+  .paySummary { position: sticky; top: var(--s-5); }
+}
 .main { display: grid; gap: var(--s-5); min-width: 0; }
 .block { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
 .blockTitle { display: flex; align-items: center; gap: var(--s-3); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
@@ -56,7 +79,6 @@
 .payButton { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 54px; width: 100%; padding: 0 var(--s-5); border: 0; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); font-weight: 700; cursor: pointer; }
 .payButton[data-ready="false"] { background: var(--panel-soft); color: var(--muted); }
 .payButton[data-ready="false"]:hover { background: var(--c-brand-soft); color: var(--fg); }
-.paymentMount { scroll-margin-top: var(--s-5); }
 .checklist { display: grid; gap: 6px; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
 .checklist li { display: flex; align-items: center; gap: 6px; }
 .checklist svg { color: var(--line); flex: none; }
@@ -76,7 +98,7 @@
 .barButton { width: auto; min-height: 44px; min-width: 9rem; }
 
 @media (min-width: 64rem) {
-  .wrap { grid-template-columns: 1fr 22rem; gap: var(--s-8); }
+  .wrap { grid-template-columns: 1fr 22rem; gap: var(--s-6) var(--s-8); }
   .pay { position: sticky; top: var(--s-5); }
   .bar { display: none; }
 }
