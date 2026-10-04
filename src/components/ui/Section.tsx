@@ -26,12 +26,15 @@ interface SectionHeaderProps {
   id: string;
   title: ReactNode;
   intro?: ReactNode;
+  eyebrow?: ReactNode;
+  align?: "start" | "center";
   className?: string;
 }
 
-export function SectionHeader({ id, title, intro, className }: SectionHeaderProps) {
+export function SectionHeader({ id, title, intro, eyebrow, align = "start", className }: SectionHeaderProps) {
   return (
-    <header className={cx(styles.header, className)}>
+    <header className={cx(styles.header, align === "center" && styles.center, className)}>
+      {eyebrow ? <p className={styles.eyebrow}>{eyebrow}</p> : null}
       <h2 id={id} className={styles.title}>{title}</h2>
       {intro ? <p className={styles.intro}>{intro}</p> : null}
     </header>

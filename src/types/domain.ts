@@ -3,8 +3,9 @@
  * (docs/ARCHITECTURE.md §5). Deliberately contains NO clinical data:
  * no results, symptoms, quiz answers, diagnoses or medications.
  */
-import type { CollectionMethod, ProductTier } from "@/config/products";
+import type { CollectionMethodId } from "@/config/collection";
 import type { Attribution } from "@/lib/analytics/attribution";
+import type { Configuration } from "@/lib/pricing";
 
 export type ID = string;
 export type ISODate = string;
@@ -27,18 +28,23 @@ export interface Order {
   id: ID;
   customerId: ID;
   productId: string;
-  productTier: ProductTier;
+  /** What was bought: product + add-ons + collection. Line prices are snapshotted at order time. */
+  configuration: Configuration;
   amountCents: number;
   currency: "AUD";
   status: OrderStatus;
   source: OrderSource;
-  collectionMethod?: CollectionMethod;
+  collectionMethod?: CollectionMethodId;
   bookingStatus: BookingStatus;
   /** Reference in the external booking system — the booking itself lives there. */
   bookingRef?: string;
   stripePaymentIntentId?: string;
   retestEnrolmentId?: ID;
   attribution?: Attribution;
+  /** Landing page and experiment context at purchase, for reconciliation. */
+  lpSlug?: string;
+  experimentId?: string;
+  experimentVariant?: string;
   createdAt: ISODate;
 }
 

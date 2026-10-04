@@ -1,0 +1,10 @@
+.panel { display: grid; gap: var(--s-3); }
+.or { display: flex; align-items: center; gap: var(--s-3); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+.or::before, .or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+.error { font-size: var(--fs-sm); font-weight: 700; color: #b23c1b; }
+.pay { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 54px; width: 100%; padding: 0 var(--s-5); border: 0; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); font: inherit; font-weight: 700; cursor: pointer; }
+.pay:hover { background: var(--c-brand-deep); }
+.pay:disabled { opacity: 0.6; cursor: wait; }
+.pay:focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; }
+.secure { display: flex; align-items: center; justify-content: center; gap: 6px; font-size: var(--fs-xs); color: var(--muted); text-align: center; }
+.secure svg { color: var(--accent); flex: none; }

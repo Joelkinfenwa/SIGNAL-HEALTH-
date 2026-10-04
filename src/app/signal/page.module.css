@@ -1,0 +1,17 @@
+.top { padding-block: var(--s-6) var(--s-7); }
+.topInner { display: grid; gap: var(--s-6); align-items: center; }
+.eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--accent); }
+.title { margin-top: var(--s-3); font-size: var(--fs-display); line-height: var(--lh-tight); font-weight: 700; letter-spacing: -0.045em; text-wrap: balance; }
+.tagline { margin-top: var(--s-4); font-size: var(--fs-md); line-height: 1.45; color: var(--muted); max-width: 32rem; text-wrap: pretty; }
+.facts { margin-top: var(--s-5); display: grid; gap: var(--s-2); font-size: var(--fs-sm); }
+.facts li { display: flex; align-items: center; gap: var(--s-2); }
+.facts svg { color: var(--accent); flex: none; }
+.photo { aspect-ratio: 16 / 10; }
+.configure { padding-block: var(--s-4) var(--section-pad); }
+:global(main):has(.configure) { padding-bottom: 5.5rem; }
+@media (min-width: 64rem) { :global(main):has(.configure) { padding-bottom: 0; } }
+@media (min-width: 64rem) {
+  .top { padding-block: var(--s-7) var(--s-7); }
+  .topInner { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); }
+  .photo { aspect-ratio: 4 / 3; }
+}

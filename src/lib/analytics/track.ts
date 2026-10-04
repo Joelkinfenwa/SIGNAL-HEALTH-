@@ -1,5 +1,7 @@
+import { dispatch } from "./adapters";
 import type { AnalyticsEvent } from "./events";
 import { readAttribution } from "./attribution";
+import { readAnalyticsContext } from "./context";
 
 declare global {
   interface Window {
@@ -22,13 +24,16 @@ export function track(event: AnalyticsEvent, opts: { eventId?: string } = {}): v
   if (typeof window === "undefined") return;
   const event_id = opts.eventId ?? crypto.randomUUID();
 
+  const context = readAnalyticsContext();
   window.dataLayer = window.dataLayer ?? [];
-  window.dataLayer.push({ event: event.name, event_id, ...event.props });
+  window.dataLayer.push({ event: event.name, event_id, ...context, ...event.props });
+  try { dispatch(event, event_id, { ...context }); } catch { /* an ad script failing never breaks the page */ }
 
-  if (process.env.NEXT_PUBLIC_SERVER_EVENTS === "1" && "sendBeacon" in navigator) {
+  if (process.env.NEXT_PUBLIC_SERVER_EVENTS !== "0" && "sendBeacon" in navigator) {
     const body = JSON.stringify({
       name: event.name,
       props: event.props,
+      context,
       event_id,
       page_url: window.location.href,
       attribution: readAttribution(),

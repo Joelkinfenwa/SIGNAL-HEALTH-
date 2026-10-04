@@ -16,45 +16,40 @@ Items marked **DECISION** need sign-off from the business. Items marked **VERIFY
 | Payments | **Stripe** (Payment Element, Express Checkout Element, Billing) | See §6. |
 | Auth (phase 3) | Passwordless email (magic link or one-time code) | No passwords to manage; suits an occasional-use account. |
 | Analytics | Typed event catalogue → dataLayer (GA4, Meta Pixel) + server mirror (Meta CAPI, GA4 Measurement Protocol, Klaviyo) | See §8. |
-| Booking | Integrate with the existing Express booking platform (Doorstep) via API; store only the booking reference | **VERIFY** Doorstep exposes availability + booking creation endpoints suitable for this flow. |
+| Booking | Integrate with the existing Express booking platform (Doorstep) via API; store only the booking reference | **VERIFY** Doorstep exposes availability + booking creation endpoints suitable for this flow. The homepage postcode checker (`config/coverage.ts`) is a static placeholder until then. |
 | Clinical results | Out of scope for this app. The dashboard will link to, or fetch through a separate authenticated service from, the clinical system | Keeps this database free of clinical data (§9). |
 
 Rendering strategy:
 
 - Marketing, product, biomarker and SEO pages: **static** (SSG/ISR). The homepage ships only ~2.6 kB of page JS (analytics).
-- Quiz: client component; answers never leave the browser.
+- Quiz (`/find-my-test`): static page with one client island; answers never leave the browser; rules in `config/quiz.ts`.
 - Checkout and post-purchase: **dynamic**, server-rendered, no caching.
 - Account: dynamic, authenticated.
 
-Configuration over code: products, the retest offer, trust claims and brand endorsement live in `src/config/`. In phase 2, products and offers move to the database (offers must be versioned — see §7) and marketing copy can move to a CMS if the team needs to edit without deploys.
+Configuration over code: the product (`products.ts`: base markers, add-on order), add-ons (`addons.ts`: markers, copy, badges, `enabled`/`launchEnabled`), configurator copy (`configurator.ts`), the retest offer, trust claims and brand endorsement live in `src/config/`. Internal cost lives in `src/config/internal/costs.ts` behind `server-only` and is never bundled to the browser. See docs/PANELS.md for the product architecture. In phase 2, products and offers move to the database (offers must be versioned — see §7) and marketing copy can move to a CMS if the team needs to edit without deploys.
 
 ---
 
 ## 2. Route structure
 
 ```
-/                               Home (built)
-/tests                          Compare the three tests
-/tests/[slug]                   Product page (core | complete | performance)
-/find-my-test                   Recommendation quiz
-/checkout/[slug]                Collection method → details → clinical requirements → payment
-/order/[orderId]                Confirmation → Automatic Retesting offer → booking next steps
-/book/[orderId]                 Booking (or embedded in /order if Doorstep allows)
-/retesting                      How Automatic Retesting works
-/account                        Your SIGNAL (dashboard)
-/account/retesting              Manage, reschedule or cancel Automatic Retesting
-/account/tests/[orderId]        A single test / booking
-/biomarkers                     SEO hub: what blood tests measure
-/biomarkers/[slug]              e.g. /biomarkers/ferritin
-/blood-tests/[topic]            e.g. /blood-tests/hormone, /blood-tests/at-home
-/locations, /locations/[city]   Collection coverage pages
-/faq, /about
-/legal/privacy | terms | retesting-terms | collection-notice
-/api/stripe/webhook             Stripe events (stubbed)
-/api/events                     Server-side analytics mirror (stubbed)
+/                               Home (built): A–M around THE SIGNAL TEST
+/signal                         Product + configurator (built): base + add-ons, live total, sticky bar; ?addons= deep links
+/find-my-signal                 Quiz (built): interests → SIGNAL + add-ons → /signal?addons=
+/lp/[slug]                      Paid landing pages from config (phase 4)
+/men                            Direct-response funnel page (hook → stack → steps → fit → proof → plans → guarantee → FAQ → close); copy in config/funnel/men.ts; Track cards pass ?plan= through checkout to the post-purchase offer
+/checkout                       Built: editable summary, collection choice, your details, Stripe Payment Element + Apple/Google Pay (lib/checkout/create-order.ts creates Customer + PaymentIntent)
+/order/[orderId]                Built (UI): confirmation → instant-refund Automatic Retesting offer → booking. Server actions stubbed until Stripe; /order/demo on previews
+/retesting                      How Automatic Retesting works (built)
+/account, /account/retesting    Phase 2+
+/legal/[slug]                   Built: terms, privacy, retesting-terms from config/legal (drafts for legal review; entity details in config/legal/entity.ts)
+/api/stripe/webhook             Built: signature-verified; purchase → Meta CAPI + GA4 MP with the browser's event_id, confirmation email via Resend
+/api/events                     Built: validated browser-event mirror → Meta CAPI (redacted) + GA4 MP
+/api/orders/[id]/request-form   Built: pathology request PDF (pdf-lib, Code 128 request number) generated on demand from Stripe; token-gated; attached to the confirmation email at payment
+/tests, /tests/*, /find-my-test 301 → /signal, /find-my-signal
 ```
 
-SEO note: the commercial architecture is three products, but the content architecture is open-ended. `/biomarkers/*`, `/blood-tests/*` and `/locations/*` are independent static collections that each link into the relevant product. Adding a fourth product or a new topic never requires restructuring URLs.
+SEO note: the commercial architecture is five products, but the content architecture is open-ended. `/biomarkers/*`, `/blood-tests/*` and `/locations/*` are independent static collections that each link into the relevant product. Adding a sixth product or a new topic never requires restructuring URLs.
 
 Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
@@ -62,20 +57,23 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 ## 3. Design system
 
-> **v0.2 update:** the design moved to a photography-led, warmer direction. Base is now warm paper (`#FBF9F6`) and shell (`#F3EEE7`); Oxblood (`#7A1B2B`) and Plasma (`#F2C14E`) are accents; typeface is Figtree; radii are larger (20/32px); the "Your signal" readout is now a floating card over photography. The principles below still apply.
+> **v0.4 update ("evergreen"):** the palette moved off oxblood/plasma. Base is a cool bone; Evergreen is the brand colour (buttons, dark sections, eyebrows); Coral is the "signal", reserved for data points, the latest reading and the Recommended badge. Typeface is Figtree; radii 20/32px; the "Your signal" readout is a floating card over photography. Tokens live in `src/app/globals.css`.
 
-**Concept.** A collected blood sample separates into red cells and straw-coloured plasma. The palette is taken directly from that: Oxblood and Plasma, on a neutral lab-glass base. It avoids medical blue and "biohacker" neon, and reads as premium rather than clinical.
+**Concept.** Calm, natural and premium rather than clinical. Evergreen reads as health and longevity without "medical blue" or biohacker neon; the single coral accent is the signal in the data, used sparingly so it always means "look here".
 
 | Token | Hex | Role |
 |---|---|---|
-| Oxblood | `#6B1422` | Brand, dark sections, featured product |
-| Oxblood deep | `#4C0D18` | Panels on dark |
-| Plasma | `#F2C14E` | Accent on dark: primary buttons, data highlights |
-| Porcelain | `#F1F2EE` | Default light background |
-| Surface | `#FFFFFF` | Alternate light background, cards |
-| Graphite | `#1D211F` | Text |
-| Slate | `#5B625E` | Secondary text |
-| Rule | `#D7DAD4` | Lines and borders |
+| Evergreen (`--c-brand`) | `#1C4A3C` | Brand: buttons, dark sections, eyebrows, sparklines |
+| Evergreen deep | `#123227` | Panels on dark |
+| Mint (`--c-brand-soft`) | `#E2EDE7` | Highlight backgrounds, icon discs |
+| Coral (`--c-signal`) | `#F06A47` | The signal: latest data point, Recommended badge, on-dark focus ring. Ink text on coral (AA). |
+| Coral soft | `#FCE3DA` | Halo behind the latest reading |
+| Bone (`--c-paper`) | `#F6F5F1` | Default light background |
+| Shell | `#ECEBE5` | Alternate light background, chips |
+| Surface | `#FFFFFF` | Cards |
+| Ink | `#121614` | Text |
+| Stone | `#5F6661` | Secondary text |
+| Rule | `#DEDCD5` | Lines |
 
 **Theming.** Sections set `data-theme="light" | "surface" | "dark"`. Components only use semantic tokens (`--bg`, `--fg`, `--muted`, `--line`, `--accent`, `--on-accent`, `--panel`), so any component works on any section without variants.
 
@@ -83,9 +81,15 @@ Checkout and order routes are `noindex` and disallowed in `robots.txt`.
 
 **Shape.** Radius carries hierarchy: controls are pills, cards 16px, the hero readout and featured product 28px.
 
-**Motion.** One orchestrated moment only: the hero readout lines draw in on load. Everything else is still. `prefers-reduced-motion` is respected globally.
+**Hero.** Full-bleed photo (or muted looping video with the photo as poster) under a dark evergreen gradient, headline, one primary CTA, three benefit chips. The "Your signal" card floats bottom-right on desktop only. The video is hidden under `prefers-reduced-motion` by CSS.
 
-**Signature element.** The "Your signal" readout: markers tracked across three tests. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings) and the retesting timeline.
+**Motion.** Two deliberate moments: the hero readout lines draw in on load, and the results phone mock rises as it scrolls into view (CSS scroll-driven animation behind `@supports`, no JavaScript). Everything else is still. `prefers-reduced-motion` is respected globally.
+
+**Signature element.** The "Your signal" readout: markers tracked across three tests, evergreen line, coral latest reading. It explains Test → Retest visually, and the same idea is reused in the logo mark (three connected readings, coral last dot) and the retesting timeline.
+
+**Product page (classic PDP).** Gallery left; name, tagline, description, four facts and the buy box right (sticky on desktop). The buy box chooses one test or an Automatic Retesting rhythm and carries `?plan=` to checkout, with the recurring-billing note inline. Below: what's measured (with "good for" and calculated markers) → every test includes → add-ons → how it works → FAQ → close.
+
+**Product presentation.** The featured product gets a full-width dark card with "what you'll learn" chips; the other four are compact cards (question + areas of health + counts). Marker detail lives on the product page. Never five equal columns.
 
 **Quality floor.** 52px minimum touch targets, visible focus rings, skip link, semantic landmarks, a real `<table>` for the biomarker comparison, AA contrast on all text tokens.
 
@@ -99,12 +103,18 @@ components/
   brand/       Logo (+ SignalMark) — endorsement level driven by config
   layout/      SiteHeader, SiteFooter, PlannedPage (temporary)
   analytics/   TrackedLink, AttributionCapture
-  product/     ProductCard
-  home/        Hero, SignalReadout, TrustBar, HowItWorks, FlagshipTests,
-               BiomarkerMatrix, WhySignal, Retesting, FinalCta
+  product/     ProductCard (buy box), PriceTag (null-safe), PanelLearn ("what you'll learn"),
+               ProductHero (gallery + details), BuyBox (client: plan selector), ProductLearn
+               (+ good-for, calculated-for-you, builds-on), ProductSteps, AddOns, Included, CompareTable
+  home/        Hero, ProofStrip, SignalCard, Coverage + PostcodeChecker (client),
+               HowItWorks + StepMock, Tests, Biomarkers (<details>), Comparison (<table>),
+               ResultsMock, RetestBand, SocialProof, Faq (+ FAQPage JSON-LD), FinalCta,
+               StickyCta (client, mobile only), Photo
+  quiz/        Quiz (client; one question per screen, result with recommendation)
+  retest/      RetestPlans (two plans from config, with the recurring-billing disclosure built in)
 ```
 
-Planned next: `PriceTag`, `CollectionMethodPicker`, `ProductHero`, `BiomarkerAccordion`, `FAQ` (with FAQPage schema), `QuizStep`, `RetestOfferPanel`, `ConsentCheckbox` (records text version), `OrderSummary`, `StepIndicator`, `Field`/`Input` primitives, `Toast`.
+Planned next: `PriceTag`, `CollectionMethodPicker`, `ProductHero`, `QuizStep`, `RetestOfferPanel`, `ConsentCheckbox` (records text version), `OrderSummary`, `StepIndicator`, `Field`/`Input` primitives, `Toast`.
 
 Conventions: server components by default; `"use client"` only where interaction requires it. Every primary CTA passes a `ctaId` so clicks are measurable without extra code.
 
@@ -156,6 +166,8 @@ Why the Payment Element rather than hosted Checkout: the post-purchase offer mus
 
 Shown on `/order/[orderId]` after the webhook has confirmed payment.
 
+**The mechanic (built):** the customer has paid full price. Choosing a plan refunds that plan's discount on today's eligible lines (product and add-ons; never the collection fee) to their card immediately, and every future retest is charged at the discounted price. `quoteRetestForOrder()` computes refund and recurring amounts; `postPurchaseOffer` in `config/retest-offer.ts` holds the copy, disclosure lines, `oneTimeOnly`, `cancellationPolicy` and `reminderDaysBefore`. `components/order/RetestOffer.tsx` renders plans as radios, the disclosure beside the button, an unticked consent checkbox, and accept/decline states; `lib/retest/accept.ts` is the server boundary.
+
 **Display**
 - Load the active, eligible offer for the product; compute the quote with `quoteRetest()` (`src/lib/retest/offer.ts`) — the same function the server uses when charging, so displayed and charged amounts cannot diverge.
 - Record an `offer_exposure` row and emit `retest_offer_viewed` with offer id, version and variant.
@@ -192,7 +204,7 @@ Note for offer design: when a partial refund is issued, Stripe's processing fee 
 
 `src/lib/analytics/events.ts` is the single typed catalogue. An event cannot be emitted unless it exists there with the correct properties.
 
-Events: `page_viewed`, `cta_clicked`, `product_viewed`, `quiz_started`, `quiz_completed`, `product_recommended`, `checkout_started`, `collection_method_selected`, `purchase_completed`, `retest_offer_viewed`, `retest_offer_accepted`, `retest_offer_declined`, `booking_started`, `booking_completed`.
+Events: `page_viewed`, `cta_clicked`, `product_viewed`, `quiz_started`, `quiz_completed`, `product_recommended`, `checkout_started`, `collection_method_selected`, `purchase_completed`, `retest_offer_viewed`, `retest_offer_accepted`, `retest_offer_declined`, `booking_started`, `booking_completed`, `postcode_checked` (`serviceable` boolean only; the postcode never leaves the browser).
 
 **Flow**
 ```

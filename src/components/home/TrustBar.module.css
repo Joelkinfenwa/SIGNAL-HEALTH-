@@ -1,0 +1,5 @@
+.section { padding-block: var(--s-4); border-block: 1px solid var(--line); }
+.list { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-6); justify-content: center; }
+.item { display: inline-flex; align-items: center; gap: var(--s-2); font-size: var(--fs-sm); font-weight: 600; color: var(--muted); }
+.item svg { color: var(--accent); flex: none; }
+.todo { padding: 2px 8px; border-radius: var(--r-pill); background: var(--c-signal-soft); color: var(--c-ink); font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
