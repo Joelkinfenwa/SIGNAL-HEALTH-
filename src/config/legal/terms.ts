@@ -35,7 +35,7 @@ export const terms: LegalDocument = {
       "Please bring photo ID. Follow any preparation instructions in your booking (for example fasting). If you miss a booking or cancel with less than the notice stated in your booking confirmation, a rebooking fee may apply as stated there.",
     ]},
     { id: "results", title: "5. Results, review and timing", body: [
-      "Most results and the doctor's review are available in your dashboard within around 7 days of collection. Occasionally a laboratory needs longer or must recollect a sample; we will tell you if that happens and there is no extra charge for a recollection the laboratory requests.",
+      "Most results and the doctor's review are sent to your email address as a secure link within around 7 days of collection. Occasionally a laboratory needs longer or must recollect a sample; we will tell you if that happens and there is no extra charge for a recollection the laboratory requests.",
       "A laboratory result is a measurement at a point in time. Reference ranges are population-based and a result outside a range does not by itself mean something is wrong, nor does a result within a range guarantee that nothing is. The reviewing doctor's report is general guidance based on your results and the information you supplied; it is not a diagnosis and does not establish an ongoing treating relationship.",
       "If a result requires urgent attention we will contact you using the details on your order. Keep them current.",
     ]},
@@ -56,8 +56,8 @@ export const terms: LegalDocument = {
     { id: "liability", title: "10. Our responsibility", body: [
       "To the extent permitted by law, and subject to section 9, we are not liable for loss arising from inaccurate information you supply, from your failure to follow preparation or booking instructions, from decisions you make without consulting a doctor, or for indirect or consequential loss. Where liability cannot be excluded but can be limited, it is limited to re-supplying the service or refunding the amount you paid for it.",
     ]},
-    { id: "accounts", title: "11. Your dashboard and account", body: [
-      "Your results are delivered through a secure dashboard. Keep your login details confidential and tell us if you believe they have been compromised. You may ask us to export or delete your account in accordance with our Privacy Policy and our record-keeping obligations for health information.",
+    { id: "accounts", title: "11. Your results and records", body: [
+      "Your results are delivered to the email address on your order as a secure link. Keep that email address secure and tell us if you believe it has been compromised. You may ask us to export or delete your records in accordance with our Privacy Policy and our record-keeping obligations for health information.",
     ]},
     { id: "general", title: "12. General", body: [
       "We may update these terms; the version in force when you order applies to that order. If any part is unenforceable the rest continues. These terms are governed by the laws of " + e.jurisdiction + ", and you submit to the non-exclusive jurisdiction of its courts.",

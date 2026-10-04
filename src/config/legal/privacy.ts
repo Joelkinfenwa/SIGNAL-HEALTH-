@@ -29,7 +29,7 @@ export const privacy: LegalDocument = {
       "- The accredited pathology laboratory that analyses your sample and the collection service that takes it. They receive your name, date of birth, sex, contact details and the tests requested, and return your results to us.",
       "- The Australian-registered medical practitioner who reviews your results.",
       "- Stripe, which processes payments and, for Automatic Retesting, stores your payment method and billing schedule. Stripe is certified to PCI DSS Level 1.",
-      "- Service providers that host our website and dashboard, send our emails and SMS, and store our records, under contracts that require them to protect your information.",
+      "- Service providers that host our website, send our emails and SMS, and store our records, under contracts that require them to protect your information.",
       "- Anyone you ask us to share results with, such as your GP, and anyone the law requires us to share them with.",
       "We never sell personal information. Advertising platforms such as Meta and Google receive only that a purchase occurred, its value and an order reference, never your name, your test selection or any health information.",
     ]},

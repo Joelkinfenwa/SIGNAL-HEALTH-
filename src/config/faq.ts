@@ -45,7 +45,7 @@ export const faqItems: FaqItem[] = [
     id: "cancel",
     question: "Can I cancel Automatic Retesting?",
     status: "draft",
-    answer: "Yes, at any time from your account, with no fees. Automatic Retesting uses recurring billing: you're charged the discounted price for each test at the start of each interval, and it continues until you cancel. We email you before every charge.",
+    answer: "Yes, at any time by emailing us, with no fees. Automatic Retesting uses recurring billing: you're charged the discounted price for each test at the start of each interval, and it continues until you cancel. We email you before every charge.",
   },
   { id: "diagnostic", question: "Are these diagnostic tests?", status: "todo-clinical" },
   { id: "labs", question: "Which laboratories are used?", status: "todo-clinical" },

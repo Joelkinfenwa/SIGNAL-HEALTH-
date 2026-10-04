@@ -32,7 +32,7 @@ export function ResultsMock() {
           </div>
         </div>
 
-        <figure className={styles.phoneWrap} aria-label="Illustrative example of results in the SIGNAL dashboard">
+        <figure className={styles.phoneWrap} aria-label="Illustrative example of a SIGNAL results report">
           <div className={styles.phone}>
             <div className={styles.screen}>
               <div className={styles.appBar}>

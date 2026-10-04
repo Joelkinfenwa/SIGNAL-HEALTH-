@@ -34,7 +34,7 @@ export const retestingTerms: LegalDocument = {
       `Your first recurring charge is due one interval after the date of your first order and is shown to you before you accept. We email you ${postPurchaseOffer.reminderDaysBefore} days before each charge with the date, the amount and a link to change the date, pause or cancel. If a charge fails we will tell you and retry; if it continues to fail your plan is paused and no test is ordered.`,
     ]},
     { id: "changes", title: "4. Changing, pausing and cancelling", body: [
-      `You can change your next test date, pause your plan or cancel at any time from your account or by emailing ${e.supportEmail}, with no fee. A cancellation takes effect immediately and stops all future charges. A charge already taken for a test you have not yet booked is refunded in full on request if you cancel within 14 days of that charge, or you may keep the test credit and book it when you like.`,
+      `You can change your next test date, pause your plan or cancel at any time by emailing ${e.supportEmail}, with no fee. A cancellation takes effect immediately and stops all future charges. A charge already taken for a test you have not yet booked is refunded in full on request if you cancel within 14 days of that charge, or you may keep the test credit and book it when you like.`,
     ]},
     { id: "price", title: "5. Price changes", body: [
       "The member price is the plan discount applied to the then-current SIGNAL Test and add-on prices. If our prices change we will tell you at least 30 days before any charge at a new amount, and you may cancel before it is taken.",

@@ -41,7 +41,7 @@ export function orderConfirmationEmail(i: ConfirmationInput): { subject: string;
         ? `2. ${walkIn.mobile.note}`
         : `2. ${walkIn.centre.note} Find your nearest centre: ${walkIn.locationsUrl}`,
     fasting ? `3. Before collection: ${fasting}` : "",
-    `${fasting ? 4 : 3}. Your results and the doctor's review arrive in your dashboard in around 7 days.`,
+    `${fasting ? 4 : 3}. Your results and the doctor's review are emailed to you as a secure link in around 7 days.`,
   ].filter(Boolean);
   const text = [
     `${greeting} Your SIGNAL Test is ordered.`, "",

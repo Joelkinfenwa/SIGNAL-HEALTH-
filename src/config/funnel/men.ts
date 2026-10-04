@@ -104,7 +104,7 @@ export const menFunnel = {
       { icon: "calendar", title: "Order online", body: "Pick your panel and any add-ons, pay securely, done in about 3 minutes." },
       { icon: "tube", title: "Get your blood drawn", body: "Walk into any partner collection centre with your request form, or have a mobile nurse come to you where available. Bring photo ID. No referral paperwork." },
       { icon: "shield", title: "A doctor reviews your results", body: "An Australian-registered doctor checks for patterns and anything that needs attention, not just individual numbers." },
-      { icon: "chart", title: "Get your report and next steps", body: "Your results, the doctor's summary and a written plan, in your dashboard in around 7 days." },
+      { icon: "chart", title: "Get your report and next steps", body: "Your results, the doctor's summary and a written plan, emailed as a secure link in around 7 days." },
     ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
   },
 
@@ -201,7 +201,7 @@ export const menFunnel = {
       ],
     },
     optionalNote: "Retesting is optional. Choose a rhythm only if tracking change over time is useful for you; your doctor's review will say whether a retest is worth doing.",
-    disclosure: "SIGNAL Track and Track+ use recurring billing: after today's test you confirm the plan, the member discount on today's order is refunded to your card, and each future test is charged at the member price at the start of each interval until you cancel. Change the date, pause or cancel any time from your account.",
+    disclosure: "SIGNAL Track and Track+ use recurring billing: after today's test you confirm the plan, the member discount on today's order is refunded to your card, and each future test is charged at the member price at the start of each interval until you cancel. Change the date, pause or cancel any time by emailing us.",
   },
 
   // 7. Safety and guarantee
