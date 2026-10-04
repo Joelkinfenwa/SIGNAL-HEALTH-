@@ -67,7 +67,7 @@ function Result({ valid, mobile, centres, postcode }: CoverageResult & { postcod
       <div className={cx(styles.card, styles.yes)}>
         <span className={styles.badge}><Icon name="check" size={16} /> Mobile collection available</span>
         <p className={styles.headline}>Good news: a collector can come to you in {postcode}.</p>
-        <p className={styles.body}>Choose a home or workplace visit when you book. Collection centres are also available if you prefer.</p>
+        <p className={styles.body}>Choose a home or workplace visit at checkout. Collection centres are also available if you prefer.</p>
         <Button href="/find-my-test" size="sm" ctaId="postcode_find_my_test" location="postcode_checker">Find my test</Button>
       </div>
     );
@@ -78,7 +78,7 @@ function Result({ valid, mobile, centres, postcode }: CoverageResult & { postcod
       <p className={styles.headline}>Mobile collection isn&apos;t available in {postcode} yet.</p>
       <p className={styles.body}>
         You can still get tested at a collection centre.
-        {centres.length > 0 ? " Nearby options include:" : " Centre options are shown when you book."}
+        {centres.length > 0 ? " Nearby options include:" : " Centre locations are sent with your request form."}
       </p>
       {centres.length > 0 ? (
         <ul className={styles.centres}>

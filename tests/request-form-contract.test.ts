@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { inflateSync } from "node:zlib";
+import type Stripe from "stripe";
 import { emptyCustomer, normaliseCustomer, validateCustomer, type CustomerDetails } from "../src/lib/checkout/customer";
 import { customerParams, encodeOrderMetadata } from "../src/lib/orders/metadata";
 import { quoteConfiguration } from "../src/lib/pricing";
@@ -32,7 +33,7 @@ function stripeObjects(details: CustomerDetails, addonIds: string[], collection:
   const params = customerParams(record);
   const cfg = { productId: "signal", addonIds, collectionMethodId: collection } as const;
   const quote = quoteConfiguration(cfg);
-  const customer = { id: "cus_test", object: "customer", ...params, metadata: { ...params.metadata, order_ip: "1.2.3.4", order_ua: "ua" } };
+  const customer = { id: "cus_test", object: "customer", ...params, metadata: { ...params.metadata, order_ip: "1.2.3.4", order_ua: "ua" } } as unknown as Stripe.Customer;
   const pi = { id: "pi_3TestABCDEFGH1234", created: 1_790_000_000, metadata: encodeOrderMetadata(cfg, quote.lines, {}, "evt"), customer };
   return { pi, record };
 }

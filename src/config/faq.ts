@@ -23,13 +23,13 @@ export const faqItems: FaqItem[] = [
     question: "Where can I get collected?",
     status: "draft",
     // TODO-VERIFY launch regions and centre list.
-    answer: "At a collection centre, with locations shown when you book. Home or workplace collection is available in selected areas; you can check your postcode at booking.",
+    answer: "At any participating collection centre, no appointment needed: bring your request form and photo ID. Locations are at expresspathology.com.au/pages/locations. Home or workplace collection is available in selected areas and arranged by phone after payment.",
   },
   {
     id: "home",
     question: "Can someone come to my home?",
     status: "draft",
-    answer: "In selected areas, yes: a qualified collector from Express Pathology comes to your home or workplace at a time you choose. Availability is confirmed at booking.",
+    answer: "In selected areas, yes: a qualified collector from Express Pathology comes to your home or workplace at a time you choose. We call you after payment to arrange it and refund the visit fee if we can't reach your address.",
   },
   { id: "timing", question: "How long do results take?", status: "todo-clinical" },
   { id: "review", question: "Who reviews my results?", status: "todo-clinical" },

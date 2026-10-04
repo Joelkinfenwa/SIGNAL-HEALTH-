@@ -102,7 +102,7 @@ export const menFunnel = {
     title: "How SIGNAL works, start to finish",
     items: [
       { icon: "calendar", title: "Order online", body: "Pick your panel and any add-ons, pay securely, done in about 3 minutes." },
-      { icon: "tube", title: "Get your blood drawn", body: "Book a partner collection centre, or a mobile nurse where available. Bring photo ID. No referral paperwork." },
+      { icon: "tube", title: "Get your blood drawn", body: "Walk into any partner collection centre with your request form, or have a mobile nurse come to you where available. Bring photo ID. No referral paperwork." },
       { icon: "shield", title: "A doctor reviews your results", body: "An Australian-registered doctor checks for patterns and anything that needs attention, not just individual numbers." },
       { icon: "chart", title: "Get your report and next steps", body: "Your results, the doctor's summary and a written plan, in your dashboard in around 7 days." },
     ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
@@ -239,7 +239,7 @@ export const menFunnel = {
       { q: "What happens if my results are abnormal?", a: "Your report highlights anything outside the expected range and says what to do next. That may mean seeing your GP or a specialist. If something needs prompt attention, we contact you directly." },
       { q: "Will I definitely get medication?", a: "No. SIGNAL is a testing, review and planning service. We never promise medication. Any treatment is only considered separately, by a doctor, and only if it's clinically appropriate." },
       { q: "How long from blood draw to results?", a: "Around 7 days. We email you the moment your report and the doctor's review are ready." },
-      { q: "Where do I go for my blood draw?", a: "You choose a partner collection centre near you when you book. In some areas a mobile nurse can come to your home or work for {homeVisit}." },
+      { q: "Where do I go for my blood draw?", a: "Walk into any partner collection centre near you with your request form, no appointment needed. In some areas a mobile nurse can come to your home or work for {homeVisit}." },
       { q: "Is this a replacement for my GP?", a: "No. SIGNAL gives you proper numbers and a doctor's explanation to act on. Your GP is still your GP, and your report is written so you can take it to them." },
       { q: "Is this suitable for women?", a: "Yes. The SIGNAL Test is the same comprehensive panel for everyone, and the Hormones+ add-on covers markers relevant to women as well as men. This page is written for men because that's who we're starting with." },
     ],

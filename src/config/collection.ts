@@ -23,7 +23,7 @@ export const collectionMethods: CollectionMethod[] = [
     name: "Collection centre",
     short: "At a centre",
     description: "Drop into a collection centre at a time that suits you.",
-    availabilityNote: "Locations shown when you book.",
+    availabilityNote: "Walk in, no appointment. Locations are sent with your request form.",
     priceDeltaCents: 0,
     status: "live",
   },
@@ -32,7 +32,7 @@ export const collectionMethods: CollectionMethod[] = [
     name: "At home or work",
     short: "At home",
     description: "A qualified collector comes to you.",
-    availabilityNote: "Available in selected areas. Enter your postcode at booking to check.",
+    availabilityNote: "Available in selected areas. We call you after payment to arrange a time, and refund the visit fee if we can't reach your address.",
     priceDeltaCents: 9900, // AUD, set 2 Oct 2026
     status: "limited",
   },
