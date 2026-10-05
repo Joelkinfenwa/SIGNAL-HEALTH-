@@ -46,7 +46,7 @@ export function RetestPlans({ product = signalTest, theme = "shell", compact }: 
               )}
               <ul className={styles.perks}>
                 <li><Icon name="check" size={16} /> Your next test booked for you, every {formatInterval(o.intervalMonths)}</li>
-                <li><Icon name="check" size={16} /> Change the date, pause or cancel from your account</li>
+                <li><Icon name="check" size={16} /> Change the date, pause or cancel by emailing us</li>
                 {o.perks.map((p) => <li key={p}><Icon name="check" size={16} /> {p}</li>)}
               </ul>
             </li>
@@ -55,7 +55,7 @@ export function RetestPlans({ product = signalTest, theme = "shell", compact }: 
       </ul>
       <p className={styles.disclosure}>
         Automatic Retesting uses recurring billing. You&apos;re charged the discounted price for each test at the start of each interval, and it continues until you cancel.
-        It&apos;s offered after your first purchase, and you can change the date, pause or cancel at any time from your account.
+        It&apos;s offered after your first purchase, and you can change the date, pause or cancel at any time by emailing us.
       </p>
     </Section>
   );

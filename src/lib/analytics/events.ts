@@ -37,6 +37,8 @@ export type AnalyticsEvent =
   | { name: "checkout_details_completed"; props: { product_id: string } }
   /** Pay attempted with invalid details; `field_count` only, never which fields or values. */
   | { name: "checkout_details_invalid"; props: { field_count: number } }
+  /** The order exists in Stripe and the payment screen is shown. */
+  | { name: "payment_step_viewed"; props: { product_id: string; addon_ids: string[] } }
   | { name: "purchase_completed"; props: { order_id: string; product_id: string; addon_ids: string[] } & Money }
   | { name: "retest_offer_viewed"; props: RetestOfferProps }
   | { name: "retest_plan_selected"; props: RetestOfferProps }
@@ -81,6 +83,7 @@ export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   collection_method_selected: { ga4: "collection_method_selected", meta: null, klaviyo: null, serverAuthoritative: false },
   checkout_details_completed: { ga4: "add_shipping_info", meta: null, klaviyo: null, serverAuthoritative: false },
   checkout_details_invalid: { ga4: "checkout_details_invalid", meta: null, klaviyo: null, serverAuthoritative: false },
+  payment_step_viewed: { ga4: "add_payment_info", meta: "AddPaymentInfo", klaviyo: null, serverAuthoritative: false },
   purchase_completed: { ga4: "purchase", meta: "Purchase", klaviyo: "Placed Order", serverAuthoritative: true },
   retest_offer_viewed: { ga4: "retest_offer_view", meta: null, klaviyo: null, serverAuthoritative: false },
   retest_plan_selected: { ga4: "retest_plan_select", meta: null, klaviyo: null, serverAuthoritative: false },

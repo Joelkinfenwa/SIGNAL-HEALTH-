@@ -121,7 +121,7 @@ export const postPurchaseOffer = {
   /** Consent wording version. Bump when any disclosure line changes; the consent record stores it. */
   consentTextVersion: "retest-consent-v1",
   eyebrow: "Available until {deadline}",
-  expired: { headline: "This offer has ended.", body: "You can still set up Automatic Retesting later from your account; the refund on this order was available for {hours} hours after payment." },
+  expired: { headline: "This offer has ended.", body: "You can still set up Automatic Retesting later by emailing us; the refund on this order was available for {hours} hours after payment." },
   headline: "Get {refund} back right now.",
   body: "You paid {paid} today. Set up Automatic Retesting and we refund {refund} to your card immediately, then every retest is {discount} off.",
   planRefundLabel: "Refund today",
@@ -130,7 +130,7 @@ export const postPurchaseOffer = {
   disclosure: [
     "This is recurring billing. Your next SIGNAL is charged to the card you paid with at {price}, on or around {date}, then every {interval} until you cancel.",
     "We email you {reminder} days before each charge with the date, the amount and a link to change or cancel it.",
-    "Change the date, pause or cancel any time from your account. No fees.",
+    "Change the date, pause or cancel any time by emailing us. No fees.",
     "Collection is booked and charged per visit, the same as today, so it isn't included in the retest price.",
   ],
   cancellationLine: {
@@ -141,10 +141,10 @@ export const postPurchaseOffer = {
   consentLabel: "I understand this is recurring billing at {price} every {interval} until I cancel, and I agree to the Retesting terms.",
   accepted: {
     headline: "Done. {refund} is on its way back to your card.",
-    body: "Your next SIGNAL is booked for around {date} at {price}. We'll remind you before it's charged. Change it any time from your account.",
+    body: "Your next SIGNAL is booked for around {date} at {price}. We'll remind you before it's charged. Change it any time by emailing us.",
   },
   declined: {
     headline: "No problem.",
-    body: "You've paid for one SIGNAL Test. You can set up Automatic Retesting later from your account, though today's refund is only available on this page.",
+    body: "You've paid for one SIGNAL Test. You can set up Automatic Retesting later by emailing us, though today's refund is only available on this page.",
   },
 };

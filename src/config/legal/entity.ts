@@ -4,14 +4,14 @@
  */
 export const legalEntity = {
   tradingName: "SIGNAL by Express Pathology",
-  legalName: "[Legal entity name, e.g. Express Pathology Pty Ltd]",
-  abn: "[ABN]",
+  legalName: "Express Pathology Pty Ltd",
+  abn: "87 681 058 319", // ABR lookup 4 Oct 2026; TODO-VERIFY against the company's own records
   address: "[Registered address]",
-  supportEmail: "[support email]",
-  privacyEmail: "[privacy officer email]",
+  supportEmail: "express@expresspathology.com.au",
+  privacyEmail: "express@expresspathology.com.au",
   /** Governing law and courts. */
-  jurisdiction: "[State or Territory]",
-  lastUpdated: "2 October 2026",
+  jurisdiction: "New South Wales",
+  lastUpdated: "4 October 2026",
 };
 
 export const legalPlaceholders = () => Object.entries(legalEntity).filter(([, v]) => /^\[.*\]$/.test(v)).map(([k]) => k);

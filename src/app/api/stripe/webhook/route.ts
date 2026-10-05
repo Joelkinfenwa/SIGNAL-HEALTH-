@@ -12,6 +12,8 @@ import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
 import { pathologyConfig } from "@/config/pathology";
 import { orderReference, requestFormForIntent } from "@/lib/pathology/order-request";
 import { opsAlert } from "@/lib/email/ops-alert";
+import { sendOrderNotification } from "@/lib/email/order-notification";
+import { dobForForm, phoneForForm, SEX_LABEL } from "@/lib/pathology/intent-input";
 import { offerDeadline } from "@/lib/retest/offer";
 import { getStripe } from "@/lib/stripe/server";
 
@@ -55,7 +57,7 @@ export async function POST(req: Request) {
         email: cust?.email ?? pi.receipt_email, fbp: pi.metadata.fbp, fbc: pi.metadata.fbc, gaClientId: pi.metadata.ga_cid,
         clientIp: cust?.metadata?.order_ip, userAgent: cust?.metadata?.order_ua,
       });
-      // Confirmation email with booking link and the time-limited retesting offer.
+      // Confirmation email with the request form, where to get collected, and the time-limited retesting offer.
       const to = cust?.email ?? pi.receipt_email;
       if (to && !pi.metadata.confirmation_sent) {
         const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
@@ -91,6 +93,19 @@ export async function POST(req: Request) {
         });
         const sent = await sendEmail({ to, ...mail, attachments: form ? [{ filename: `SIGNAL-request-${orderReference(pi.id)}.pdf`, content: form }] : undefined });
         if (sent.sent) await stripe.paymentIntents.update(pi.id, { metadata: { confirmation_sent: sent.id ?? "1" } }).catch(() => undefined);
+        // Internal copy for the operations inbox: the order record until a dashboard exists.
+        const cm = cust?.metadata ?? {};
+        const addr = cust?.address ? [cust.address.line1, cust.address.line2, cust.address.city, cust.address.state, cust.address.postal_code].filter(Boolean).join(", ") : "-";
+        await sendOrderNotification({
+          reference: orderReference(pi.id), orderId: pi.id,
+          stripeUrl: `https://dashboard.stripe.com/${pi.livemode ? "" : "test/"}payments/${pi.id}`,
+          paidAt: new Date(pi.created * 1000), amountCents: pi.amount_received,
+          lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
+          collectionLabel: order.configuration.collectionMethodId ? getCollectionMethod(order.configuration.collectionMethodId).name : "-",
+          isMobile: order.configuration.collectionMethodId === "mobile",
+          patient: { name: cust?.name ?? "-", email: to, phone: phoneForForm(cust?.phone) || "-", dob: dobForForm(cm.dob) ?? cm.dob ?? "-", sex: SEX_LABEL[cm.sex ?? ""] ?? cm.sex ?? "-", address: addr },
+          formStatus, form,
+        });
       }
       break;
     }

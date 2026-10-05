@@ -56,7 +56,7 @@ export const quizQuestions: QuizQuestion[] = [
     id: "collection",
     label: "Collection",
     question: "How would you like your blood collected?",
-    help: "Every SIGNAL can be collected either way. You choose when you book.",
+    help: "Every SIGNAL can be collected either way. You choose at checkout.",
     options: [
       { id: "mobile", label: "At home or work", hint: "A collector comes to you, where available" },
       { id: "centre", label: "At a collection centre" },

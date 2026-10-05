@@ -69,7 +69,7 @@ export default function RetestingPage() {
           <ul className={styles.terms}>
             <li><strong>It&apos;s recurring billing.</strong> You&apos;re charged the discounted price for each test at the start of each interval. It continues until you cancel.</li>
             <li><strong>Reminders first.</strong> We email you before each charge with the date, the amount and a link to manage it.</li>
-            <li><strong>Move it, pause it, cancel it.</strong> All from your account, any time, with no fees.</li>
+            <li><strong>Move it, pause it, cancel it.</strong> By email, any time, with no fees.</li>
             <li><strong>Same test, same price logic.</strong> The amount you see is the amount you&apos;re charged. Prices are shown before you choose a plan.</li>
           </ul>
           {/* TODO(legal): confirm wording against Australian Consumer Law and the retesting terms before launch. */}

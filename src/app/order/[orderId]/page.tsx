@@ -7,7 +7,7 @@ import { RetestOffer } from "@/components/order/RetestOffer";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
-import { bookingUrlFor } from "@/config/booking";
+import { bookingUrlFor, walkIn } from "@/config/booking";
 import { getCollectionMethod } from "@/config/collection";
 import { pathologyConfig } from "@/config/pathology";
 import { getOrderForPage } from "@/lib/orders/get-order";
@@ -43,7 +43,7 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
             <p className={styles.eyebrow}>{order.status === "processing" ? "Payment processing" : "Payment received"} · {order.reference}</p>
             <h1 className={styles.title}>{order.firstName ? `Thanks, ${order.firstName}.` : "Thank you."} Your SIGNAL is ordered.</h1>
             <p className={styles.intro}>
-              {order.emailMasked ? <>A receipt and your booking link are on their way to {order.emailMasked}. </> : null}
+              {order.emailMasked ? <>Your confirmation and request form are on their way to {order.emailMasked}. </> : null}
               Next, take a look at this. It&apos;s open for {postPurchaseOffer.windowHours} hours.
             </p>
           </header>
@@ -69,8 +69,12 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
                 <h2 id="next-title" className={styles.blockTitle}>What happens next</h2>
                 <NextSteps bare current="book" only={["book", "collect", "results"]} />
                 <div className={styles.bookRow}>
-                  {bookingUrlFor(order.id) ? <Button href={bookingUrlFor(order.id)!} ctaId="order_book_collection" location="order">Book my collection <Icon name="arrow" size={18} /></Button> : null}
-                  <p className={styles.bookNote}>{collection ? `You chose: ${collection.name}. ` : ""}{bookingUrlFor(order.id) ? "Pick the time and place that suit you. The link is also in your email." : "Your booking link is on its way by email. Pick the time and place that suit you."}</p>
+                  {bookingUrlFor(order.id) ? (
+                    <Button href={bookingUrlFor(order.id)!} ctaId="order_book_collection" location="order">Book my collection <Icon name="arrow" size={18} /></Button>
+                  ) : order.configuration.collectionMethodId !== "mobile" ? (
+                    <Button href={walkIn.locationsUrl} ctaId="order_find_centre" location="order">{walkIn.centre.cta} <Icon name="arrow" size={18} /></Button>
+                  ) : null}
+                  <p className={styles.bookNote}>{collection ? `You chose: ${collection.name}. ` : ""}{bookingUrlFor(order.id) ? "Pick the time and place that suit you. The link is also in your email." : order.configuration.collectionMethodId === "mobile" ? walkIn.mobile.note : walkIn.centre.note}</p>
                 </div>
               </section>
             </div>

@@ -104,10 +104,10 @@ function Result({ answers, onRestart }: { answers: QuizAnswers; onRestart: () =>
   const href = `/signal${serializeConfiguration(cfg)}`;
   const collection =
     answers.collection === "mobile"
-      ? "You asked for collection at home or work: choose it when you book, where it's available."
+      ? "You asked for collection at home or work: choose it at checkout, where it's available."
       : answers.collection === "centre"
-        ? "You'll pick a collection centre when you book."
-        : "Choose a centre or, where available, a home visit when you book.";
+        ? "Walk into any participating collection centre after you order, no appointment needed."
+        : "Choose a centre or, where available, a home visit at checkout.";
   return (
     <div className={styles.result} aria-live="polite">
       <p className={styles.resultKicker}>Your SIGNAL</p>

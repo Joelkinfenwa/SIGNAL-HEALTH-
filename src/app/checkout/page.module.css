@@ -1,8 +1,2 @@
 .main { padding-block: var(--s-5) var(--section-pad); padding-bottom: calc(var(--section-pad) + 5rem); }
-.header { margin-bottom: var(--s-6); max-width: 40rem; }
-.crumbs { font-size: var(--fs-sm); color: var(--muted); }
-.crumbs a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
-.crumbs a:hover { text-decoration: underline; }
-.title { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; }
-.intro { margin-top: var(--s-3); color: var(--muted); text-wrap: pretty; }
 @media (min-width: 64rem) { .main { padding-bottom: var(--section-pad); } }

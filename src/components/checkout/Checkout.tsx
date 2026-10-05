@@ -48,7 +48,6 @@ export function Checkout() {
   const [plan, setPlan] = useState<RetestOffer | null>(null);
   const [starting, setStarting] = useState(false);
   const detailsRef = useRef<HTMLElement>(null);
-  const payRef = useRef<HTMLElement>(null);
   const detailsDone = useRef(false);
   const router = useRouter();
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
@@ -80,6 +79,17 @@ export function Checkout() {
   // Any change to what's being bought or who's buying invalidates a started payment.
   useEffect(() => { setPayment(null); }, [cfg, customer]);
 
+  // The payment step is its own screen: entering it pushes a history entry so the browser's
+  // Back button (and our own) returns to the details without losing anything typed.
+  useEffect(() => {
+    const onPop = () => setPayment(null);
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+  function leavePayment() {
+    if (window.history.state?.step === "pay") window.history.back(); else setPayment(null);
+  }
+
   // Always: the laboratory prints the address on the request form as an identifier, whichever way the sample is collected.
   const requiresAddress = true;
   const errors = useMemo(() => validateCustomer(customer, { requiresAddress }, detailsCopy.errors), [customer, requiresAddress]);
@@ -95,7 +105,7 @@ export function Checkout() {
 
   const ALL_FIELDS = Object.keys(emptyCustomer()) as CustomerField[];
   async function attemptPay() {
-    if (payment) { payRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }); return; }
+    if (payment) return;
     if (!cfg.collectionMethodId) { setPayMessage("Choose a collection option first."); return; }
     if (!detailsValid) {
       setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
@@ -115,7 +125,9 @@ export function Checkout() {
       const res = await createOrder(cfg, customer);
       if (res.status === "ready") {
         setPayment({ orderId: res.orderId, clientSecret: res.clientSecret, amountCents: res.amountCents, token: res.token });
-        requestAnimationFrame(() => payRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }));
+        window.history.pushState({ step: "pay" }, "");
+        window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
+        track({ name: "payment_step_viewed", props: { product_id: signalTest.id, addon_ids: cfg.addonIds } });
       } else if (res.status === "invalid") {
         setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
         setPayMessage(Object.values(res.errors)[0] ?? "Check your details.");
@@ -157,9 +169,60 @@ export function Checkout() {
   }
 
   const canPay = paymentsLive && quote.pricingComplete && Boolean(cfg.collectionMethodId) && detailsValid;
+  const collection = cfg.collectionMethodId ? collectionMethods.find((m) => m.id === cfg.collectionMethodId) : undefined;
+
+  if (payment) {
+    return (
+      <div className={styles.payStep}>
+        <header className={styles.header}>
+          <button type="button" className={styles.back} onClick={leavePayment}><Icon name="arrow" size={16} className={styles.backIcon} /> Back to your details</button>
+          <h1 className={styles.title}>Pay <span className="num">{formatAUD(payment.amountCents)}</span></h1>
+          <p className={styles.intro}>Card, Apple Pay or Google Pay. Secured by Stripe.</p>
+        </header>
+        <div className={styles.payGrid}>
+          <section className={styles.payCard} aria-label="Payment">
+            <PaymentPanel
+              key={payment.clientSecret}
+              clientSecret={payment.clientSecret}
+              amountCents={payment.amountCents}
+              billing={{ name: `${customer.firstName.trim()} ${customer.lastName.trim()}`, email: customer.email.trim(), phone: customer.phone.trim() }}
+              returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`}
+              onSuccess={onPaid}
+            />
+          </section>
+          <aside className={styles.paySummary} aria-labelledby="pay-summary-title">
+            <p id="pay-summary-title" className={styles.payTitle}>Your order</p>
+            <ul className={styles.payLines}>
+              {quote.lines.map((l) => (
+                <li key={l.id}><span>{l.label}</span><span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span></li>
+              ))}
+            </ul>
+            <div className={styles.total}><span>Total</span><span className={cx(styles.totalValue, "num")}>{formatAUD(payment.amountCents)}</span></div>
+            <dl className={styles.payWho}>
+              <div><dt>Name</dt><dd>{customer.firstName.trim()} {customer.lastName.trim()}</dd></div>
+              <div><dt>Email</dt><dd>{customer.email.trim()}</dd></div>
+              <div><dt>Collection</dt><dd>{collection?.name ?? "-"}</dd></div>
+            </dl>
+            <button type="button" className={styles.remove} onClick={leavePayment}>Edit order or details</button>
+            {trust.length ? (
+              <ul className={styles.trust}>
+                {trust.map((c) => <li key={c.id}><Icon name={c.icon} size={14} /> {c.text}</li>)}
+              </ul>
+            ) : null}
+            <p className={styles.fine}>Your confirmation and pathology request form are emailed straight after payment. Prices in AUD.</p>
+          </aside>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.wrap}>
+      <header className={styles.header}>
+        <p className={styles.crumbs}><Link href="/signal">The SIGNAL Test</Link><span aria-hidden="true"> / </span><span>Checkout</span></p>
+        <h1 className={styles.title}>Almost there.</h1>
+        <p className={styles.intro}>Check your SIGNAL, choose how you&apos;d like to be collected, add your details, then pay on the next screen. About two minutes.</p>
+      </header>
       <div className={styles.main}>
         <section className={styles.block} aria-labelledby="summary-title">
           <h2 id="summary-title" className={styles.blockTitle}><span className={styles.n}>1</span> Your SIGNAL</h2>
@@ -262,35 +325,20 @@ export function Checkout() {
           <li className={cfg.collectionMethodId ? styles.done : undefined}><Icon name="check" size={14} /> Collection {cfg.collectionMethodId ? "chosen" : "not chosen yet"}</li>
           <li className={detailsValid ? styles.done : undefined}><Icon name="check" size={14} /> Details {detailsValid ? "complete" : "to complete"}</li>
         </ul>
-        {payment ? (
-          <div ref={payRef as React.RefObject<HTMLDivElement>} className={styles.paymentMount}>
-            <PaymentPanel
-              key={payment.clientSecret}
-              clientSecret={payment.clientSecret}
-              amountCents={payment.amountCents}
-              billing={{ name: `${customer.firstName.trim()} ${customer.lastName.trim()}`, email: customer.email.trim(), phone: customer.phone.trim() }}
-              returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`}
-              onSuccess={onPaid}
-            />
-          </div>
-        ) : (
-          <>
-            <button type="button" className={styles.payButton} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>
-              {starting ? "Starting payment…" : paymentsLive ? "Continue to payment" : "Payments open at launch"} <Icon name="arrow" size={18} />
-            </button>
-            <p className={styles.payNote} aria-live="polite">
-              {payMessage ?? (paymentsLive
-                ? "Card, Apple Pay and Google Pay. Secured by Stripe."
-                : cfg.collectionMethodId ? "Card, Apple Pay and Google Pay will be available here." : "Choose a collection option to continue.")}
-            </p>
-          </>
-        )}
+        <button type="button" className={styles.payButton} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>
+          {starting ? "Starting payment…" : paymentsLive ? "Continue to payment" : "Payments open at launch"} <Icon name="arrow" size={18} />
+        </button>
+        <p className={styles.payNote} aria-live="polite">
+          {payMessage ?? (paymentsLive
+            ? "Card, Apple Pay and Google Pay on the next screen. Secured by Stripe."
+            : cfg.collectionMethodId ? "Card, Apple Pay and Google Pay will be available here." : "Choose a collection option to continue.")}
+        </p>
         {trust.length ? (
           <ul className={styles.trust}>
             {trust.map((c) => <li key={c.id}><Icon name={c.icon} size={14} /> {c.text}</li>)}
           </ul>
         ) : null}
-        <p className={styles.fine}>You&apos;ll receive an email confirmation and a link to book your collection. Prices in AUD.</p>
+        <p className={styles.fine}>Your confirmation and pathology request form are emailed straight after payment. Prices in AUD.</p>
       </aside>
 
       <div className={styles.bar} data-theme="light">
@@ -299,7 +347,7 @@ export function Checkout() {
             <span className={styles.barLabel}>Total</span>
             <span className={cx(styles.barPrice, "num")}>{displayTotal(quote, formatAUD, "Pricing coming soon")}</span>
           </span>
-          <button type="button" className={cx(styles.payButton, styles.barButton)} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>{payment ? "Pay" : paymentsLive ? "Continue" : "Opens at launch"}</button>
+          <button type="button" className={cx(styles.payButton, styles.barButton)} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>{paymentsLive ? "Continue" : "Opens at launch"}</button>
         </div>
       </div>
     </div>

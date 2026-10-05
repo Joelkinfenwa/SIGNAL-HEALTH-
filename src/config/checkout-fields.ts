@@ -40,7 +40,7 @@ export const detailsCopy = {
     help: "As recorded at birth. Laboratories use it to apply the right reference ranges to your results. It doesn't need to match your gender.",
   },
   gender: { label: "Gender", optional: "optional", help: "How you'd like us to refer to you. Never shared with advertising platforms." },
-  email: { label: "Email", help: "Your confirmation, booking link and results notification go here." },
+  email: { label: "Email", help: "Your confirmation, request form and results notification go here." },
   phone: { label: "Mobile", help: "For booking reminders and if the collector needs to reach you." },
   address: {
     legend: "Home address",
@@ -51,7 +51,7 @@ export const detailsCopy = {
     state: "State",
     postcode: "Postcode",
   },
-  postcodeOnly: { label: "Postcode", help: "So we can show collection centres near you when you book." },
+  postcodeOnly: { label: "Postcode", help: "So we can show collection centres near you." },
   consent: {
     terms: "I agree to the Terms of Service and Privacy Policy, and to my details being shared with the laboratory and collection team to carry out my test.",
     marketing: "Send me occasional updates and offers from SIGNAL by email. You can unsubscribe any time.",
