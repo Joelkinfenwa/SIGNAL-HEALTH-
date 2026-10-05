@@ -39,7 +39,7 @@ export interface PlanCard {
 
 export const menFunnel = {
   slug: "men",
-  seo: { title: "A doctor-reviewed blood panel that explains your fatigue, mood and energy | SIGNAL", description: "One visit, one comprehensive panel, reviewed by an Australian-registered doctor with a plain-English plan. {price}, no GP referral." },
+  seo: { title: "A doctor-reviewed blood panel for men, explained in plain English | SIGNAL", description: "One visit, one comprehensive panel, reviewed by an Australian-registered doctor with a plain-English report and next steps in around 7 days. {price}, no GP referral." },
 
   // 1. Above the fold
   trustStrip: [
@@ -50,14 +50,14 @@ export const menFunnel = {
   hero: {
     eyebrow: "For Australian men 30–60",
     headline: "Tired, flat or not yourself? Get the numbers, and a doctor's read on them.",
-    subheadline: "A comprehensive blood panel, reviewed by an Australian-registered doctor, explained in plain English. Report and next steps in around 7 days from your blood draw. One visit. No GP referral.",
-    supporting: "{markers} markers across {buckets} areas: energy, heart, metabolism, thyroid, liver and kidneys, electrolytes, inflammation. Hormones available as an add-on in the same draw.",
+    subheadline: "One comprehensive blood panel, reviewed by an Australian-registered doctor and explained in plain English. Your written report and next steps arrive in around 7 days from your blood draw.",
+    supporting: "{markers} markers across {buckets} areas: energy and iron, heart, blood sugar, thyroid, liver, kidneys and more. Hormones available in the same draw.",
     primaryCta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
     secondaryCta: { label: "See what's included first", href: "#panel" },
     miniTrust: [
       { text: "No GP referral. Order online in about 3 minutes", verified: true },
-      { text: "Accredited Australian laboratory, Australian-registered doctor", verified: true },
-      { text: "Clear plan or it's free. If the explanation isn't clear, your test fee comes back", verified: true },
+      { text: "Analysed by an accredited Australian laboratory. Reviewed by an Australian-registered doctor", verified: true },
+      { text: "Clear plan or it's free. If your explanation isn't clear, your test fee comes back", verified: true },
     ] as Claim[],
   },
 
@@ -66,11 +66,11 @@ export const menFunnel = {
     title: "What you actually get for {price}",
     intro: "Not a printout of numbers. A proper panel, a doctor's eyes on it, and a written plan you can act on.",
     bullets: [
-      { title: "One comprehensive blood panel", body: "{markers} markers across energy and iron, heart and cholesterol, metabolism and blood sugar, thyroid, liver and kidneys, electrolytes and minerals, and inflammation. Every marker is listed before you pay." },
+      { title: "One comprehensive blood panel", body: "{markers} markers covering energy and iron, heart and cholesterol, blood sugar, thyroid, liver and kidneys, electrolytes and minerals, and inflammation. Every marker is listed before you pay." },
       { title: "A doctor reviews the whole picture", body: "An Australian-registered doctor reads your results together, looking for patterns across markers, not just whether each number sits in a range." },
-      { title: "A written summary and next steps, in plain English", body: "What's in the expected range, what isn't, and what to do about it. If something needs follow-up with your GP or a specialist, the plan says so." },
-      { title: "Add depth in the same draw", body: "Hormones and drive, thyroid, heart, key nutrients, or training and recovery. From {addonsFrom}. One needle, no second visit." },
-      { title: "Collection that fits around you", body: "A partner collection centre near you, included. Or a mobile nurse at home or work where available, {homeVisit}." },
+      { title: "A written summary and next steps, in plain English", body: "What's in the expected range, what isn't, and what to do about it. If something needs follow-up with your GP or a specialist, the report says so. It's sent to you as a secure link and kept on file so your doctor can compare it next time." },
+      { title: "Add depth in the same draw", body: "Hormones and drive, thyroid in depth, heart in depth, key nutrients, or training and recovery. From {addonsFrom}. One needle, no second visit." },
+      { title: "Collection that fits around you", body: "Walk into any partner collection centre, no appointment needed. Or a mobile nurse at home or work where available, {homeVisit}." },
     ],
   },
 
@@ -101,9 +101,9 @@ export const menFunnel = {
   steps: {
     title: "How SIGNAL works, start to finish",
     items: [
-      { icon: "calendar", title: "Order online", body: "Pick your panel and any add-ons, pay securely, done in about 3 minutes." },
-      { icon: "tube", title: "Get your blood drawn", body: "Walk into any partner collection centre with your request form, or have a mobile nurse come to you where available. Bring photo ID. No referral paperwork." },
-      { icon: "shield", title: "A doctor reviews your results", body: "An Australian-registered doctor checks for patterns and anything that needs attention, not just individual numbers." },
+      { icon: "calendar", title: "Order online", body: "Pick your panel and any add-ons, pay securely. About 3 minutes." },
+      { icon: "tube", title: "Get your blood drawn", body: "Take your request form and photo ID to any partner collection centre, or have a mobile nurse come to you where available. No referral paperwork." },
+      { icon: "shield", title: "A doctor reviews your results", body: "An Australian-registered doctor checks the full picture for patterns and anything that needs attention." },
       { icon: "chart", title: "Get your report and next steps", body: "Your results, the doctor's summary and a written plan, emailed as a secure link in around 7 days." },
     ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
   },
@@ -168,9 +168,9 @@ export const menFunnel = {
         priceSub: "2 tests a year · {track6Discount} off · charged per test",
         tagline: "Best if you want to see what's changing, not just where you are today.",
         bullets: [
-          { text: "Two panels a year at member pricing", verified: true },
-          { text: "Priority doctor review", verified: true },
-          { text: "Each test compared with your last, marker by marker", verified: true },
+          { text: "Two panels a year at the member price", verified: true },
+          { text: "Your doctor's review compares each result with your last", verified: true },
+          { text: "A reminder before each test, so nothing slips", verified: true },
           { text: "Change the date, pause or cancel any time", verified: true },
         ],
         cta: { label: "Get started", href: "/checkout?plan=retest_6m" },
@@ -184,7 +184,7 @@ export const menFunnel = {
         tagline: "For high performers and anyone whose doctor wants closer tracking.",
         bullets: [
           { text: "Four panels a year at the lowest per-test price", verified: true },
-          { text: "Priority booking", verified: true },
+          { text: "Your doctor's review compares each result with your last", verified: true },
           { text: "One at-home collector visit included each year, where available", verified: true },
           { text: "Change the date, pause or cancel any time", verified: true },
         ],
@@ -200,8 +200,8 @@ export const menFunnel = {
         { label: "See what's changing over time", values: ["–", "✓", "✓"] },
       ],
     },
-    optionalNote: "Retesting is optional. Choose a rhythm only if tracking change over time is useful for you; your doctor's review will say whether a retest is worth doing.",
-    disclosure: "SIGNAL Track and Track+ use recurring billing: after today's test you confirm the plan, the member discount on today's order is refunded to your card, and each future test is charged at the member price at the start of each interval until you cancel. Change the date, pause or cancel any time by emailing us.",
+    optionalNote: "Retesting is optional. Choose a rhythm only if tracking change over time is useful for you. Your doctor's review will say whether a retest is worth doing.",
+    disclosure: "SIGNAL Track and Track+ use recurring billing. After today's test you confirm the plan, the member discount on today's order is refunded to your card, and each future test is charged at the member price at the start of each interval until you cancel. Change the date, pause or cancel any time by emailing us.",
   },
 
   // 7. Safety and guarantee
@@ -211,21 +211,20 @@ export const menFunnel = {
       { text: "Your sample is analysed by an accredited Australian pathology laboratory", verified: true },
       { text: "Your results are reviewed by an Australian-registered doctor before you see them", verified: true },
       { text: "We never promise specific medications. Any treatment is only ever considered separately, by a doctor, and only if it's clinically appropriate", verified: true },
-      { text: "Your data is stored to the same standards as hospital records, and never shared with advertisers", verified: true },
+      { text: "Your results are stored securely to the same standards as hospital records, kept on file for your doctor, and never shared with advertisers", verified: true },
     ] as Claim[],
     disclaimer: {
       title: "Medical information and limits",
       body: [
-        "SIGNAL provides general health information based on your blood results. It is not a personalised diagnosis or a full medical assessment, and it does not replace your GP.",
+        "SIGNAL provides general health information based on your blood results. It is not a diagnosis or a full medical assessment, and it does not replace your GP.",
         "Results outside the expected range may need follow-up with your GP or a specialist, and your report will say so.",
         "Any treatment, including any medication, is only ever considered separately, by a doctor, and only if it is clinically appropriate for you.",
-        "Samples are analysed by accredited Australian pathology laboratories and every result is reviewed by an Australian-registered doctor.",
       ],
     },
     guarantee: {
       title: "Clear Plan or It's Free",
-      body: "If you complete your blood draw and doctor review and feel you did not get either a clear explanation of your results, or specific next steps you can discuss with a doctor, email us within 7 days of your report and we'll refund your {price} test fee in full.",
-      terms: "This guarantee is about the clarity of what you receive, not a promise about your health. Terms apply.",
+      body: "If you complete your blood draw and doctor review and feel you did not get either a clear explanation of your results, or specific next steps you can discuss with a doctor, email us within 7 days of receiving your report and we'll refund your {price} test fee in full.",
+      terms: "This guarantee is about the clarity of what you receive, not a promise about your health. One claim per order. Terms apply.",
       verified: true,
     },
   },
@@ -239,7 +238,7 @@ export const menFunnel = {
       { q: "What happens if my results are abnormal?", a: "Your report highlights anything outside the expected range and says what to do next. That may mean seeing your GP or a specialist. If something needs prompt attention, we contact you directly." },
       { q: "Will I definitely get medication?", a: "No. SIGNAL is a testing, review and planning service. We never promise medication. Any treatment is only considered separately, by a doctor, and only if it's clinically appropriate." },
       { q: "How long from blood draw to results?", a: "Around 7 days. We email you the moment your report and the doctor's review are ready." },
-      { q: "Where do I go for my blood draw?", a: "Walk into any partner collection centre near you with your request form, no appointment needed. In some areas a mobile nurse can come to your home or work for {homeVisit}." },
+      { q: "Where do I go for my blood draw?", a: "Any partner collection centre near you, no appointment needed. Bring your request form and photo ID. In some areas a mobile nurse can come to your home or work for {homeVisit}." },
       { q: "Is this a replacement for my GP?", a: "No. SIGNAL gives you proper numbers and a doctor's explanation to act on. Your GP is still your GP, and your report is written so you can take it to them." },
       { q: "Is this suitable for women?", a: "Yes. The SIGNAL Test is the same comprehensive panel for everyone, and the Hormones+ add-on covers markers relevant to women as well as men. This page is written for men because that's who we're starting with." },
     ],
