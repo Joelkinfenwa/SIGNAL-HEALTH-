@@ -31,7 +31,7 @@ export const privacy: LegalDocument = {
       "- Stripe, which processes payments and, for Automatic Retesting, stores your payment method and billing schedule. Stripe is certified to PCI DSS Level 1.",
       "- Service providers that host our website, send our emails and SMS, and store our records, under contracts that require them to protect your information.",
       "- Anyone you ask us to share results with, such as your GP, and anyone the law requires us to share them with.",
-      "We never sell personal information. Advertising platforms such as Meta and Google receive only that a purchase occurred, its value and an order reference, never your name, your test selection or any health information.",
+      "We never sell personal information. Advertising platforms such as Meta and Google receive only that a purchase occurred, its value, an order reference and, to match the purchase to the advertisement you saw, a hashed (scrambled, one-way) version of your email address. They never receive your name in clear text, your test selection or any health information.",
     ]},
     { id: "overseas", title: "4. Overseas disclosure", body: [
       "Your pathology analysis and medical review take place in Australia. Some of our service providers, including Stripe and our website host, store data in the United States and other countries. We take reasonable steps to ensure they handle your information in a way consistent with the Australian Privacy Principles.",
