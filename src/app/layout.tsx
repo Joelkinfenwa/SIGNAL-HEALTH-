@@ -1,15 +1,22 @@
 import type { Metadata, Viewport } from "next";
-import { Figtree } from "next/font/google";
+import localFont from "next/font/local";
 import type { ReactNode } from "react";
 import { Analytics } from "@/components/analytics/Analytics";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
 import { PreviewPricingBanner } from "@/components/layout/PreviewPricingBanner";
 import "./globals.css";
 
-/** Self-hosted and preloaded by Next; no render-blocking Google Fonts stylesheet. */
-const figtree = Figtree({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
+/**
+ * Figtree, bundled with the site (variable font, latin subset, OFL licence).
+ * Served from our own domain and preloaded by Next. Bundling it, rather than
+ * fetching from Google at build time, means a build can never fail or stall
+ * on Google Fonts being unreachable.
+ */
+const figtree = localFont({
+  src: [
+    { path: "./fonts/figtree-latin.woff2", weight: "300 900", style: "normal" },
+    { path: "./fonts/figtree-latin-italic.woff2", weight: "300 900", style: "italic" },
+  ],
   display: "swap",
   variable: "--font-figtree",
 });
