@@ -51,7 +51,10 @@ export function orderConfirmationEmail(i: ConfirmationInput): { subject: string;
   const next = mobile ? c.nextStep.mobile : c.nextStep.centre;
   const nextBody = fill(next.body);
   const formLine = hasForm ? fill(next.formLine) : fill(c.nextStep.noForm);
-  const ctaHref = mobile ? i.orderUrl : walkIn.locationsUrl;
+  const siteBase = i.orderUrl.replace(/\/order\/.*$/, "");
+  const collectHref = `${siteBase}${walkIn.locationsUrl}`;
+  const ctaHref = mobile ? i.orderUrl : collectHref;
+  const onlyLabs = mobile ? "" : c.nextStep.centre.onlyLabs;
   const day = mobile ? c.onTheDay.mobile : c.onTheDay.centre;
   const coverage = mobile ? fill(c.nextStep.mobile.coverage) : "";
   const offer = deadline ? { title: fill(c.offer.title), body: fill(c.offer.body) } : null;
@@ -61,7 +64,7 @@ export function orderConfirmationEmail(i: ConfirmationInput): { subject: string;
   // ── Plain text ──
   const text = [
     `${c.brand}`, "", headline, "", lead, "",
-    next.title.toUpperCase(), nextBody, coverage, formLine, i.formUrl ? `Download your form: ${i.formUrl}` : "", mobile ? "" : `${next.cta}: ${walkIn.locationsUrl}`, "",
+    next.title.toUpperCase(), nextBody, onlyLabs, coverage, formLine, i.formUrl ? `Download your form: ${i.formUrl}` : "", mobile ? "" : `${next.cta}: ${collectHref}`, mobile ? "" : pathologyConfig.labs.map((l) => `  ${l.name}: ${l.finderUrl}`).join("\n"), "",
     c.prepare.title.toUpperCase(), ...c.prepare.items.map((s) => `- ${s}`), "",
     day.title.toUpperCase(), ...day.items.map((s) => `- ${s}`), "",
     c.results.title.toUpperCase(), c.results.body, "",
@@ -94,6 +97,7 @@ export function orderConfirmationEmail(i: ConfirmationInput): { subject: string;
     <p style="margin:0 0 6px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:${CORAL};font-weight:800">Step 1</p>
     ${h2(next.title)}
     ${p(nextBody)}
+    ${onlyLabs ? `<p style="margin:0 0 12px;padding:10px 14px;background:#fff4ef;border-left:4px solid ${CORAL};font-size:15px;line-height:1.5;color:${INK};font-weight:700">${esc(onlyLabs)}</p>` : ""}
     ${coverage ? p(coverage, `color:${MUTED};font-size:14px`) : ""}
     ${button(next.cta, ctaHref)}
     ${p(formLine, `color:${MUTED};font-size:14px;margin:0`)}
@@ -121,7 +125,7 @@ export function orderConfirmationEmail(i: ConfirmationInput): { subject: string;
     ${h2(c.help.title)}
     ${p(help, `color:${MUTED}`)}
     <p style="margin:18px 0 0;font-size:12px;line-height:1.5;color:${MUTED}">${esc(footer)}</p>
-    <p style="margin:10px 0 0;font-size:12px;color:${MUTED}"><a href="${esc(i.orderUrl.replace(/\/order\/.*$/, ""))}/legal/privacy" style="color:${MUTED}">Privacy</a> &middot; <a href="${esc(i.orderUrl.replace(/\/order\/.*$/, ""))}/legal/terms" style="color:${MUTED}">Terms</a></p>
+    <p style="margin:10px 0 0;font-size:12px;color:${MUTED}"><a href="${esc(siteBase)}/legal/privacy" style="color:${MUTED}">Privacy</a> &middot; <a href="${esc(siteBase)}/legal/terms" style="color:${MUTED}">Terms</a></p>
   </td></tr>
 </table>
 </td></tr></table>

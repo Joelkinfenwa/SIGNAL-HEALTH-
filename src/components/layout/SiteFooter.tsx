@@ -5,7 +5,7 @@ import styles from "./SiteFooter.module.css";
 
 const GROUPS = [
   { title: "The test", links: [{ href: "/signal", label: "The SIGNAL Test" }, { href: "/signal#add-ons", label: "Add-ons" }, { href: "/find-my-signal", label: "Find my SIGNAL" }] },
-  { title: "SIGNAL", links: [{ href: "/#how-it-works", label: "How it works" }, { href: "/#what-is-tested", label: "What's tested" }, { href: "/retesting", label: "Retesting" }, { href: "/#faq", label: "FAQ" }] },
+  { title: "SIGNAL", links: [{ href: "/#how-it-works", label: "How it works" }, { href: "/#what-is-tested", label: "What's tested" }, { href: "/retesting", label: "Retesting" }, { href: "/collect", label: "Collection centres" }, { href: "/#faq", label: "FAQ" }] },
   { title: "Legal", links: [{ href: "/legal/privacy", label: "Privacy policy" }, { href: "/legal/terms", label: "Terms of service" }, { href: "/legal/retesting-terms", label: "Retesting terms" }] },
 ];
 

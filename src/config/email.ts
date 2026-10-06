@@ -20,7 +20,8 @@ export const confirmationEmail = {
   nextStep: {
     centre: {
       title: "Your next step: get your blood drawn",
-      body: "Take your request form, printed or on your phone, and photo ID to any participating collection centre. No appointment, no referral. Centres are run by our partner laboratories and open normal business hours.",
+      body: "Take your request form, printed or on your phone, and photo ID to any 4Cyte Pathology or Australian Clinical Labs collection centre. No appointment, no referral. Walk in during opening hours.",
+      onlyLabs: "Only 4Cyte Pathology or Australian Clinical Labs. Any other laboratory will not accept your form and may bill you for the test.",
       cta: "Find a collection centre",
       formLine: "Your request form is attached to this email as a PDF.",
     },

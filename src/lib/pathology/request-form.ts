@@ -232,7 +232,7 @@ export async function buildRequestFormPdf(i: RequestFormInput): Promise<Uint8Arr
     e.text(title, M + 26, y - 7, 10.5, bold, INK); y -= 22;
     y = e.para(body, M + 26, y, W - 26, 9.5, font, INK, 13.5); y -= 10;
   };
-  step(1, "Find your nearest collection centre", `Go to ${i.referrer.locationsUrl} and choose a centre run by one of the participating laboratories below. ${i.collection.instructions.footer}`);
+  step(1, "Find your nearest collection centre", `Go to ${i.referrer.locationsUrl} for the centre finders of the two participating laboratories below. ${i.collection.instructions.footer}`);
   step(2, "Prepare for your collection", `${i.fasting ? i.collection.fastingInstruction + " " : ""}${i.collection.bring}`);
   step(3, "At the centre", `Hand over this form (page 1) and your photo ID. The collector will confirm your name and date of birth, take your sample and sign the form. ${i.collection.instructions.commercialNote.replace("{phone}", i.referrer.phone)}`);
   step(4, "Your results", `The laboratory returns your results to ${i.referrer.legalName}. Your SIGNAL report, with a doctor's review, is released to you by email. Questions: ${i.referrer.email} or ${i.referrer.phone}.`);
