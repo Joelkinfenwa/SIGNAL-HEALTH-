@@ -2,8 +2,9 @@ import "server-only";
 
 /**
  * Transactional email through Resend's HTTP API (no SDK). Configured by
- * RESEND_API_KEY and EMAIL_FROM. Without them, sends are logged and skipped
- * so previews never email anyone.
+ * RESEND_API_KEY and EMAIL_FROM; EMAIL_REPLY_TO sends customer replies to a
+ * monitored inbox when the sending domain has none. Without the first two,
+ * sends are logged and skipped so previews never email anyone.
  */
 export interface EmailAttachment { filename: string; content: Uint8Array }
 export async function sendEmail(input: { to: string; subject: string; html: string; text: string; replyTo?: string; attachments?: EmailAttachment[] }): Promise<{ sent: boolean; id?: string }> {
@@ -14,7 +15,7 @@ export async function sendEmail(input: { to: string; subject: string; html: stri
     method: "POST",
     headers: { authorization: `Bearer ${key}`, "content-type": "application/json" },
     body: JSON.stringify({
-      from, to: [input.to], subject: input.subject, html: input.html, text: input.text, reply_to: input.replyTo,
+      from, to: [input.to], subject: input.subject, html: input.html, text: input.text, reply_to: input.replyTo ?? process.env.EMAIL_REPLY_TO ?? undefined,
       attachments: input.attachments?.map((a) => ({ filename: a.filename, content: Buffer.from(a.content).toString("base64") })),
     }),
   });
