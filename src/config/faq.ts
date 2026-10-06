@@ -23,7 +23,7 @@ export const faqItems: FaqItem[] = [
     question: "Where can I get collected?",
     status: "draft",
     // TODO-VERIFY launch regions and centre list.
-    answer: "At any participating collection centre, no appointment needed: bring your request form and photo ID. Locations are at expresspathology.com.au/pages/locations. Home or workplace collection is available in selected areas and arranged by phone after payment.",
+    answer: "At any participating collection centre, no appointment needed: bring your request form and photo ID. Only 4Cyte Pathology and Australian Clinical Labs centres accept the form; both centre finders are on our collection page. Home or workplace collection is available in selected areas and arranged by phone after payment.",
   },
   {
     id: "home",

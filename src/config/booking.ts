@@ -15,11 +15,15 @@ export const bookingBaseUrl = process.env.NEXT_PUBLIC_BOOKING_URL ?? null;
 export const bookingUrlFor = (orderId: string): string | null =>
   bookingBaseUrl ? `${bookingBaseUrl}${bookingBaseUrl.includes("?") ? "&" : "?"}ref=${encodeURIComponent(orderId)}` : null;
 
+/** Absolute URL of the collection page, for emails and the request form. */
+export const collectUrl = () => `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://signaltest.com.au"}/collect`;
+
 export const walkIn = {
-  locationsUrl: "https://expresspathology.com.au/pages/locations",
+  /** Our own page: lists the two participating laboratories and nothing else. */
+  locationsUrl: "/collect",
   centre: {
     cta: "Find a collection centre",
-    note: "No appointment needed. Take your request form and photo ID to any participating collection centre, at a time that suits you.",
+    note: "No appointment needed. Take your request form and photo ID to any 4Cyte Pathology or Australian Clinical Labs collection centre, at a time that suits you. No other laboratory will accept your form.",
   },
   mobile: {
     note: "We'll call you within one business day to arrange your home or workplace visit at a time that suits you.",

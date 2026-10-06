@@ -20,6 +20,13 @@ export interface ParticipatingLab {
   drCode: string;
   /** Billing code the laboratory invoices against. */
   billingCode: string;
+  /** The laboratory's own collection-centre finder. TODO-VERIFY both links on launch day. */
+  finderUrl: string;
+  finderLabel: string;
+  /** States and territories where the laboratory has collection centres. */
+  coverage: string;
+  /** One line a customer needs to know before walking in. */
+  note: string;
 }
 
 export const pathologyConfig = {
@@ -32,12 +39,23 @@ export const pathologyConfig = {
     email: "express@expresspathology.com.au",
     phone: "02 9545 2940",
     website: "expresspathology.com.au",
-    locationsUrl: "expresspathology.com.au/pages/locations",
+    /** Overridden at generation time with the site's own /collect page. */
+    locationsUrl: "signaltest.com.au/collect",
   },
   /** Only these laboratories may accept the form. Order = display order. */
   labs: [
-    { name: "4Cyte Pathology", legalName: "4Cyte Pathology Pty Ltd", drCode: "9EXP", billingCode: "9EXP" },
-    { name: "Australian Clinical Labs", legalName: "Australian Clinical Labs", drCode: "BR479", billingCode: "N1687" },
+    {
+      name: "4Cyte Pathology", legalName: "4Cyte Pathology Pty Ltd", drCode: "9EXP", billingCode: "9EXP",
+      finderUrl: "https://www.4cyte.com.au/OurLocations.php", finderLabel: "Find a 4Cyte centre",
+      coverage: "NSW, VIC, QLD and WA",
+      note: "Walk in during opening hours. Many centres are inside medical practices; ask reception for the 4Cyte collection room.",
+    },
+    {
+      name: "Australian Clinical Labs", legalName: "Australian Clinical Labs", drCode: "BR479", billingCode: "N1687",
+      finderUrl: "https://www.clinicallabs.com.au/locations", finderLabel: "Find a Clinical Labs centre",
+      coverage: "NSW, VIC, QLD, WA, SA, ACT and NT",
+      note: "Walk in during opening hours. Look for the Clinical Labs sign; some centres are branded Clinical Labs rather than Australian Clinical Labs.",
+    },
   ] as ParticipatingLab[],
   billing: {
     headline: "COMMERCIAL ACCOUNT · BILL TO EXPRESS PATHOLOGY · DO NOT BILL THE PATIENT",
@@ -61,10 +79,10 @@ export const pathologyConfig = {
     /** Patient / phlebotomist page. */
     instructions: {
       title: "Collection instructions",
-      thanks: "Thank you for choosing Express Pathology. Present this form and photo ID at any participating collection centre. No appointment or referral from your GP is needed.",
+      thanks: "Thank you for choosing Express Pathology. Present this form and photo ID at any 4Cyte Pathology or Australian Clinical Labs collection centre. No appointment or referral from your GP is needed.",
       commercialNote: "This is a commercial account request. Your test has been paid in full. If a collection centre attempts to bill you or asks for a Medicare card for billing, do not pay: show them the billing notice on page 1 or call us on {phone}.",
       validAt: "This form is only valid at the collection centres of the following participating laboratories:",
-      footer: "Only attend collection centres listed on expresspathology.com.au to avoid being billed for this test again.",
+      footer: "Only attend a 4Cyte Pathology or Australian Clinical Labs collection centre. Any other laboratory will not accept this form and may bill you for the test.",
     },
   },
 };

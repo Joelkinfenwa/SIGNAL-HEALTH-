@@ -6,5 +6,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/signal`, priority: 0.9 },
     { url: `${base}/find-my-signal`, priority: 0.8 },
     { url: `${base}/retesting`, priority: 0.6 },
+    { url: `${base}/collect`, priority: 0.5 },
   ];
 }

@@ -13,6 +13,7 @@ import { getAddon, addonNewMarkers } from "../../config/addons";
 import { getBiomarker } from "../../config/biomarkers";
 import { getCollectionMethod } from "../../config/collection";
 import { pathologyConfig } from "../../config/pathology";
+import { collectUrl } from "../../config/booking";
 import { getProduct } from "../../config/products";
 import { decodeOrderMetadata } from "../orders/metadata";
 import type { Configuration } from "../pricing";
@@ -62,7 +63,7 @@ export function formTemplate(cfg: Configuration, reference: string, issuedAt: Da
     tests: testsFor(cfg),
     fasting: c.collection.fastingRequired,
     notes: `${c.notes} Collection: ${method}.`,
-    formTitle: c.formTitle, referrer: c.referrer, labs: c.labs, billing: c.billing, compliance: c.compliance,
+    formTitle: c.formTitle, referrer: { ...c.referrer, locationsUrl: collectUrl().replace(/^https?:\/\//, "") }, labs: c.labs, billing: c.billing, compliance: c.compliance,
     collectorCertification: c.collectorCertification,
     collection: { fastingInstruction: c.collection.fastingInstruction, bring: c.collection.bring, instructions: c.collection.instructions },
   };
