@@ -90,6 +90,8 @@ export async function POST(req: Request) {
           amountCents: pi.amount_received,
           collectionMethodId: order.configuration.collectionMethodId,
           offerDeadline: offerDeadline(new Date(pi.created * 1000), postPurchaseOffer.windowHours),
+          phone: phoneForForm(cust?.phone) || undefined,
+          address: cust?.address ? [cust.address.line1, cust.address.line2, cust.address.city, cust.address.state, cust.address.postal_code].filter(Boolean).join(", ") : undefined,
         });
         const sent = await sendEmail({ to, ...mail, attachments: form ? [{ filename: `SIGNAL-request-${orderReference(pi.id)}.pdf`, content: form }] : undefined });
         if (sent.sent) await stripe.paymentIntents.update(pi.id, { metadata: { confirmation_sent: sent.id ?? "1" } }).catch(() => undefined);
