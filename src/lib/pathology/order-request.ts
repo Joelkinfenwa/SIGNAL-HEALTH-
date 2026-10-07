@@ -4,7 +4,7 @@ import { buildRequestFormPdf } from "./request-form";
 import { formTemplate, requestInputFromIntent, type IntentInputResult } from "./intent-input";
 import type { Configuration } from "@/lib/pricing";
 
-export { orderReference, testsFor } from "./intent-input";
+export { orderReference, orderReferenceSlug, testsFor } from "./intent-input";
 
 export type RequestFormResult = { ok: true; pdf: Uint8Array } | { ok: false; missing: string[] };
 
@@ -27,7 +27,7 @@ export async function requestFormForIntentId(stripe: Stripe, pi: Stripe.PaymentI
 /** Preview-only sample with illustrative patient details. */
 export async function requestFormDemo(cfg: Configuration): Promise<Uint8Array> {
   return buildRequestFormPdf({
-    ...formTemplate(cfg, "SIG-DEMO0001", new Date()),
+    ...formTemplate(cfg, "#2050", new Date()),
     patient: { firstName: "Sam", lastName: "Example", dob: "29/02/1992", sex: "Male", phone: "0412 345 678", email: "sam@example.com", address: "1 Example St, Sydney, NSW, 2000" },
   });
 }

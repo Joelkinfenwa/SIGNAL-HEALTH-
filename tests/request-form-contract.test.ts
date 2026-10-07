@@ -5,7 +5,7 @@ import type Stripe from "stripe";
 import { emptyCustomer, normaliseCustomer, validateCustomer, type CustomerDetails } from "../src/lib/checkout/customer";
 import { customerParams, encodeOrderMetadata } from "../src/lib/orders/metadata";
 import { quoteConfiguration } from "../src/lib/pricing";
-import { requestInputFromIntent, dobForForm, phoneForForm } from "../src/lib/pathology/intent-input";
+import { requestInputFromIntent, dobForForm, phoneForForm, orderReference, orderReferenceSlug } from "../src/lib/pathology/intent-input";
 import { buildRequestFormPdf } from "../src/lib/pathology/request-form";
 import { detailsCopy } from "../src/config/checkout-fields";
 import { signalTest } from "../src/config/products";
@@ -125,4 +125,14 @@ test("date and phone formatting helpers", () => {
   assert.equal(phoneForForm("0412345678"), "0412 345 678");
   assert.equal(phoneForForm("+61 2 9545 2940"), "+61 2 9545 2940");
   assert.equal(phoneForForm(null), "");
+});
+
+test("order reference is the sequential number once assigned, with a Stripe-derived fallback", () => {
+  assert.equal(orderReference({ id: "pi_3TestABCDEFGH1234", metadata: { order_number: "2050" } }), "#2050");
+  assert.equal(orderReferenceSlug({ id: "pi_x", metadata: { order_number: "2051" } }), "2051");
+  assert.equal(orderReference({ id: "pi_3TestABCDEFGH1234", metadata: {} }), "SIG-EFGH1234");
+  const { pi } = stripeObjects(typed(), [], "centre");
+  const r = requestInputFromIntent({ ...pi, metadata: { ...pi.metadata, order_number: "2050" } });
+  assert.ok(r.ok);
+  assert.equal(r.input.reference, "#2050");
 });

@@ -10,6 +10,7 @@
     "test": "node --import tsx --test \"tests/**/*.test.ts\""
   },
   "dependencies": {
+    "@neondatabase/serverless": "^1.2.0",
     "@stripe/react-stripe-js": "^3.11.0",
     "@stripe/stripe-js": "^7.10.0",
     "@vercel/analytics": "^2.0.1",

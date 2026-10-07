@@ -10,7 +10,8 @@ import { sendEmail } from "@/lib/email/send";
 import { decodeOrderMetadata } from "@/lib/orders/metadata";
 import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
 import { pathologyConfig } from "@/config/pathology";
-import { orderReference, requestFormForIntent } from "@/lib/pathology/order-request";
+import { orderReferenceSlug, requestFormForIntent } from "@/lib/pathology/order-request";
+import { ensureOrderReference } from "@/lib/orders/number";
 import { opsAlert } from "@/lib/email/ops-alert";
 import { sendOrderNotification } from "@/lib/email/order-notification";
 import { dobForForm, phoneForForm, SEX_LABEL } from "@/lib/pathology/intent-input";
@@ -49,6 +50,8 @@ export async function POST(req: Request) {
       if (!order) break;
       const customer = typeof pi.customer === "string" ? await stripe.customers.retrieve(pi.customer).catch(() => null) : pi.customer;
       const cust = customer && !("deleted" in customer && customer.deleted) ? customer : null;
+      // Sequential order number, assigned once and stored on the PaymentIntent.
+      const reference = await ensureOrderReference(stripe, pi);
       // The browser fired purchase_completed with event_id = pi.id; the server sends the same id.
       await recordServerEvent("purchase_completed", pi.id, {
         order_id: pi.id, product_id: order.configuration.productId, addon_ids: order.configuration.addonIds,
@@ -73,18 +76,18 @@ export async function POST(req: Request) {
           try {
             const r = await requestFormForIntent({ ...pi, customer: cust });
             if (r.ok) { form = r.pdf; formStatus = "attached"; }
-            else { formStatus = `held:${r.missing.join("+")}`; await opsAlert(`Request form held for ${orderReference(pi.id)}`, `Order ${pi.id} paid but the pathology request form could not be generated. Missing or invalid: ${r.missing.join(", ")}. Fix the Stripe Customer (${cust?.id ?? "unknown"}) and the customer can download the form from their order page, or send it manually.`); }
+            else { formStatus = `held:${r.missing.join("+")}`; await opsAlert(`Request form held for ${reference}`, `Order ${pi.id} paid but the pathology request form could not be generated. Missing or invalid: ${r.missing.join(", ")}. Fix the Stripe Customer (${cust?.id ?? "unknown"}) and the customer can download the form from their order page, or send it manually.`); }
           } catch (err) {
             formStatus = "held:error";
             console.warn("[request-form] generation failed", err);
-            await opsAlert(`Request form failed for ${orderReference(pi.id)}`, `Order ${pi.id}: ${(err as Error).message}`);
+            await opsAlert(`Request form failed for ${reference}`, `Order ${pi.id}: ${(err as Error).message}`);
           }
         }
         await stripe.paymentIntents.update(pi.id, { metadata: { request_form: formStatus.slice(0, 120) } }).catch(() => undefined);
         const label = (kind: string, id: string) => kind === "product" ? getProduct(id)?.name ?? "The SIGNAL Test" : kind === "addon" ? getAddon(id)?.name ?? id : id === "centre" || id === "mobile" ? getCollectionMethod(id).name : id;
         const mail = orderConfirmationEmail({
           firstName: cust?.metadata?.first_name || undefined,
-          reference: orderReference(pi.id),
+          reference,
           orderUrl, orderId: pi.id, formAttached: Boolean(form), formUrl: form ? formUrl : undefined,
           lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
           amountCents: pi.amount_received,
@@ -93,13 +96,13 @@ export async function POST(req: Request) {
           phone: phoneForForm(cust?.phone) || undefined,
           address: cust?.address ? [cust.address.line1, cust.address.line2, cust.address.city, cust.address.state, cust.address.postal_code].filter(Boolean).join(", ") : undefined,
         });
-        const sent = await sendEmail({ to, ...mail, attachments: form ? [{ filename: `SIGNAL-request-${orderReference(pi.id)}.pdf`, content: form }] : undefined });
+        const sent = await sendEmail({ to, ...mail, attachments: form ? [{ filename: `SIGNAL-request-${orderReferenceSlug(pi)}.pdf`, content: form }] : undefined });
         if (sent.sent) await stripe.paymentIntents.update(pi.id, { metadata: { confirmation_sent: sent.id ?? "1" } }).catch(() => undefined);
         // Internal copy for the operations inbox: the order record until a dashboard exists.
         const cm = cust?.metadata ?? {};
         const addr = cust?.address ? [cust.address.line1, cust.address.line2, cust.address.city, cust.address.state, cust.address.postal_code].filter(Boolean).join(", ") : "-";
         await sendOrderNotification({
-          reference: orderReference(pi.id), orderId: pi.id,
+          reference, orderId: pi.id,
           stripeUrl: `https://dashboard.stripe.com/${pi.livemode ? "" : "test/"}payments/${pi.id}`,
           paidAt: new Date(pi.created * 1000), amountCents: pi.amount_received,
           lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
