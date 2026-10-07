@@ -121,7 +121,7 @@ export default function MenFunnelPage() {
                   <TrendCard key={m.markerId} name={getBiomarker(m.markerId).name} unit={m.unit} previous={m.previous} current={m.current} direction={m.direction} note={m.note} />
                 ))}
               </div>
-              <p className={styles.reportPlan}><strong>Your plan.</strong> Every marker explained in plain English, what's worth acting on, and what to do next.</p>
+              <p className={styles.reportPlan}><strong>Your report.</strong> Every marker explained in plain English, with anything outside the expected range flagged for follow-up with your GP.</p>
               <figcaption className={styles.reportCaption}>Illustrative example only. Not real results.</figcaption>
             </figure>
           </Container>

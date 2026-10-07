@@ -64,7 +64,7 @@ export const confirmationEmail = {
   },
   results: {
     title: "Your results",
-    body: "Around 7 days after your collection, an Australian-registered doctor reviews your results and we email you a secure link to your report and next steps. If anything needs prompt attention, we call you.",
+    body: "Within 5 days of your collection, an Australian-registered doctor reviews your results and we email you a secure link to your report: every result explained in plain English. If anything needs prompt attention, we call you.",
   },
   offer: {
     title: "Automatic Retesting: {headline}",

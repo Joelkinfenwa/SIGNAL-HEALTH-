@@ -39,7 +39,7 @@ export interface PlanCard {
 
 export const menFunnel = {
   slug: "men",
-  seo: { title: "A doctor-reviewed blood panel for men, explained in plain English | SIGNAL", description: "One visit, one comprehensive panel, reviewed by an Australian-registered doctor with a plain-English report and next steps in around 7 days. {price}, no GP referral." },
+  seo: { title: "A doctor-reviewed blood panel for men, explained in plain English | SIGNAL", description: "One visit, one comprehensive panel, reviewed by an Australian-registered doctor with a plain-English report within 5 days. {price}, no GP referral." },
 
   // 1. Above the fold
   trustStrip: [
@@ -50,25 +50,25 @@ export const menFunnel = {
   hero: {
     eyebrow: "For Australian men 30–60",
     headline: "Tired, flat or not yourself? Get the numbers, and a doctor's read on them.",
-    subheadline: "One comprehensive blood panel, reviewed by an Australian-registered doctor and explained in plain English. Your written report and next steps arrive in around 7 days from your blood draw.",
+    subheadline: "One comprehensive blood panel, reviewed by an Australian-registered doctor and explained in plain English. Your written report arrives within 5 days of your blood draw.",
     supporting: "{markers} markers across {buckets} areas: energy and iron, heart, blood sugar, thyroid, liver, kidneys and more. Hormones available in the same draw.",
     primaryCta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
     secondaryCta: { label: "See what's included first", href: "#panel" },
     miniTrust: [
       { text: "No GP referral. Order online in about 3 minutes", verified: true },
       { text: "Analysed by an accredited Australian laboratory. Reviewed by an Australian-registered doctor", verified: true },
-      { text: "Clear plan or it's free. If your explanation isn't clear, your test fee comes back", verified: true },
+      { text: "Clear explanation or it's free. If the doctor's explanation isn't clear, your test fee comes back", verified: true },
     ] as Claim[],
   },
 
   // 2. What you get
   included: {
     title: "What you actually get for {price}",
-    intro: "Not a printout of numbers. A proper panel, a doctor's eyes on it, and a written plan you can act on.",
+    intro: "Not a printout of numbers. A proper panel, a doctor's eyes on it, and a written explanation you can actually understand.",
     bullets: [
       { title: "One comprehensive blood panel", body: "{markers} markers covering energy and iron, heart and cholesterol, blood sugar, thyroid, liver and kidneys, electrolytes and minerals, and inflammation. Every marker is listed before you pay." },
       { title: "A doctor reviews the whole picture", body: "An Australian-registered doctor reads your results together, looking for patterns across markers, not just whether each number sits in a range." },
-      { title: "A written summary and next steps, in plain English", body: "What's in the expected range, what isn't, and what to do about it. If something needs follow-up with your GP or a specialist, the report says so. It's sent to you as a secure link and kept on file so your doctor can compare it next time." },
+      { title: "A written explanation, in plain English", body: "What's in the expected range, what isn't, and what each marker means for you. If something warrants follow-up with your GP or a specialist, the report says so. It's sent to you as a secure link and kept on file so your doctor can compare it next time." },
       { title: "Add depth in the same draw", body: "Hormones and drive, thyroid in depth, heart in depth, key nutrients, or training and recovery. From {addonsFrom}. One needle, no second visit." },
       { title: "Collection that fits around you", body: "Walk into any partner collection centre, no appointment needed. Or a mobile nurse at home or work where available, {homeVisit}." },
     ],
@@ -104,7 +104,7 @@ export const menFunnel = {
       { icon: "calendar", title: "Order online", body: "Pick your panel and any add-ons, pay securely. About 3 minutes." },
       { icon: "tube", title: "Get your blood drawn", body: "Take your request form and photo ID to any partner collection centre, or have a mobile nurse come to you where available. No referral paperwork." },
       { icon: "shield", title: "A doctor reviews your results", body: "An Australian-registered doctor checks the full picture for patterns and anything that needs attention." },
-      { icon: "chart", title: "Get your report and next steps", body: "Your results, the doctor's summary and a written plan, emailed as a secure link in around 7 days." },
+      { icon: "chart", title: "Get your report", body: "Your results and the doctor's written explanation, emailed as a secure link within 5 days." },
     ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
   },
 
@@ -115,7 +115,7 @@ export const menFunnel = {
     bestFor: [
       "Men 30–60 who feel tired, flat, low on drive or “not themselves”",
       "Men who want proper pathology numbers and a doctor's explanation, not guesswork from social media",
-      "Men happy to pay privately for clarity and a plan",
+      "Men happy to pay privately for clarity",
       "Men who'd rather know than wonder",
     ],
     notForTitle: "Not for",
@@ -145,7 +145,7 @@ export const menFunnel = {
   // 6. Pricing and options
   plans: {
     title: "Choose how you want to track your health",
-    intro: "Every option includes the full panel, the doctor's review and the written plan. You pay per test. No lock-ins.",
+    intro: "Every option includes the full panel, the doctor's review and the written explanation. You pay per test. No lock-ins.",
     cards: [
       {
         id: "one_time",
@@ -154,7 +154,7 @@ export const menFunnel = {
         priceSub: "one payment",
         tagline: "Ideal if you've never had a proper check.",
         bullets: [
-          { text: "Full panel, doctor review and written plan", verified: true },
+          { text: "Full panel, doctor review and written explanation", verified: true },
           { text: "Collection at a centre included", verified: true },
           { text: "Add-ons from {addonsFrom}", verified: true },
         ],
@@ -193,7 +193,7 @@ export const menFunnel = {
     ] as PlanCard[],
     compare: {
       rows: [
-        { label: "Panel + doctor review + written plan", values: ["Included", "Included", "Included"] },
+        { label: "Panel + doctor review + written explanation", values: ["Included", "Included", "Included"] },
         { label: "Charged per test, no lock-in", values: ["✓", "✓", "✓"] },
         { label: "Tests per year", values: ["1", "2", "4"] },
         { label: "Per-test price", values: ["{price}", "{track6Price}", "{track3Price}"] },
@@ -222,9 +222,9 @@ export const menFunnel = {
       ],
     },
     guarantee: {
-      title: "Clear Plan or It's Free",
-      body: "If you complete your blood draw and doctor review and feel you did not get either a clear explanation of your results, or specific next steps you can discuss with a doctor, email us within 7 days of receiving your report and we'll refund your {price} test fee in full.",
-      terms: "This guarantee is about the clarity of what you receive, not a promise about your health. One claim per order. Terms apply.",
+      title: "Clear Explanation or It's Free",
+      body: "Complete your blood draw and doctor review. If you feel the doctor's written explanation of your results was not clear, email us within 7 days of receiving your report and we'll refund your {price} test fee in full.",
+      terms: "This guarantee is about the clarity of the explanation only. It is not a promise about your health, your results or any treatment. One claim per order. Terms apply.",
       verified: true,
     },
   },
@@ -235,9 +235,9 @@ export const menFunnel = {
     items: [
       { q: "Do I need a GP referral?", a: "No. SIGNAL is a private service you order directly. We arrange the pathology request." },
       { q: "Is this covered by Medicare or private health?", a: "No. It isn't billed to Medicare, and most health funds don't cover it. You pay for it yourself, and the price you see is the price you pay." },
-      { q: "What happens if my results are abnormal?", a: "Your report highlights anything outside the expected range and says what to do next. That may mean seeing your GP or a specialist. If something needs prompt attention, we contact you directly." },
+      { q: "What happens if my results are abnormal?", a: "Your report highlights anything outside the expected range and explains what that marker means. Where follow-up with your GP or a specialist is warranted, the report says so. If something needs prompt attention, we contact you directly." },
       { q: "Will I definitely get medication?", a: "No. SIGNAL is a testing, review and planning service. We never promise medication. Any treatment is only considered separately, by a doctor, and only if it's clinically appropriate." },
-      { q: "How long from blood draw to results?", a: "Around 7 days. We email you the moment your report and the doctor's review are ready." },
+      { q: "How long from blood draw to results?", a: "Within 5 days. We email you the moment your report and the doctor's review are ready." },
       { q: "Where do I go for my blood draw?", a: "Any partner collection centre near you, no appointment needed. Bring your request form and photo ID. In some areas a mobile nurse can come to your home or work for {homeVisit}." },
       { q: "Is this a replacement for my GP?", a: "No. SIGNAL gives you proper numbers and a doctor's explanation to act on. Your GP is still your GP, and your report is written so you can take it to them." },
       { q: "Is this suitable for women?", a: "Yes. The SIGNAL Test is the same comprehensive panel for everyone, and the Hormones+ add-on covers markers relevant to women as well as men. This page is written for men because that's who we're starting with." },
@@ -247,7 +247,7 @@ export const menFunnel = {
   // 9. Close
   close: {
     headline: "Ready to stop guessing and see what's really going on?",
-    sub: "Order your SIGNAL test today. Your doctor-reviewed report and next steps arrive in around 7 days.",
+    sub: "Order your SIGNAL test today. Your doctor-reviewed report arrives within 5 days of your blood draw.",
     cta: { label: "Order your SIGNAL test – {price}", href: "/checkout" },
   },
 };

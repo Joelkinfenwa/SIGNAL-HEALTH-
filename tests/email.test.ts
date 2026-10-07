@@ -7,7 +7,7 @@ const base = { reference: "SIG-TEST0001", orderId: "pi_x", orderUrl: "https://si
 test("centre confirmation: walk-in instructions, form attached, no booking promise", () => {
   const m = orderConfirmationEmail({ ...base, collectionMethodId: "centre" });
   assert.match(m.subject, /request form is attached/);
-  for (const s of ["Find a collection centre", "https://signaltest.com.au/collect", "4Cyte Pathology", "Australian Clinical Labs", "Any other laboratory will not accept your form", "Fast for 10 to 12 hours", "photo ID", "already paid for", "Around 7 days", "02 9545 2940", "SIG-TEST0001", "$299", "Automatic Retesting"]) assert.ok(m.text.includes(s) && m.html.includes(s.replace(/'/g, "&#39;").split("'")[0]!), s);
+  for (const s of ["Find a collection centre", "https://signaltest.com.au/collect", "4Cyte Pathology", "Australian Clinical Labs", "Any other laboratory will not accept your form", "Fast for 10 to 12 hours", "photo ID", "already paid for", "Within 5 days", "02 9545 2940", "SIG-TEST0001", "$299", "Automatic Retesting"]) assert.ok(m.text.includes(s) && m.html.includes(s.replace(/'/g, "&#39;").split("'")[0]!), s);
   for (const banned of ["booking link", "dashboard", "We'll call you"]) assert.ok(!m.text.includes(banned), banned);
 });
 

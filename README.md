@@ -159,7 +159,7 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Product "promise", "is this you if…" and "what you walk away with" lines | Product pages (`config/products.ts`) | Understanding-only framing; marketing/legal to confirm none reads as symptom-to-diagnosis |
 | "Ten minutes, then get on with your day" (collection duration) | Product page, Why SIGNAL | TODO-VERIFY typical collection time with operations |
 | Add-on "For you if…" lines | /signal configurator, homepage add-ons (`config/addons.ts`) | Preference framing only; marketing/legal to confirm none reads as symptom-to-diagnosis |
-| Journey timings ("Straight after payment", "At your chosen time", "Around 7 days after collection") | /signal, /checkout, /order (`config/journey.ts`) | VERIFIED by the Director, 2 Oct 2026 |
+| Journey timings ("Straight after payment", "At your chosen time", "Within 5 days of collection") | /signal, /checkout, /order (`config/journey.ts`) | VERIFIED by the Director, 2 Oct 2026 |
 | "Pay by card, Apple Pay or Google Pay. No account needed first." | Journey step 1, checkout | True once Stripe Payment + Express Checkout Elements ship |
 | Checkout details: "Sex … as recorded at birth. Laboratories use it to apply the right reference ranges" | /checkout step 3 (`config/checkout-fields.ts`) | TODO-VERIFY wording with the clinical lead and the laboratory's request requirements |
 | Checkout minimum age (18+) | /checkout step 3 (`MIN_AGE_YEARS`) | DECISION: policy on under-18 self-pay testing; legal to confirm |
@@ -171,7 +171,7 @@ Every public claim needs substantiation under Australian Consumer Law. `trustPoi
 | Demo order (`/order/demo`, SIG-DEMO-0001, $349/$59/$49) | Previews only | Illustrative; production returns 404 |
 | Preview pricing ($349 / $59 / $49 …) | Everywhere, with a banner, when `NEXT_PUBLIC_PREVIEW_PRICING=1` | Placeholders for test payments only; the server refuses to create an order with them on Production |
 | "Your card details never touch our servers" | Checkout payment panel | True by construction (Stripe Payment Element); keep it that way |
-| **/men funnel page** claims (doctors, labs, 7 days, no referral, priority review and booking, at-home visit perk, guarantee, data storage) | /men (`config/funnel/men.ts`) | VERIFIED by the Director, 2 Oct 2026. Any edited or new line goes back to `verified: false` until re-confirmed |
+| **/men funnel page** claims (doctors, labs, 5 days, no referral, priority review and booking, at-home visit perk, guarantee, data storage) | /men (`config/funnel/men.ts`) | VERIFIED by the Director, 2 Oct 2026. Any edited or new line goes back to `verified: false` until re-confirmed |
 | "Clear Plan or It's Free" guarantee (full refund within 7 days if no clear explanation or plan) | /men hero, guarantee block | VERIFIED by the Director, 2 Oct 2026; terms stated in the block. TODO(legal): mirror the wording in /legal/terms |
 | Plan badges "Save 15% per test" / "Save 20% per test" | /men plans | Factual, derived from config. "Most popular" removed (ACL and AHPRA: no unsubstantiated claims) |
 | No testimonials on /men | /men trust facts section | AHPRA / National Law s133: advertising a regulated health service (doctor review) must not use testimonials. The section is factual only; `config/social-proof.ts` content is not rendered on this page |
