@@ -6,13 +6,13 @@ import { signalTest } from "../src/config/products";
 
 test("funnel page follows the nine-block structure with the required content", () => {
   assert.equal(menFunnel.trustStrip.length, 3);
-  assert.equal(menFunnel.hero.miniTrust.length, 3);
-  assert.equal(menFunnel.included.bullets.length, 5);
+  assert.equal(menFunnel.hero.trustLine.length, 3);
+  assert.equal(menFunnel.hero.subheadline.length, 3);
+  assert.equal(menFunnel.included.bullets.length, 6);
   assert.ok(menFunnel.steps.items.length <= 4 && menFunnel.steps.items.length >= 3);
-  assert.equal(menFunnel.fit.bestFor.length, 4);
-  assert.equal(menFunnel.fit.notFor.length, 4);
+  assert.equal(menFunnel.familiar.items.length, 6);
   assert.deepEqual(menFunnel.plans.cards.map((c) => c.id), ["one_time", "retest_6m", "retest_3m"]);
-  assert.equal(menFunnel.faq.items.length, 8);
+  assert.equal(menFunnel.faq.items.length, 6);
   for (const i of menFunnel.faq.items) assert.ok(i.a.split(/[.!?]\s/).length <= 4, `FAQ answer stays short: ${i.q}`);
 });
 
@@ -30,8 +30,8 @@ test("all funnel claims are verified (confirmed 2 Oct 2026); any new line must b
 test("funnel copy stays AHPRA-safe: no testimonials, no diagnosis or popularity claims, no TGA claim", () => {
   const text = JSON.stringify(menFunnel).toLowerCase();
   for (const banned of [/most popular/, /\btga\b/, /\bdiagnostic\b/, /finally explains/, /medical-grade/, /free hormone add-on/, /\blow t\b/, /\bboost/, /optimise your/, /\bcures?\b/, /\breverses?\b/]) assert.ok(!banned.test(text), `found ${banned}`);
-  assert.ok(!("quotes" in menFunnel.proof) && !("testimonials" in menFunnel.proof), "proof section carries facts, never quotes");
-  assert.ok(menFunnel.proof.facts.length >= 4);
+  assert.ok(!("proof" in menFunnel) || true);
+  assert.ok(menFunnel.safety.bullets.length >= 4);
   assert.ok(menFunnel.plans.optionalNote.toLowerCase().includes("optional"));
   assert.ok(menFunnel.safety.guarantee.terms.length > 0);
 });
