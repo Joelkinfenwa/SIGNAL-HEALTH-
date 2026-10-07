@@ -150,9 +150,10 @@ export const menMedia = {
     backyard: { src: `${HF3}9_09d761c9-5f96-41ef-bc5d-dca5a18fab8b.png`, alt: "A man in his mid forties in his backyard early in the morning, holding a mug" },
     step: { src: `${HF3}9_f3550d8a-e30f-4b60-a920-f1ef23a69559.png`, alt: "A man in his fifties on a back step lacing up running shoes" },
   },
-  collection: { src: `${HF3}20_3a1f1ee3-5af9-44b7-9433-de57add5f6f2.png`, alt: "A collector's gloved hands placing a small bandage on a man's arm after a blood collection" },
-  doctor: { src: `${HF3}20_72f10b4a-3abe-46f1-8744-0a59eb1c1488.png`, alt: "Over the shoulder of a doctor reading a printed results page at a desk" },
-  reading: { src: `${HF3}9_a80d67c3-4572-44e8-ba78-a93cbc10789a.png`, alt: "A man at a kitchen table reading a printed report with a cup of tea" },
+  // Side photos use the CDN's smaller web renders (_min.webp): the full PNGs are too large for the image optimiser.
+  collection: { src: `${HF3}20_3a1f1ee3-5af9-44b7-9433-de57add5f6f2_min.webp`, alt: "A collector's gloved hands placing a small bandage on a man's arm after a blood collection" },
+  doctor: { src: `${HF3}20_72f10b4a-3abe-46f1-8744-0a59eb1c1488_min.webp`, alt: "Over the shoulder of a doctor reading a printed results page at a desk" },
+  reading: { src: `${HF3}9_a80d67c3-4572-44e8-ba78-a93cbc10789a_min.webp`, alt: "A man at a kitchen table reading a printed report with a cup of tea" },
 } as const satisfies Record<string, MediaAsset | Record<string, MediaAsset>>;
 
 /** Earlier polished set, kept for comparison / A-B. */
