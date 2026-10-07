@@ -11,6 +11,15 @@
 /* 1. hero: callout, value, CTA. Dark, no photo, first screen on a phone. */
 .hero { padding-block: var(--s-7) var(--s-8); }
 .heroInner { display: grid; gap: var(--s-4); max-width: 40rem; }
+.heroCopy { display: grid; gap: var(--s-4); }
+.heroCard { display: none; gap: var(--s-4); padding: var(--s-6) var(--s-5); border-radius: var(--r-md); background: var(--c-paper); color: var(--c-ink); box-shadow: var(--shadow-float); }
+.heroCardHead { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); padding-bottom: var(--s-3); border-bottom: 1px solid var(--line); }
+.heroCardTitle { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
+.heroCardPrice { font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
+.heroCardRows { display: grid; gap: var(--s-2); font-size: var(--fs-sm); font-weight: 600; }
+.heroCardRows li { display: flex; gap: var(--s-2); align-items: flex-start; }
+.heroCardRows svg { flex: none; margin-top: 4px; color: var(--c-brand); }
+.heroCardFoot { font-size: var(--fs-xs); color: var(--c-stone); }
 .eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-signal); }
 .title { font-size: clamp(2rem, 1.2rem + 3.6vw, 3.5rem); line-height: 1.05; font-weight: 700; letter-spacing: -0.035em; text-wrap: balance; max-width: 16ch; }
 .lede { display: grid; gap: 2px; font-size: var(--fs-md); line-height: 1.45; color: var(--fg); max-width: 34rem; }
@@ -29,20 +38,14 @@
 .narrow { max-width: 44rem; }
 .sectionCta { display: grid; gap: var(--s-3); margin-top: var(--s-5); max-width: 24rem; }
 
-/* 3. value stack + example report */
+/* 3. value stack + what you receive */
 .stack { display: grid; gap: var(--s-3); margin-bottom: var(--s-5); }
 .stackItem { display: grid; grid-template-columns: auto 1fr; gap: var(--s-2); align-items: start; line-height: 1.5; }
 .stackItem svg { margin-top: 5px; color: var(--c-brand); }
 .stackItem strong { font-weight: 700; }
 .stackBody { color: var(--muted); }
 .compareLine { padding: var(--s-4); border-left: 3px solid var(--c-signal); background: var(--panel-soft); font-size: var(--fs-sm); color: var(--fg); text-wrap: pretty; }
-.report { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); background: var(--c-paper); box-shadow: inset 0 0 0 1px var(--line); }
-.reportHead { display: flex; justify-content: space-between; align-items: center; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
-.reportTag { padding: 2px 8px; border-radius: 999px; background: var(--c-shell); letter-spacing: 0; text-transform: none; font-weight: 600; }
-.reportPeriod { font-size: var(--fs-sm); font-weight: 600; }
-.reportCards { display: grid; gap: var(--s-2); }
-.reportPlan { padding: var(--s-3) var(--s-4); border-left: 3px solid var(--c-brand); font-size: var(--fs-sm); color: var(--fg); text-wrap: pretty; }
-.reportCaption { font-size: var(--fs-xs); color: var(--muted); }
+.report { box-shadow: inset 0 0 0 1px var(--line); }
 
 /* 2b. panel buckets */
 .h3 { margin-top: var(--s-6); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
@@ -89,6 +92,7 @@
 .planBadge { padding: 4px 12px; border-radius: 999px; background: var(--c-signal); color: var(--c-ink); font-size: var(--fs-xs); font-weight: 700; }
 .optionalNote { margin-top: var(--s-5); max-width: 48rem; font-size: var(--fs-sm); color: var(--fg); text-wrap: pretty; }
 .planPrice { font-size: var(--fs-xl); font-weight: 700; letter-spacing: -0.035em; line-height: 1; }
+.planPer { font-size: var(--fs-sm); font-weight: 600; letter-spacing: 0; color: var(--muted); }
 .planPriceSub { font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
 .planTagline { font-size: var(--fs-sm); color: var(--muted); }
 .planBullets { display: grid; gap: var(--s-2); margin-bottom: var(--s-2); font-size: var(--fs-sm); }
@@ -144,7 +148,9 @@
 }
 @media (min-width: 64rem) {
   .hero { padding-block: var(--s-9, 6rem) var(--s-9, 6rem); }
-  .heroInner { max-width: 48rem; }
+  .heroInner { max-width: none; grid-template-columns: minmax(0, 1.25fr) minmax(18rem, 0.75fr); gap: var(--s-8); align-items: center; }
+  .heroCopy { max-width: 40rem; }
+  .heroCard { display: grid; }
   .split { grid-template-columns: 1.1fr 0.9fr; gap: var(--s-8); }
   .plans { grid-template-columns: repeat(3, 1fr); gap: var(--s-5); }
   .addonBuckets { grid-template-columns: repeat(2, 1fr); }

@@ -1,0 +1,7 @@
+.card { display: grid; gap: var(--s-4); padding: var(--s-6) var(--s-5); border-radius: var(--r-md); background: var(--c-paper); color: var(--c-ink); box-shadow: var(--shadow-card); }
+.eyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-brand); }
+.title { margin-top: calc(var(--s-2) * -1); font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+.rows { display: grid; gap: var(--s-3); }
+.rows li { display: flex; gap: var(--s-3); align-items: flex-start; padding-top: var(--s-3); border-top: 1px solid var(--line); line-height: 1.45; text-wrap: pretty; }
+.tick { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--c-brand-soft); color: var(--c-brand); margin-top: 1px; }
+.foot { padding: var(--s-3) var(--s-4); border-left: 3px solid var(--c-brand); font-size: var(--fs-sm); color: var(--c-stone); text-wrap: pretty; }
