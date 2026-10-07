@@ -6,3 +6,6 @@ next-env.d.ts
 .env*.local
 .vercel
 .DS_Store
+
+# Stray screenshot output from local browser scripts
+undefined/

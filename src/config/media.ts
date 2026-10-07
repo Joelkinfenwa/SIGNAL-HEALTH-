@@ -140,17 +140,20 @@ const HF3 = `${CDN2}/hf_20261002_02151`;
 const HF4 = `${CDN2}/hf_20261002_223925_`;
 /** Documentary set (natural light, ordinary people, slight grain). The live set for /men. */
 export const menMedia = {
-  hero: { src: `${HF4}ac7b7aeb-e9bc-48f9-bf0f-15fe6ecd721f.png`, alt: "A man in his early forties on a morning walk along a coastal path with his dog" },
+  // Director rejected the coastal-walk-with-dog render (7 Oct). Interim pick below; new candidates in generation.
+  hero: { src: `${HF3}9_f3550d8a-e30f-4b60-a920-f1ef23a69559.png`, alt: "A man in his fifties on a back step lacing up running shoes" },
   heroCandidates: {
+    coastal: { src: `${HF4}ac7b7aeb-e9bc-48f9-bf0f-15fe6ecd721f.png`, alt: "A man in his early forties on a morning walk along a coastal path with his dog" },
     ute: { src: `${HF4}a48dcfa0-bba8-4677-b013-388097a6a6da.png`, alt: "A man in his mid forties leaning on a ute tailgate after a swim" },
     kitchen: { src: `${HF4}d7e5bde9-8840-4044-abd8-f9012a14f2b5.png`, alt: "A man in his late thirties reading his phone at a kitchen bench with a coffee" },
     bench: { src: `${HF4}118ab605-a04b-42f3-9fd5-29bb91c40e84.png`, alt: "A man around fifty on a park bench after a run" },
     backyard: { src: `${HF3}9_09d761c9-5f96-41ef-bc5d-dca5a18fab8b.png`, alt: "A man in his mid forties in his backyard early in the morning, holding a mug" },
     step: { src: `${HF3}9_f3550d8a-e30f-4b60-a920-f1ef23a69559.png`, alt: "A man in his fifties on a back step lacing up running shoes" },
   },
-  collection: { src: `${HF3}20_3a1f1ee3-5af9-44b7-9433-de57add5f6f2.png`, alt: "A collector's gloved hands placing a small bandage on a man's arm after a blood collection" },
-  doctor: { src: `${HF3}20_72f10b4a-3abe-46f1-8744-0a59eb1c1488.png`, alt: "Over the shoulder of a doctor reading a printed results page at a desk" },
-  reading: { src: `${HF3}9_a80d67c3-4572-44e8-ba78-a93cbc10789a.png`, alt: "A man at a kitchen table reading a printed report with a cup of tea" },
+  // Side photos use the CDN's smaller web renders (_min.webp): the full PNGs are too large for the image optimiser.
+  collection: { src: `${HF3}20_3a1f1ee3-5af9-44b7-9433-de57add5f6f2_min.webp`, alt: "A collector's gloved hands placing a small bandage on a man's arm after a blood collection" },
+  doctor: { src: `${HF3}20_72f10b4a-3abe-46f1-8744-0a59eb1c1488_min.webp`, alt: "Over the shoulder of a doctor reading a printed results page at a desk" },
+  reading: { src: `${HF3}9_a80d67c3-4572-44e8-ba78-a93cbc10789a_min.webp`, alt: "A man at a kitchen table reading a printed report with a cup of tea" },
 } as const satisfies Record<string, MediaAsset | Record<string, MediaAsset>>;
 
 /** Earlier polished set, kept for comparison / A-B. */
