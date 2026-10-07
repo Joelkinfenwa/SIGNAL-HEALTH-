@@ -19,7 +19,7 @@ declare global {
 export const GA4_ID = process.env.NEXT_PUBLIC_GA4_ID;
 export const META_PIXEL_ID = process.env.NEXT_PUBLIC_META_PIXEL_ID;
 
-const META_STANDARD = new Set(["PageView", "ViewContent", "InitiateCheckout", "Purchase", "Subscribe", "Schedule", "Lead", "AddToCart"]);
+const META_STANDARD = new Set(["PageView", "ViewContent", "InitiateCheckout", "AddPaymentInfo", "Purchase", "Subscribe", "Schedule", "Lead", "AddToCart", "CompleteRegistration"]);
 
 export function dispatch(event: AnalyticsEvent, eventId: string, context: Record<string, unknown>): void {
   const policy = EVENT_POLICY[event.name];
