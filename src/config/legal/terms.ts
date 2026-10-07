@@ -19,7 +19,7 @@ export const terms: LegalDocument = {
   intro: `These terms govern your purchase and use of the SIGNAL Test and related services from ${e.legalName} (ABN ${e.abn}), trading as ${e.tradingName} ("we", "us"). By placing an order you agree to them. Please read them with our Privacy Policy and, if you choose Automatic Retesting, the Retesting Terms.`,
   sections: [
     { id: "service", title: "1. What SIGNAL is", body: [
-      "SIGNAL is a self-requested pathology testing service. When you order, we arrange a pathology request for the markers in your chosen configuration, your sample is collected at a partner collection centre or by a mobile collector, it is analysed by an accredited Australian pathology laboratory, and your results are reviewed by an Australian-registered medical practitioner who prepares a plain-English report and a written plan for what to do next.",
+      "SIGNAL is a self-requested pathology testing service. When you order, we arrange a pathology request for the markers in your chosen configuration, your sample is collected at a partner collection centre or by a mobile collector, it is analysed by an accredited Australian pathology laboratory, and your results are reviewed by an Australian-registered medical practitioner who prepares a plain-English written explanation of your results.",
       "SIGNAL is not a substitute for your general practitioner or for emergency care. It does not diagnose or treat any condition, and a report is not a consultation or a prescription. If you are unwell, or if your report says a result needs prompt attention, see a doctor. In an emergency call 000.",
     ]},
     { id: "eligibility", title: "2. Who can order", body: [
@@ -35,7 +35,7 @@ export const terms: LegalDocument = {
       "Please bring photo ID. Follow any preparation instructions in your booking (for example fasting). If you miss a booking or cancel with less than the notice stated in your booking confirmation, a rebooking fee may apply as stated there.",
     ]},
     { id: "results", title: "5. Results, review and timing", body: [
-      "Most results and the doctor's review are sent to your email address as a secure link within around 7 days of collection. Occasionally a laboratory needs longer or must recollect a sample; we will tell you if that happens and there is no extra charge for a recollection the laboratory requests.",
+      "Most results and the doctor's review are sent to your email address as a secure link within 5 days of collection. Occasionally a laboratory needs longer or must recollect a sample; we will tell you if that happens and there is no extra charge for a recollection the laboratory requests.",
       "A laboratory result is a measurement at a point in time. Reference ranges are population-based and a result outside a range does not by itself mean something is wrong, nor does a result within a range guarantee that nothing is. The reviewing doctor's report is general guidance based on your results and the information you supplied; it is not a diagnosis and does not establish an ongoing treating relationship.",
       "If a result requires urgent attention we will contact you using the details on your order. Keep them current.",
     ]},
@@ -43,8 +43,8 @@ export const terms: LegalDocument = {
       "You may cancel for a full refund at any time before your blood is collected by emailing us. After collection the laboratory work has begun and the order can no longer be cancelled, except under the guarantee below or your rights under the Australian Consumer Law.",
       "Add-ons can be added or removed before payment. To change add-ons after payment but before collection, email us and we will adjust the order and the amount paid.",
     ]},
-    { id: "guarantee", title: "7. Clear Plan or It's Free guarantee", body: [
-      `If, after your blood draw and the doctor's review, you feel you did not receive a clear explanation of your results or a clear plan for what to do next, email ${e.supportEmail} within 7 days of your report being released and we will refund the ${price} test fee in full. The guarantee covers the SIGNAL Test fee; add-ons and collection fees are refunded if you cancel before collection under section 6. One claim per order. This guarantee is in addition to, and does not limit, your rights under the Australian Consumer Law.`,
+    { id: "guarantee", title: "7. Clear Explanation or It's Free guarantee", body: [
+      `If, after your blood draw and the doctor's review, you feel the written explanation of your results was not clear, email ${e.supportEmail} within 7 days of your report being released and we will refund the ${price} test fee in full. The guarantee covers the SIGNAL Test fee; add-ons and collection fees are refunded if you cancel before collection under section 6. One claim per order. The guarantee concerns the clarity of the explanation only; it is not a promise about your health, your results or any treatment. This guarantee is in addition to, and does not limit, your rights under the Australian Consumer Law.`,
     ]},
     { id: "retesting", title: "8. Automatic Retesting", body: [
       `Automatic Retesting is optional and is offered after your first purchase. It uses recurring billing. If you choose it, the Retesting Terms apply in addition to these terms, including the refund of the plan discount against your first order, the recurring charge for each future test, the reminder we send ${postPurchaseOffer.reminderDaysBefore} days before each charge, and your right to change, pause or cancel at any time.`,
