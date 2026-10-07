@@ -23,6 +23,8 @@ const figtree = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
+  // Meta Business domain verification for signaltest.com.au (Business Settings → Domains).
+  verification: { other: { "facebook-domain-verification": "24c1jmeubq5g5mra1cv3xhpeel6ub1" } },
   title: {
     default: "SIGNAL by Express Pathology | Advanced blood testing, made simple",
     template: "%s | SIGNAL by Express Pathology",
