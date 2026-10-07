@@ -63,7 +63,7 @@
 .bucketBody { display: grid; gap: var(--s-3); padding: 0 0 var(--s-4); color: var(--muted); max-width: 60ch; }
 .markerChips { display: flex; flex-wrap: wrap; gap: 6px; }
 .markerChips li { padding: 5px 10px; border-radius: 999px; background: var(--panel-soft); font-size: var(--fs-xs); font-weight: 600; color: var(--fg); }
-.addonBuckets { display: grid; gap: var(--s-3); margin-top: var(--s-4); }
+.addonBuckets { display: grid; gap: var(--s-3); padding-bottom: var(--s-4); }
 .addonBucket { display: grid; gap: 4px; padding: var(--s-4); border-radius: var(--r-md); background: var(--panel-soft); }
 .addonBucketHead { display: flex; justify-content: space-between; gap: var(--s-3); flex-wrap: wrap; }
 .addonBucketPrice { font-size: var(--fs-sm); font-weight: 700; color: var(--c-brand); }
@@ -110,10 +110,11 @@
 .safety li { display: flex; gap: var(--s-2); align-items: flex-start; }
 .safety svg { flex: none; margin-top: 5px; color: var(--c-brand); }
 .disclaimer { display: grid; gap: var(--s-2); margin-top: var(--s-5); padding: var(--s-4); border-radius: var(--r-md); background: var(--panel-soft); font-size: var(--fs-sm); color: var(--muted); }
+.disclaimerLine { margin-top: var(--s-5); max-width: 40rem; font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
 .disclaimerTitle { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--fg); }
 .guarantee { display: grid; gap: var(--s-3); padding: var(--s-6) var(--s-5); border-radius: var(--r-md); background: var(--bg); border: 2px solid var(--fg); box-shadow: var(--shadow-card); }
 .guaranteeEyebrow { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-signal); }
-.guaranteeTitle { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; }
+.guaranteeTitle { font-size: var(--fs-lg); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; text-wrap: balance; }
 .guaranteeBody { display: grid; gap: 2px; font-size: var(--fs-md); line-height: 1.45; }
 .guaranteeTerms { font-size: var(--fs-xs); color: var(--muted); }
 .guaranteeTerms a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); font-weight: 700; text-underline-offset: 3px; }
