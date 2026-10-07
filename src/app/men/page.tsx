@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
-import { Photo } from "@/components/home/Photo";
 import { StickyCta } from "@/components/home/StickyCta";
 import { TrendCard } from "@/components/home/TrendCard";
 import { SiteFooter } from "@/components/layout/SiteFooter";
@@ -14,14 +13,12 @@ import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { getCollectionMethod } from "@/config/collection";
 import { resultsPreview } from "@/config/home";
-import { menMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
 import { quoteRetest } from "@/lib/retest/offer";
 import styles from "./page.module.css";
-
 
 const PREVIEW = process.env.VERCEL_ENV !== "production";
 
@@ -33,6 +30,7 @@ function fill(s: string): string {
   const q3 = price !== null && t3 ? quoteRetest(price, t3) : null;
   const tokens: Record<string, string> = {
     price: price !== null ? formatAUD(price) : "TBC",
+    perWeek: price !== null ? formatAUD(Math.ceil(price / 52 / 100) * 100) : "TBC",
     addonsFrom: Number.isFinite(addonsFromCents()) ? formatAUD(addonsFromCents()) : "TBC",
     track6Price: q6 ? formatAUD(q6.recurringPriceCents) : "TBC",
     track3Price: q3 ? formatAUD(q3.recurringPriceCents) : "TBC",
@@ -52,14 +50,18 @@ export const metadata: Metadata = { title: f.seo.title, description: fill(f.seo.
 const visible = (claims: Claim[]) => claims.filter((c) => c.verified || PREVIEW);
 const ClaimText = ({ c }: { c: Claim }) => <>{fill(c.text)}{!c.verified && PREVIEW ? <span className={styles.todo} title="Unverified claim: see README claims register">?</span> : null}</>;
 
+const Cta = ({ id, location, label, full }: { id: string; location: string; label?: string; full?: boolean }) => (
+  <Button href={f.hero.primaryCta.href} ctaId={id} location={location} full={full}>{fill(label ?? f.hero.primaryCta.label)} <Icon name="arrow" size={18} /></Button>
+);
+
 /**
- * Funnel page for paid traffic: hook, stack, steps, fit, proof, offer, risk
- * reversal, FAQ, close. Structure and copy from config/funnel/men.ts.
- * Minimal header (logo + trust strip, no nav) so the only exits are the CTAs.
+ * Funnel page for paid, mobile-first traffic. Callout + value + CTA above
+ * the fold with no photo; then how it works, value stack, why men book,
+ * trust, guarantee, optional plans, FAQ and a final CTA strip. One product,
+ * one price, one button, repeated. Copy from config/funnel/men.ts.
  */
 export default function MenFunnelPage() {
   const unverified = unverifiedClaimCount();
-  const primary = { label: fill(f.hero.primaryCta.label), href: f.hero.primaryCta.href };
 
   return (
     <>
@@ -74,41 +76,59 @@ export default function MenFunnelPage() {
       {PREVIEW && unverified > 0 ? <p className={styles.previewNote}>Preview: {unverified} claims on this page are marked unverified (shown with a ?). Clear them in the README claims register before paid traffic.</p> : null}
 
       <main id="main">
-        {/* 1. Above the fold */}
-        <section id="hero" data-theme="light" className={styles.hero} aria-labelledby="hero-title">
+        {/* 1. Hero: callout, value, CTA */}
+        <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
           <Container className={styles.heroInner}>
-            <div>
-              <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
-              <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
-              <p className={styles.lede}>{f.hero.subheadline}</p>
-              <div className={styles.actions}>
-                <Button href={primary.href} ctaId="men_hero_primary" location="men_hero">{primary.label} <Icon name="arrow" size={18} /></Button>
-                <a href={f.hero.secondaryCta.href} className={styles.secondary}>{f.hero.secondaryCta.label}</a>
-              </div>
-              <p className={styles.supporting}>{fill(f.hero.supporting)}</p>
-              <ul className={styles.miniTrust}>
-                {visible(f.hero.miniTrust).map((c, i) => <li key={i}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
-              </ul>
+            <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
+            <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
+            <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
+            <div className={styles.actions}>
+              <Cta id="men_hero_primary" location="men_hero" full />
             </div>
-            <Photo asset={menMedia.hero} sizes="(min-width: 64rem) 46vw, 100vw" className={styles.heroPhoto} priority position="center 30%" />
+            <p className={styles.trustLine}>
+              {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
+            </p>
           </Container>
         </section>
 
-        {/* 2. What you get */}
+        {/* 2. How it works */}
+        <section data-theme="light" className={styles.section} aria-labelledby="steps-title">
+          <Container className={styles.narrow}>
+            <h2 id="steps-title" className={styles.h2}>{f.steps.title}</h2>
+            <p className={styles.intro}>{f.steps.intro}</p>
+            <ol className={styles.steps}>
+              {f.steps.items.map((s, i) => (
+                <li key={s.title} className={styles.step}>
+                  <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
+                  <div>
+                    <h3 className={styles.stepTitle}>{s.title}</h3>
+                    <p className={styles.stepBody}>{fill(s.body)}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <div className={styles.sectionCta}><Cta id="men_steps_cta" location="men_steps" label="Book your SIGNAL test" /></div>
+          </Container>
+        </section>
+
+        {/* 3. Value stack */}
         <section id="included" data-theme="shell" className={styles.section} aria-labelledby="included-title">
           <Container className={styles.split}>
             <div>
               <h2 id="included-title" className={styles.h2}>{fill(f.included.title)}</h2>
-              <p className={styles.intro}>{fill(f.included.intro)}</p>
-              <ol className={styles.stack}>
+              <ul className={styles.stack}>
                 {f.included.bullets.map((b) => (
                   <li key={b.title} className={styles.stackItem}>
-                    <strong>{fill(b.title)}</strong>
-                    <span className={styles.stackBody}>{fill(b.body)}</span>
+                    <Icon name="check" size={16} />
+                    <span><strong>{fill(b.title)}.</strong> <span className={styles.stackBody}>{fill(b.body)}</span></span>
                   </li>
                 ))}
-              </ol>
-              <Button href={primary.href} ctaId="men_included_cta" location="men_included">{primary.label} <Icon name="arrow" size={18} /></Button>
+              </ul>
+              <p className={styles.compareLine}>{fill(f.included.compare)}</p>
+              <div className={styles.sectionCta}>
+                <Cta id="men_included_cta" location="men_included" label="Book your SIGNAL test" />
+                <a href="#panel" className={styles.secondary}>{f.included.panelLink}</a>
+              </div>
             </div>
             <figure className={styles.report} aria-label="Illustrative example of a results page">
               <div className={styles.reportHead}>
@@ -127,9 +147,9 @@ export default function MenFunnelPage() {
           </Container>
         </section>
 
-        {/* 2b. Panel detail by plain-English bucket; marker names from the catalogue */}
+        {/* 3b. Every marker, collapsed by area */}
         <section id="panel" data-theme="light" className={styles.section} aria-labelledby="panel-title">
-          <Container>
+          <Container className={styles.narrow}>
             <h2 id="panel-title" className={styles.h2}>{f.panel.title}</h2>
             <p className={styles.intro}>{f.panel.intro}</p>
             <ul className={styles.buckets}>
@@ -163,67 +183,55 @@ export default function MenFunnelPage() {
                 );
               })}
             </ul>
-            <div className={styles.proofCta}><Button href={primary.href} ctaId="men_panel_cta" location="men_panel">{primary.label} <Icon name="arrow" size={18} /></Button></div>
           </Container>
         </section>
 
-        {/* 3. How it works */}
-        <section data-theme="light" className={styles.section} aria-labelledby="steps-title">
+        {/* 4. Why men book */}
+        <section data-theme="shell" className={styles.section} aria-labelledby="familiar-title">
+          <Container className={styles.narrow}>
+            <h2 id="familiar-title" className={styles.h2}>{f.familiar.title}</h2>
+            <ul className={styles.familiar}>
+              {f.familiar.items.map((t) => <li key={t}>{t}</li>)}
+            </ul>
+            <p className={styles.familiarNote}>{f.familiar.note}</p>
+            <div className={styles.sectionCta}><Cta id="men_familiar_cta" location="men_familiar" label="Book your SIGNAL test" /></div>
+          </Container>
+        </section>
+
+        {/* 5. Trust and safety */}
+        <section data-theme="light" className={styles.section} aria-labelledby="safety-title">
           <Container className={styles.split}>
             <div>
-              <h2 id="steps-title" className={styles.h2}>{f.steps.title}</h2>
-              <ol className={styles.steps}>
-                {f.steps.items.map((s, i) => (
-                  <li key={s.title} className={styles.step}>
-                    <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
-                    <div>
-                      <h3 className={styles.stepTitle}>{s.title}</h3>
-                      <p className={styles.stepBody}>{fill(s.body)}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
-            </div>
-            <Photo asset={menMedia.collection} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.sidePhoto} position="center" />
-          </Container>
-        </section>
-
-        {/* 4. Who it's for */}
-        <section data-theme="shell" className={styles.section} aria-labelledby="fit-title">
-          <Container>
-            <h2 id="fit-title" className={styles.h2}>{f.fit.title}</h2>
-            <div className={styles.fit}>
-              <div className={cx(styles.fitCol, styles.fitYes)}>
-                <h3 className={styles.fitTitle}><Icon name="check" size={18} /> {f.fit.bestForTitle}</h3>
-                <ul>{f.fit.bestFor.map((t) => <li key={t}>{t}</li>)}</ul>
-              </div>
-              <div className={cx(styles.fitCol, styles.fitNo)}>
-                <h3 className={styles.fitTitle}><Icon name="close" size={18} /> {f.fit.notForTitle}</h3>
-                <ul>{f.fit.notFor.map((t) => <li key={t}>{t}</li>)}</ul>
-              </div>
-            </div>
-          </Container>
-        </section>
-
-        {/* 5. Trust facts: factual only. No testimonials (AHPRA, National Law s133). */}
-        <section data-theme="light" className={styles.section} aria-labelledby="proof-title">
-          <Container className={styles.split}>
-            <div>
-              <h2 id="proof-title" className={styles.h2}>{f.proof.title}</h2>
-              <p className={styles.intro}>{f.proof.intro}</p>
-              <ul className={styles.facts}>
-                {visible(f.proof.facts).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
+              <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
+              <p className={styles.intro}>{f.safety.intro}</p>
+              <ul className={styles.safety}>
+                {visible(f.safety.bullets).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
               </ul>
-              <div className={styles.proofCta}>
-                <Button href={f.proof.cta.href} ctaId="men_proof_cta" location="men_proof">{fill(f.proof.cta.label)} <Icon name="arrow" size={18} /></Button>
-              </div>
             </div>
-            <Photo asset={menMedia.reading} sizes="(min-width: 64rem) 40vw, 100vw" className={styles.sidePhoto} position="center" />
+            <div className={styles.disclaimer}>
+              <h3 className={styles.disclaimerTitle}>{f.safety.disclaimer.title}</h3>
+              {f.safety.disclaimer.body.map((t) => <p key={t}>{t}</p>)}
+            </div>
           </Container>
         </section>
 
-        {/* 6. Pricing and options */}
-        <section id="plans" data-theme="shell" className={styles.section} aria-labelledby="plans-title">
+        {/* 6. Guarantee */}
+        {f.safety.guarantee.verified || PREVIEW ? (
+          <section data-theme="shell" className={styles.section} aria-labelledby="guarantee-title">
+            <Container className={styles.narrow}>
+              <div className={styles.guarantee}>
+                <p className={styles.guaranteeEyebrow}>Our guarantee</p>
+                <h2 id="guarantee-title" className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h2>
+                <p className={styles.guaranteeBody}>{f.safety.guarantee.body.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
+                <p className={styles.guaranteeTerms}>{f.safety.guarantee.terms} <Link href="/legal/terms">Read the terms</Link>.</p>
+                <div className={styles.sectionCta}><Cta id="men_guarantee_cta" location="men_guarantee" label="Book your SIGNAL test" /></div>
+              </div>
+            </Container>
+          </section>
+        ) : null}
+
+        {/* 7. Optional plans, after the decision is made */}
+        <section id="plans" data-theme="light" className={styles.section} aria-labelledby="plans-title">
           <Container>
             <h2 id="plans-title" className={styles.h2}>{f.plans.title}</h2>
             <p className={styles.intro}>{f.plans.intro}</p>
@@ -244,36 +252,8 @@ export default function MenFunnelPage() {
                 </li>
               ))}
             </ul>
-            <table className={styles.compare}>
-              <thead><tr><th scope="col"><span className={styles.srOnly}>Feature</span></th>{f.plans.cards.map((c) => <th key={c.id} scope="col">{c.name.replace("SIGNAL ", "").replace(" SIGNAL Panel", "")}</th>)}</tr></thead>
-              <tbody>{f.plans.compare.rows.map((r) => <tr key={r.label}><th scope="row">{r.label}</th>{r.values.map((v, i) => <td key={i} className="num">{fill(v)}</td>)}</tr>)}</tbody>
-            </table>
             <p className={styles.optionalNote}>{fill(f.plans.optionalNote)}</p>
             <p className={styles.disclosure}>{fill(f.plans.disclosure)}</p>
-          </Container>
-        </section>
-
-        {/* 7. Safety and guarantee */}
-        <section data-theme="light" className={styles.section} aria-labelledby="safety-title">
-          <Container className={styles.split}>
-            <div>
-              <Photo asset={menMedia.doctor} sizes="(min-width: 64rem) 50vw, 100vw" className={styles.safetyPhoto} position="center 40%" />
-              <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
-              <ul className={styles.safety}>
-                {visible(f.safety.bullets).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
-              </ul>
-            </div>
-            <div className={styles.disclaimer}>
-              <h3 className={styles.disclaimerTitle}>{f.safety.disclaimer.title}</h3>
-              {f.safety.disclaimer.body.map((t) => <p key={t}>{t}</p>)}
-            </div>
-            {f.safety.guarantee.verified || PREVIEW ? (
-              <div className={styles.guarantee}>
-                <h3 className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h3>
-                <p className={styles.guaranteeBody}>{fill(f.safety.guarantee.body)}</p>
-                <p className={styles.guaranteeTerms}>{f.safety.guarantee.terms} <Link href="/legal/terms">Read the terms</Link>.</p>
-              </div>
-            ) : null}
           </Container>
         </section>
 
@@ -294,18 +274,18 @@ export default function MenFunnelPage() {
           </Container>
         </section>
 
-        {/* 9. Close */}
+        {/* 9. Final CTA strip */}
         <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
           <Container className={styles.closeInner}>
             <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
-            <p className={styles.closeSub}>{f.close.sub}</p>
-            <Button href={f.close.cta.href} ctaId="men_close_cta" location="men_close">{fill(f.close.cta.label)} <Icon name="arrow" size={18} /></Button>
-            <p className={styles.closeFine}><Link href="/signal">See every marker in the SIGNAL Test</Link></p>
+            <p className={styles.closeSub}>{fill(f.close.sub)}</p>
+            <Cta id="men_close_cta" location="men_close" label={f.close.cta.label} />
+            <p className={styles.closeFine}>{f.close.micro}</p>
           </Container>
         </section>
       </main>
       <SiteFooter />
-      <StickyCta priceLine={fill("{price} · doctor-reviewed")} href={primary.href} label="Order now" ctaId="men_sticky" />
+      <StickyCta priceLine={fill("{price} · doctor-reviewed")} href={f.hero.primaryCta.href} label="Book now" ctaId="men_sticky" />
       <LandingPageView slug={f.slug} />
     </>
   );
