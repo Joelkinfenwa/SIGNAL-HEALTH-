@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { inflateSync } from "node:zlib";
+import { PDFArray, PDFDocument, PDFRawStream, decodePDFRawStream } from "pdf-lib";
 import type Stripe from "stripe";
 import { emptyCustomer, normaliseCustomer, validateCustomer, type CustomerDetails } from "../src/lib/checkout/customer";
 import { customerParams, encodeOrderMetadata } from "../src/lib/orders/metadata";
@@ -38,18 +38,17 @@ function stripeObjects(details: CustomerDetails, addonIds: string[], collection:
   return { pi, record };
 }
 
-/** Decompress every Flate stream and return the literal strings drawn with Tj. */
-function pdfText(bytes: Uint8Array): string {
-  const buf = Buffer.from(bytes);
-  const out: string[] = [];
-  let idx = 0;
-  while ((idx = buf.indexOf("stream\n", idx)) !== -1) {
-    const start = idx + 7; const end = buf.indexOf("endstream", start);
-    try { out.push(inflateSync(buf.subarray(start, end)).toString("latin1")); } catch { /* not a flate stream */ }
-    idx = end;
+/** Decode each page's content stream and return the literal strings drawn with Tj. */
+async function pdfText(bytes: Uint8Array): Promise<string> {
+  const doc = await PDFDocument.load(bytes);
+  const parts: string[] = [];
+  for (const page of doc.getPages()) {
+    const contents = page.node.Contents();
+    const streams = contents instanceof PDFArray ? contents.asArray().map((r) => doc.context.lookup(r)) : [contents];
+    for (const st of streams) if (st instanceof PDFRawStream) parts.push(Buffer.from(decodePDFRawStream(st).decode()).toString("latin1"));
   }
   // pdf-lib writes standard-font text as hex strings: <48656C6C6F> Tj
-  return out.join("\n").replace(/<([0-9A-Fa-f]+)>\s*Tj/g, (_, hex: string) => Buffer.from(hex, "hex").toString("latin1"));
+  return parts.join("\n").replace(/<([0-9A-Fa-f]+)>\s*Tj/g, (_, hex: string) => Buffer.from(hex, "hex").toString("latin1"));
 }
 
 test("details typed at checkout arrive on the form exactly, normalised", async () => {
@@ -74,7 +73,7 @@ test("details typed at checkout arrive on the form exactly, normalised", async (
   assert.deepEqual(r.input.tests.map((g) => g.group), ["The SIGNAL Test (32 markers)", "Hormones+ (7 markers)", "Heart+ (4 markers)"]);
 
   // And the PDF literally contains them.
-  const text = pdfText(await buildRequestFormPdf(r.input));
+  const text = await pdfText(await buildRequestFormPdf(r.input));
   for (const s of ["SIG-EFGH1234", "O'BRIEN-SMITH", "Sam", "29/02/1992", "Male", "0412 345 678", "Unit 5, 1 Example St, Sydney, NSW, 2000", "Total testosterone", "Lp(a)", "4Cyte Pathology", "BR479", "N1687", "9EXP", "DO NOT BILL THE PATIENT"]) {
     assert.ok(text.includes(s), `PDF should contain "${s}"`);
   }
@@ -90,7 +89,7 @@ test("centre collection, base test only, 2-digit day and month", async () => {
   assert.equal(r.input.patient.phone, "0400 000 000");
   assert.equal(r.input.tests.length, 1);
   assert.equal(r.input.tests[0]!.items.length, 32);
-  const text = pdfText(await buildRequestFormPdf(r.input));
+  const text = await pdfText(await buildRequestFormPdf(r.input));
   assert.ok(text.includes("NGUYEN") && text.includes("01/12/1970") && text.includes("Collection centre"));
 });
 

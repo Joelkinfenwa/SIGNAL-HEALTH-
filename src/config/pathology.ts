@@ -83,6 +83,20 @@ export const pathologyConfig = {
       commercialNote: "This is a commercial account request. Your test has been paid in full. If a collection centre attempts to bill you or asks for a Medicare card for billing, do not pay: show them the billing notice on page 1 or call us on {phone}.",
       validAt: "This form is only valid at the collection centres of the following participating laboratories:",
       footer: "Only attend a 4Cyte Pathology or Australian Clinical Labs collection centre. Any other laboratory will not accept this form and may bill you for the test.",
+      /* Page 2 of the printed form, as on the Express Pathology template. */
+      findTitle: "Find your nearest collection centre",
+      findBody: "Please visit",
+      qrCaption: "Scan to find your nearest collection centre",
+      collectorTitle: "For the attention of phlebotomist / collector",
+      collectorBody: [
+        "Thank you for taking care of our Express Pathology customers. Without you we would not be able to provide this service to our customers in Australia.",
+        "Express Pathology has commercial accounts with the laboratories listed below and the customer has already paid for this test in full.",
+        "If you need anything clarified please contact your laboratory's commercial department or area coordinator, or reach Express Pathology on {phone}.",
+        "This pathology request form is only valid at the collection centres of the following participating laboratories and should not be submitted to, nor accepted by, any other laboratory than:",
+      ],
+      closing: ["Express Pathology has commercial accounts with the laboratories above.", "THE CUSTOMER HAS ALREADY PAID FOR THIS TEST IN FULL · DO NOT BILL THE PATIENT"],
+      customerTitle: "Collection centres — note to customer",
+      customerBody: "Only attend collection centres of the laboratories listed on {locationsUrl} to avoid being billed for this test again.",
     },
   },
 };
