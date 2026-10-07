@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { StickyCta } from "@/components/home/StickyCta";
@@ -11,6 +12,7 @@ import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type
 import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { getCollectionMethod } from "@/config/collection";
+import { media, menMedia, menMediaPolished, type MediaAsset } from "@/config/media";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
 import { cx } from "@/lib/cx";
@@ -19,6 +21,16 @@ import { quoteRetest } from "@/lib/retest/offer";
 import styles from "./page.module.css";
 
 const PREVIEW = process.env.VERCEL_ENV !== "production";
+
+/** Hero background options for the imagery preview; pick with ?photo=<key>. */
+const HERO_PHOTOS: Record<string, MediaAsset> = {
+  road: media.heroRoad,
+  step: menMedia.hero,
+  backyard: menMedia.heroCandidates.backyard,
+  balcony: media.heroBalcony,
+  clifftop: menMediaPolished.hero,
+  swim: menMediaPolished.heroAlt.swim,
+};
 
 /** Fill price tokens from config so nothing on the page can go stale. */
 function fill(s: string): string {
@@ -58,8 +70,10 @@ const Cta = ({ id, location, label, full }: { id: string; location: string; labe
  * guarantee, five short FAQs, close. One product, one price, one button.
  * Copy from config/funnel/men.ts.
  */
-export default function MenFunnelPage() {
+export default async function MenFunnelPage({ searchParams }: { searchParams: Promise<{ photo?: string }> }) {
   const unverified = unverifiedClaimCount();
+  const { photo } = await searchParams;
+  const heroPhoto = HERO_PHOTOS[photo ?? ""] ?? HERO_PHOTOS.road!;
 
   return (
     <>
@@ -75,7 +89,11 @@ export default function MenFunnelPage() {
 
       <main id="main">
         {/* 1. Hero: callout, value, CTA */}
-        <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
+        <section id="hero" data-theme="dark" className={cx(styles.hero, styles.heroPhoto)} aria-labelledby="hero-title">
+          <div className={styles.heroMedia} aria-hidden="true">
+            <Image src={heroPhoto.src} alt="" fill priority sizes="100vw" style={{ objectFit: "cover" }} />
+            <div className={styles.heroShade} />
+          </div>
           <Container className={styles.heroInner}>
             <div className={styles.heroCopy}>
               <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
@@ -119,6 +137,12 @@ export default function MenFunnelPage() {
             <div className={styles.sectionCta}><Cta id="men_steps_cta" location="men_steps" label="Book your SIGNAL test" /></div>
           </Container>
         </section>
+
+        {/* 2b. Photo band */}
+        <figure className={styles.band} aria-label={menMedia.collection.alt}>
+          <Image src={menMedia.collection.src} alt={menMedia.collection.alt} fill sizes="100vw" style={{ objectFit: "cover" }} />
+          <figcaption className={styles.bandCaption}><span>Walk in. No appointment. About five minutes.</span></figcaption>
+        </figure>
 
         {/* 3. Value: four lines */}
         <section id="included" data-theme="shell" className={styles.section} aria-labelledby="included-title">
@@ -182,6 +206,7 @@ export default function MenFunnelPage() {
         <section data-theme="light" className={styles.section} aria-labelledby="safety-title">
           <Container className={styles.split}>
             <div>
+              <div className={styles.sidePhoto}><Image src={menMedia.doctor.src} alt={menMedia.doctor.alt} fill sizes="(min-width: 64rem) 50vw, 100vw" style={{ objectFit: "cover" }} /></div>
               <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
               <ul className={styles.safety}>
                 {visible(f.safety.bullets).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
@@ -218,7 +243,11 @@ export default function MenFunnelPage() {
         </section>
 
         {/* 6. Final CTA strip */}
-        <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
+        <section data-theme="dark" className={cx(styles.close, styles.closePhoto)} aria-labelledby="close-title">
+          <div className={styles.heroMedia} aria-hidden="true">
+            <Image src={menMedia.reading.src} alt="" fill sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 40%" }} />
+            <div className={styles.closeShade} />
+          </div>
           <Container className={styles.closeInner}>
             <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
             <Cta id="men_close_cta" location="men_close" label={f.close.cta.label} />
