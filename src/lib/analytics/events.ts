@@ -67,7 +67,8 @@ export interface DestinationPolicy {
 
 export const EVENT_POLICY: Record<EventName, DestinationPolicy> = {
   page_viewed: { ga4: "page_view", meta: "PageView", klaviyo: null, serverAuthoritative: false },
-  landing_page_viewed: { ga4: "landing_page_view", meta: null, klaviyo: null, serverAuthoritative: false },
+  // ViewContent on a funnel page gives Meta an upper-funnel standard event to optimise on when lower-funnel events are restricted for health datasets.
+  landing_page_viewed: { ga4: "landing_page_view", meta: "ViewContent", klaviyo: null, serverAuthoritative: false },
   biomarkers_viewed: { ga4: "view_biomarkers", meta: null, klaviyo: null, serverAuthoritative: false },
   configurator_started: { ga4: "configurator_start", meta: null, klaviyo: null, serverAuthoritative: false },
   addon_viewed: { ga4: "view_addon", meta: null, klaviyo: null, serverAuthoritative: false },
