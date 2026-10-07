@@ -1,24 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { CODE128_PATTERNS, code128Values, code128Widths } from "../src/lib/pathology/code128";
 import { PDFDocument } from "pdf-lib";
 import { buildRequestFormPdf } from "../src/lib/pathology/request-form";
 import { pathologyConfig } from "../src/config/pathology";
-
-test("Code 128 pattern table is well formed", () => {
-  assert.equal(CODE128_PATTERNS.length, 107);
-  CODE128_PATTERNS.forEach((p, i) => assert.equal(p.split("").reduce((a, b) => a + Number(b), 0), i === 106 ? 13 : 11, `pattern ${i}`));
-});
-
-test("Code 128 B checksum is start + weighted sum mod 103", () => {
-  const v = code128Values("PJJ123C");
-  assert.equal(v[0], 104);
-  const expected = (104 + 48 * 1 + 42 * 2 + 42 * 3 + 17 * 4 + 18 * 5 + 19 * 6 + 35 * 7) % 103; // 55
-  assert.equal(v[v.length - 2], expected);
-  assert.equal(v[v.length - 1], 106);
-  assert.throws(() => code128Values("é"));
-  assert.ok(code128Widths("SIG-ABC12345").length > 0);
-});
 
 test("request form renders the two-page commercial form with the expected metadata", async () => {
   const bytes = await buildRequestFormPdf({

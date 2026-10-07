@@ -40,7 +40,15 @@ export const phoneForForm = (raw: string | null | undefined) => {
 
 const tidy = (s: string | null | undefined) => (s ?? "").replace(/\s+/g, " ").trim();
 
-export const orderReference = (piId: string) => `SIG-${piId.replace(/^pi_/, "").slice(-8).toUpperCase()}`;
+/**
+ * Customer-facing reference: the sequential order number (#2050) once one
+ * has been assigned (lib/orders/number.ts); otherwise a code derived from
+ * the Stripe id so nothing is ever blank.
+ */
+export const orderReference = (pi: { id: string; metadata?: Record<string, string> | null }) =>
+  pi.metadata?.order_number ? `#${pi.metadata.order_number}` : `SIG-${pi.id.replace(/^pi_/, "").slice(-8).toUpperCase()}`;
+/** Reference safe for filenames and URLs ("#2050" -> "2050"). */
+export const orderReferenceSlug = (pi: { id: string; metadata?: Record<string, string> | null }) => orderReference(pi).replace(/^#/, "");
 
 /** Tests grouped for the form: the base panel, then each add-on's additional markers. */
 export function testsFor(cfg: Configuration): RequestFormInput["tests"] {
@@ -108,7 +116,7 @@ export function requestInputFromIntent(pi: Pick<Stripe.PaymentIntent, "id" | "cr
   return {
     ok: true,
     input: {
-      ...formTemplate(decoded.configuration, orderReference(pi.id), new Date(pi.created * 1000)),
+      ...formTemplate(decoded.configuration, orderReference(pi), new Date(pi.created * 1000)),
       patient: { firstName, lastName, dob: dob!, sex: sex!, phone, email, address },
     },
   };

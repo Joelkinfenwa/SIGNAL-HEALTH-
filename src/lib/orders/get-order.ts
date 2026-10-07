@@ -7,6 +7,7 @@ import { decodeOrderMetadata } from "@/lib/orders/metadata";
 import { orderTokenSecret, verifyOrderToken } from "@/lib/orders/token";
 import { quoteConfiguration, parseConfiguration, type Configuration, type QuoteLine } from "@/lib/pricing";
 import { getStripe } from "@/lib/stripe/server";
+import { ensureOrderReference } from "@/lib/orders/number";
 
 /**
  * What the confirmation page needs about an order, read from Stripe (the
@@ -41,7 +42,6 @@ const DEMO_ALLOWED = () => process.env.VERCEL_ENV !== "production";
 const DEMO_PRICES = { product: 34900, addon: 5900, mobile: 4900 };
 
 const maskEmail = (e?: string | null) => (e ? `${e[0]}•••@${e.split("@")[1] ?? ""}` : undefined);
-const reference = (id: string) => `SIG-${id.replace(/^pi_/, "").slice(-8).toUpperCase()}`;
 
 function labelFor(kind: QuoteLine["kind"], id: string): string {
   if (kind === "product") return getProduct(id)?.name ?? "The SIGNAL Test";
@@ -59,7 +59,7 @@ export async function getOrderForPage(orderId: string, searchParams: Record<stri
       priceCents: l.priceCents ?? (l.kind === "product" ? DEMO_PRICES.product : l.kind === "addon" ? DEMO_PRICES.addon : l.id === "mobile" ? DEMO_PRICES.mobile : 0),
     }));
     return {
-      id: "demo", token: "demo", reference: "SIG-DEMO-0001", status: "paid", configuration: cfg, lines,
+      id: "demo", token: "demo", reference: "#2050", status: "paid", configuration: cfg, lines,
       amountCents: lines.reduce((n, l) => n + (l.priceCents ?? 0), 0), currency: "AUD", paidAt: new Date(),
       firstName: "Sam", emailMasked: "s•••@example.com", demo: true,
     };
@@ -80,6 +80,7 @@ export async function getOrderForPage(orderId: string, searchParams: Record<stri
   if (pi.status !== "succeeded" && pi.status !== "processing") return null;
   const decoded = decodeOrderMetadata(pi.metadata);
   if (!decoded) return null;
+  const reference = pi.status === "succeeded" ? await ensureOrderReference(stripe, pi) : `SIG-${pi.id.replace(/^pi_/, "").slice(-8).toUpperCase()}`;
 
   const customer = pi.customer && typeof pi.customer !== "string" && !("deleted" in pi.customer && pi.customer.deleted) ? pi.customer : null;
   const charge = pi.latest_charge && typeof pi.latest_charge !== "string" ? pi.latest_charge : null;
@@ -91,7 +92,7 @@ export async function getOrderForPage(orderId: string, searchParams: Record<stri
   return {
     id: pi.id,
     token: token!,
-    reference: reference(pi.id),
+    reference,
     status: pi.status === "processing" ? "processing" : refunded ? "partially_refunded" : "paid",
     configuration: decoded.configuration,
     lines: decoded.lines.map((l) => ({ kind: l.kind, id: l.id, label: labelFor(l.kind, l.id), priceCents: l.priceCents })),

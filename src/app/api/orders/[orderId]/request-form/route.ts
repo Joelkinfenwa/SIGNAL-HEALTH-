@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { signalTest } from "@/config/products";
 import { orderTokenSecret, verifyOrderToken } from "@/lib/orders/token";
-import { orderReference, requestFormDemo, requestFormForIntent } from "@/lib/pathology/order-request";
+import { orderReferenceSlug, requestFormDemo, requestFormForIntent } from "@/lib/pathology/order-request";
+import { ensureOrderReference } from "@/lib/orders/number";
 import { parseConfiguration } from "@/lib/pricing";
 import { getStripe } from "@/lib/stripe/server";
 
@@ -27,10 +28,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ orderId:
   let pi;
   try { pi = await stripe.paymentIntents.retrieve(orderId, { expand: ["customer"] }); } catch { return new NextResponse(null, { status: 404 }); }
   if (pi.status !== "succeeded") return new NextResponse(null, { status: 404 });
+  await ensureOrderReference(stripe, pi);
   const r = await requestFormForIntent(pi);
   if (!r.ok) {
     console.error(`[request-form] ${pi.id} cannot be issued; missing ${r.missing.join(", ")}`);
     return new NextResponse("Your request form is being prepared by our team and will be emailed to you. Reply to your confirmation email if you need it sooner.", { status: 409, headers: { "content-type": "text/plain; charset=utf-8" } });
   }
-  return pdfResponse(r.pdf, `SIGNAL-request-${orderReference(pi.id)}.pdf`);
+  return pdfResponse(r.pdf, `SIGNAL-request-${orderReferenceSlug(pi)}.pdf`);
 }
