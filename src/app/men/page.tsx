@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
 import { StickyCta } from "@/components/home/StickyCta";
-import { TrendCard } from "@/components/home/TrendCard";
+import { ReportCard } from "@/components/home/ReportCard";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
 import { Button } from "@/components/ui/Button";
@@ -12,7 +12,6 @@ import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type
 import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { getCollectionMethod } from "@/config/collection";
-import { resultsPreview } from "@/config/home";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
 import { cx } from "@/lib/cx";
@@ -79,15 +78,27 @@ export default function MenFunnelPage() {
         {/* 1. Hero: callout, value, CTA */}
         <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
           <Container className={styles.heroInner}>
-            <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
-            <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
-            <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
-            <div className={styles.actions}>
-              <Cta id="men_hero_primary" location="men_hero" full />
+            <div className={styles.heroCopy}>
+              <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
+              <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
+              <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
+              <div className={styles.actions}>
+                <Cta id="men_hero_primary" location="men_hero" full />
+              </div>
+              <p className={styles.trustLine}>
+                {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
+              </p>
             </div>
-            <p className={styles.trustLine}>
-              {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
-            </p>
+            <aside className={styles.heroCard} data-theme="light" aria-label="The offer at a glance">
+              <div className={styles.heroCardHead}>
+                <span className={styles.heroCardTitle}>{f.hero.card.title}</span>
+                <span className={cx(styles.heroCardPrice, "num")}>{fill("{price}")}</span>
+              </div>
+              <ul className={styles.heroCardRows}>
+                {visible(f.hero.card.rows).map((c, i) => <li key={i}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
+              </ul>
+              <p className={styles.heroCardFoot}>{fill(f.hero.card.foot)}</p>
+            </aside>
           </Container>
         </section>
 
@@ -130,20 +141,7 @@ export default function MenFunnelPage() {
                 <a href="#panel" className={styles.secondary}>{f.included.panelLink}</a>
               </div>
             </div>
-            <figure className={styles.report} aria-label="Illustrative example of a results page">
-              <div className={styles.reportHead}>
-                <span>Example results page</span>
-                <span className={styles.reportTag}>Example</span>
-              </div>
-              <p className={styles.reportPeriod}>{resultsPreview.previousLabel} → {resultsPreview.currentLabel}</p>
-              <div className={styles.reportCards}>
-                {resultsPreview.markers.map((m) => (
-                  <TrendCard key={m.markerId} name={getBiomarker(m.markerId).name} unit={m.unit} previous={m.previous} current={m.current} direction={m.direction} note={m.note} />
-                ))}
-              </div>
-              <p className={styles.reportPlan}><strong>Your report.</strong> Every marker explained in plain English, with anything outside the expected range flagged for follow-up with your GP.</p>
-              <figcaption className={styles.reportCaption}>Illustrative example only. Not real results.</figcaption>
-            </figure>
+            <ReportCard className={styles.report} />
           </Container>
         </section>
 
@@ -242,7 +240,7 @@ export default function MenFunnelPage() {
                     <h3 className={styles.planName}>{c.name}</h3>
                     {c.badge ? <span className={styles.planBadge}>{fill(c.badge)}</span> : null}
                   </div>
-                  <p className={styles.planPrice}><span className="num">{fill(c.priceLine)}</span></p>
+                  <p className={styles.planPrice}>{(() => { const [amount, ...rest] = fill(c.priceLine).split(" "); return <><span className="num">{amount}</span>{rest.length ? <span className={styles.planPer}> {rest.join(" ")}</span> : null}</>; })()}</p>
                   {c.priceSub ? <p className={styles.planPriceSub}>{fill(c.priceSub)}</p> : null}
                   <p className={styles.planTagline}>{c.tagline}</p>
                   <ul className={styles.planBullets}>

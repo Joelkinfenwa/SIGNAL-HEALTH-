@@ -60,6 +60,18 @@ export const menFunnel = {
       { text: "No GP referral", verified: true },
       { text: "No lock-in", verified: true },
     ] as Claim[],
+    // Desktop only: the offer at a glance beside the headline. Facts, no mock results.
+    card: {
+      title: "The SIGNAL Test",
+      rows: [
+        { text: "{markers} markers across {areas} areas of health", verified: true },
+        { text: "Accredited Australian laboratory", verified: true },
+        { text: "Reviewed by an Australian-registered doctor", verified: true },
+        { text: "Written explanation within 5 days", verified: true },
+        { text: "Collection at a centre included", verified: true },
+      ] as Claim[],
+      foot: "Add-ons from {addonsFrom} · No GP referral",
+    },
   },
 
   // 2. How it works
@@ -243,6 +255,6 @@ export const trackOffer = (id: "retest_6m" | "retest_3m") => retestOffers.find((
 /** Count of lines on the page still marked unverified, for the preview banner and the claims register. */
 export function unverifiedClaimCount(): number {
   const f = menFunnel;
-  const all: Claim[] = [...f.trustStrip, ...f.hero.trustLine, ...f.safety.bullets, { text: f.safety.guarantee.body.join(" "), verified: f.safety.guarantee.verified }, ...f.plans.cards.flatMap((c) => c.bullets)];
+  const all: Claim[] = [...f.trustStrip, ...f.hero.trustLine, ...f.hero.card.rows, ...f.safety.bullets, { text: f.safety.guarantee.body.join(" "), verified: f.safety.guarantee.verified }, ...f.plans.cards.flatMap((c) => c.bullets)];
   return all.filter((c) => !c.verified).length;
 }
