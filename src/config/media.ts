@@ -140,8 +140,10 @@ const HF3 = `${CDN2}/hf_20261002_02151`;
 const HF4 = `${CDN2}/hf_20261002_223925_`;
 /** Documentary set (natural light, ordinary people, slight grain). The live set for /men. */
 export const menMedia = {
-  hero: { src: `${HF4}ac7b7aeb-e9bc-48f9-bf0f-15fe6ecd721f.png`, alt: "A man in his early forties on a morning walk along a coastal path with his dog" },
+  // Director rejected the coastal-walk-with-dog render (7 Oct). Interim pick below; new candidates in generation.
+  hero: { src: `${HF3}9_f3550d8a-e30f-4b60-a920-f1ef23a69559.png`, alt: "A man in his fifties on a back step lacing up running shoes" },
   heroCandidates: {
+    coastal: { src: `${HF4}ac7b7aeb-e9bc-48f9-bf0f-15fe6ecd721f.png`, alt: "A man in his early forties on a morning walk along a coastal path with his dog" },
     ute: { src: `${HF4}a48dcfa0-bba8-4677-b013-388097a6a6da.png`, alt: "A man in his mid forties leaning on a ute tailgate after a swim" },
     kitchen: { src: `${HF4}d7e5bde9-8840-4044-abd8-f9012a14f2b5.png`, alt: "A man in his late thirties reading his phone at a kitchen bench with a coffee" },
     bench: { src: `${HF4}118ab605-a04b-42f3-9fd5-29bb91c40e84.png`, alt: "A man around fifty on a park bench after a run" },
