@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import type { ReactNode } from "react";
+import { Analytics as VercelAnalytics } from "@vercel/analytics/next";
 import { Analytics } from "@/components/analytics/Analytics";
 import { AttributionCapture } from "@/components/analytics/AttributionCapture";
 import { PreviewPricingBanner } from "@/components/layout/PreviewPricingBanner";
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <a className="skip-link" href="#main">Skip to content</a>
         <AttributionCapture />
         <Analytics />
+        <VercelAnalytics />
         <PreviewPricingBanner />
         {children}
       </body>
