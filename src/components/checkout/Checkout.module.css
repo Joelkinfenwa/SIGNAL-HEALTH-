@@ -1,6 +1,16 @@
 .wrap { display: grid; gap: var(--s-6); align-items: start; }
 .header { grid-column: 1 / -1; max-width: 40rem; }
 .crumbs { font-size: var(--fs-sm); color: var(--muted); }
+.stepper { display: flex; flex-wrap: wrap; gap: var(--s-3) var(--s-4); margin-bottom: var(--s-4); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.stepperItem { display: inline-flex; align-items: center; gap: 6px; }
+.stepperNum { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--panel-soft); color: var(--muted); font-size: 0.7rem; letter-spacing: 0; }
+.stepperCurrent { color: var(--fg); }
+.stepperCurrent .stepperNum { background: var(--accent); color: var(--on-accent); }
+.stepperDone .stepperNum { background: var(--c-brand-soft); color: var(--c-brand); }
+.srOnly { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.primaryRow { display: grid; gap: var(--s-2); margin-top: var(--s-2); }
+.payAction { display: none; gap: var(--s-3); }
+@media (max-width: 30rem) { .stepperItem:not(.stepperCurrent) .stepperLabel { display: none; } }
 .crumbs a { text-decoration: none; display: inline-flex; align-items: center; min-height: 44px; }
 .crumbs a:hover { text-decoration: underline; }
 .title { font-size: var(--fs-xl); line-height: var(--lh-snug); font-weight: 700; letter-spacing: -0.03em; }
@@ -101,6 +111,8 @@
   .wrap { grid-template-columns: 1fr 22rem; gap: var(--s-6) var(--s-8); }
   .pay { position: sticky; top: var(--s-5); }
   .bar { display: none; }
+  .primaryRow { display: none; }
+  .payAction { display: grid; }
 }
 
 .plan { display: grid; gap: var(--s-2); padding: var(--s-4); border-radius: var(--r-sm); background: var(--c-brand-soft); }

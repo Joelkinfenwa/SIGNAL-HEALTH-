@@ -54,8 +54,6 @@ export function CustomerDetails({ value, errors, touched, requiresAddress, onCha
 
   return (
     <div className={styles.form}>
-      <p className={styles.intro}>{copy.intro}</p>
-
       <fieldset className={styles.group}>
         <legend className={styles.legend}>{copy.name.legend}</legend>
         <div className={styles.row2}>
