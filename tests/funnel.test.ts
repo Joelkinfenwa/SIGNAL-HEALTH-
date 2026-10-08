@@ -4,16 +4,18 @@ import { addonsFromCents, menFunnel, trackOffer, unverifiedClaimCount } from "..
 import { addons } from "../src/config/addons";
 import { signalTest } from "../src/config/products";
 
-test("funnel page is short: one-line hero sub, three steps, four value lines, five short FAQs", () => {
+test("funnel page is short: one-line hero sub, five-line offer, three steps, three familiar lines, five short FAQs", () => {
   assert.equal(menFunnel.trustStrip.length, 3);
   assert.equal(menFunnel.hero.trustLine.length, 3);
   assert.equal(menFunnel.hero.subheadline.length, 1);
-  assert.equal(menFunnel.included.bullets.length, 4);
+  assert.equal(menFunnel.offer.rows.length, 5);
+  for (const r of menFunnel.offer.rows) assert.ok(r.text.split(" ").length <= 12, `offer row stays short: ${r.text}`);
   assert.equal(menFunnel.steps.items.length, 3);
-  for (const s of menFunnel.steps.items) assert.ok(s.body.split(" ").length <= 14, `step body stays short: ${s.title}`);
+  for (const s of menFunnel.steps.items) assert.ok(s.body.split(" ").length <= 12, `step body stays short: ${s.title}`);
+  assert.equal(menFunnel.familiar.items.length, 3);
   assert.equal(menFunnel.faq.items.length, 5);
   for (const i of menFunnel.faq.items) assert.ok(i.a.split(/[.!?]\s/).length <= 3, `FAQ answer stays short: ${i.q}`);
-  assert.ok(!("familiar" in menFunnel) && !("plans" in menFunnel), "no situations grid or plan cards on the funnel page");
+  assert.ok(!("plans" in menFunnel) && !("included" in menFunnel), "no plan cards or value stack on the funnel page");
 });
 
 test("retesting offers exist for the price tokens and prices are never typed into copy", () => {
