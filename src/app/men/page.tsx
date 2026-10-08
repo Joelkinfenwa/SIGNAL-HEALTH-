@@ -54,9 +54,9 @@ const Cta = ({ id, location, label, full }: { id: string; location: string; labe
 
 /**
  * Funnel page for paid, mobile-first traffic, built to be read in twenty
- * seconds: hero, three steps, four-line value, markers collapsed, trust and
- * guarantee, five short FAQs, close. One product, one price, one button.
- * Copy from config/funnel/men.ts.
+ * seconds: hero, the offer card, what's checked (tap to expand), three
+ * steps, three "sound familiar" lines, guarantee + trust, close, FAQs.
+ * One product, one price, one button. Copy from config/funnel/men.ts.
  */
 export default function MenFunnelPage() {
   const unverified = unverifiedClaimCount();
@@ -74,135 +74,143 @@ export default function MenFunnelPage() {
       {PREVIEW && unverified > 0 ? <p className={styles.previewNote}>Preview: {unverified} claims on this page are marked unverified (shown with a ?). Clear them in the README claims register before paid traffic.</p> : null}
 
       <main id="main">
-        {/* 1. Hero: callout, value, CTA */}
+        {/* 1. Hero */}
         <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
           <Container className={styles.heroInner}>
-            <div className={styles.heroCopy}>
-              <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
-              <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
-              <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
-              <div className={styles.actions}>
-                <Cta id="men_hero_primary" location="men_hero" full />
-              </div>
-              <p className={styles.trustLine}>
-                {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
-              </p>
+            <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
+            <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
+            <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
+            <div className={styles.actions}>
+              <Cta id="men_hero_primary" location="men_hero" full />
             </div>
-            <aside className={styles.heroCard} data-theme="light" aria-label="The offer at a glance">
-              <div className={styles.heroCardHead}>
-                <span className={styles.heroCardTitle}>{f.hero.card.title}</span>
-                <span className={cx(styles.heroCardPrice, "num")}>{fill("{price}")}</span>
-              </div>
-              <ul className={styles.heroCardRows}>
-                {visible(f.hero.card.rows).map((c, i) => <li key={i}><Icon name="check" size={14} /> <ClaimText c={c} /></li>)}
-              </ul>
-              <p className={styles.heroCardFoot}>{fill(f.hero.card.foot)}</p>
-            </aside>
+            <p className={styles.trustLine}>
+              {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
+            </p>
           </Container>
         </section>
 
-        {/* 2. How it works */}
-        <section data-theme="light" className={styles.section} aria-labelledby="steps-title">
+        {/* 2. The offer */}
+        <section id="offer" data-theme="shell" className={styles.section} aria-labelledby="offer-title">
+          <Container className={styles.narrow}>
+            <div className={styles.offer}>
+              <div className={styles.offerHead}>
+                <h2 id="offer-title" className={styles.offerTitle}>{fill(f.offer.title)}</h2>
+                <span className={cx(styles.offerPrice, "num")}>{fill("{price}")}</span>
+              </div>
+              <ul className={styles.offerRows}>
+                {visible(f.offer.rows).map((c, i) => <li key={i}><span className={styles.tick}><Icon name="check" size={14} /></span><span><ClaimText c={c} /></span></li>)}
+              </ul>
+              <p className={styles.offerFoot}>{fill(f.offer.foot)}</p>
+              <Cta id="men_offer_cta" location="men_offer" full />
+            </div>
+          </Container>
+        </section>
+
+        {/* 3. What's checked */}
+        <section id="panel" data-theme="light" className={styles.section} aria-labelledby="panel-title">
+          <Container className={styles.narrow}>
+            <h2 id="panel-title" className={styles.h2}>{f.panel.title}</h2>
+            <p className={styles.intro}>{fill(f.panel.intro)}</p>
+            <ul className={styles.areas}>
+              {f.panel.buckets.map((b) => (
+                <li key={b.id}>
+                  <details className={styles.area}>
+                    <summary className={styles.areaSummary}>
+                      <span className={styles.areaName}>{b.name}</span>
+                      <span className={styles.areaCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span>
+                      <span className={styles.areaToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
+                    </summary>
+                    <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
+                  </details>
+                </li>
+              ))}
+              <li className={styles.areaWide}>
+                <details className={styles.area}>
+                  <summary className={styles.areaSummary}>
+                    <span className={styles.areaName}>{fill(f.panel.addonsTitle)}</span>
+                    <span className={styles.areaCount}>Optional</span>
+                    <span className={styles.areaToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
+                  </summary>
+                  <ul className={styles.addonList}>
+                    {f.panel.addonBuckets.map((ab) => {
+                      const a = getAddon(ab.addonId);
+                      if (!a || !a.launchEnabled) return null;
+                      return (
+                        <li key={ab.addonId}>
+                          <span className={styles.addonName}>{ab.name} <span className={styles.addonPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span></span>
+                          <span className={styles.addonMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).name).join(", ")}</span>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </details>
+              </li>
+            </ul>
+          </Container>
+        </section>
+
+        {/* 4. How it works */}
+        <section data-theme="shell" className={styles.section} aria-labelledby="steps-title">
           <Container className={styles.narrow}>
             <h2 id="steps-title" className={styles.h2}>{f.steps.title}</h2>
             <ol className={styles.steps}>
-              {f.steps.items.map((s, i) => (
-                <li key={s.title} className={styles.step}>
+              {f.steps.items.map((st, i) => (
+                <li key={st.title} className={styles.step}>
                   <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
                   <div>
-                    <h3 className={styles.stepTitle}>{s.title}</h3>
-                    <p className={styles.stepBody}>{fill(s.body)}</p>
+                    <h3 className={styles.stepTitle}>{st.title}</h3>
+                    <p className={styles.stepBody}>{fill(st.body)}</p>
                   </div>
                 </li>
               ))}
             </ol>
-            <div className={styles.sectionCta}><Cta id="men_steps_cta" location="men_steps" label="Book your SIGNAL test" /></div>
+            <div className={styles.sectionCta}><Cta id="men_steps_cta" location="men_steps" /></div>
           </Container>
         </section>
 
-        {/* 3. Value: four lines */}
-        <section id="included" data-theme="shell" className={styles.section} aria-labelledby="included-title">
+        {/* 5. Sound familiar */}
+        <section data-theme="light" className={styles.section} aria-labelledby="familiar-title">
           <Container className={styles.narrow}>
-            <h2 id="included-title" className={styles.h2}>{fill(f.included.title)}</h2>
-            <ul className={styles.stack}>
-              {f.included.bullets.map((b) => (
-                <li key={b} className={styles.stackItem}><Icon name="check" size={16} /><span><strong>{fill(b)}</strong></span></li>
-              ))}
+            <h2 id="familiar-title" className={styles.h2}>{f.familiar.title}</h2>
+            <ul className={styles.familiar}>
+              {f.familiar.items.map((t) => <li key={t}>{t}</li>)}
             </ul>
-            <div className={styles.sectionCta}>
-              <Cta id="men_included_cta" location="men_included" label="Book your SIGNAL test" />
-              <a href="#panel" className={styles.secondary}>{f.included.panelLink}</a>
-            </div>
+            <p className={styles.familiarNote}>{f.familiar.note}</p>
           </Container>
         </section>
 
-        {/* 3b. Every marker, collapsed by area */}
-        <section id="panel" data-theme="light" className={styles.section} aria-labelledby="panel-title">
-          <Container className={styles.narrow}>
-            <h2 id="panel-title" className={styles.h2}>{f.panel.title}</h2>
-            <p className={styles.intro}>{f.panel.intro}</p>
-            <ul className={styles.buckets}>
-              {f.panel.buckets.map((b) => (
-                <li key={b.id}>
-                  <details className={styles.bucket}>
-                    <summary className={styles.bucketSummary}>
-                      <span className={styles.bucketText}><span className={styles.bucketName}>{b.name}</span><span className={styles.bucketCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span></span>
-                      <span className={styles.faqToggle} aria-hidden="true"><Icon name="plus" size={18} className={styles.plus} /><Icon name="minus" size={18} className={styles.minus} /></span>
-                    </summary>
-                    <div className={styles.bucketBody}>
-                      <p>{b.explanation}</p>
-                      <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
-                    </div>
-                  </details>
-                </li>
-              ))}
-            </ul>
-            <details className={styles.bucket}>
-              <summary className={styles.bucketSummary}>
-                <span className={styles.bucketText}><span className={styles.bucketName}>{fill(f.panel.addonsTitle)}</span><span className={styles.bucketCount}><span className="num">{f.panel.addonBuckets.length}</span> add-ons</span></span>
-                <span className={styles.faqToggle} aria-hidden="true"><Icon name="plus" size={18} className={styles.plus} /><Icon name="minus" size={18} className={styles.minus} /></span>
-              </summary>
-              <ul className={styles.addonBuckets}>
-                {f.panel.addonBuckets.map((ab) => {
-                  const a = getAddon(ab.addonId);
-                  if (!a || !a.launchEnabled) return null;
-                  return (
-                    <li key={ab.addonId} className={styles.addonBucket}>
-                      <div className={styles.addonBucketHead}><span className={styles.bucketName}>{ab.name}</span><span className={styles.addonBucketPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span></div>
-                      <p className={styles.addonBucketMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).name).join(", ")}</p>
-                    </li>
-                  );
-                })}
-              </ul>
-            </details>
-          </Container>
-        </section>
-
-        {/* 4. Trust, limits and guarantee */}
-        <section data-theme="light" className={styles.section} aria-labelledby="safety-title">
-          <Container className={styles.split}>
-            <div>
-              <h2 id="safety-title" className={styles.h2}>{f.safety.title}</h2>
-              <ul className={styles.safety}>
-                {visible(f.safety.bullets).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
-              </ul>
-              <p className={styles.disclaimerLine}>{f.safety.disclaimer}</p>
-            </div>
-            {f.safety.guarantee.verified || PREVIEW ? (
+        {/* 6. Guarantee + trust */}
+        {f.safety.guarantee.verified || PREVIEW ? (
+          <section data-theme="shell" className={styles.section} aria-labelledby="guarantee-title">
+            <Container className={styles.narrow}>
               <div className={styles.guarantee}>
                 <p className={styles.guaranteeEyebrow}>Our guarantee</p>
-                <h3 id="guarantee-title" className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h3>
+                <h2 id="guarantee-title" className={styles.guaranteeTitle}>{f.safety.guarantee.title}{!f.safety.guarantee.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</h2>
                 <p className={styles.guaranteeBody}>{f.safety.guarantee.body.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
+                <ul className={styles.safety}>
+                  {visible(f.safety.bullets).map((c, i) => <li key={i}><Icon name="check" size={16} /> <ClaimText c={c} /></li>)}
+                </ul>
                 <p className={styles.guaranteeTerms}>{f.safety.guarantee.terms} <Link href="/legal/terms">Read the terms</Link>.</p>
-                <div className={styles.sectionCta}><Cta id="men_guarantee_cta" location="men_guarantee" label="Book your SIGNAL test" /></div>
+                <p className={styles.disclaimerLine}>{f.safety.disclaimer}</p>
               </div>
-            ) : null}
+            </Container>
+          </section>
+        ) : null}
+
+        {/* 7. Close */}
+        <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
+          <Container className={styles.closeInner}>
+            <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
+            <p className={styles.closeSub}>{fill(f.close.sub)}</p>
+            <Cta id="men_close_cta" location="men_close" label={f.close.cta.label} />
+            <p className={styles.closeFine}>{f.close.micro}</p>
+            <Link href={f.close.plansLink.href} className={styles.secondary}>{f.close.plansLink.label}</Link>
           </Container>
         </section>
 
-        {/* 5. FAQ */}
-        <section data-theme="shell" className={styles.section} aria-labelledby="faq-title">
-          <Container className={styles.faqInner}>
+        {/* 8. FAQ */}
+        <section data-theme="light" className={styles.section} aria-labelledby="faq-title">
+          <Container className={styles.narrow}>
             <h2 id="faq-title" className={styles.h2}>{f.faq.title}</h2>
             <ul className={styles.faq}>
               {f.faq.items.map((item) => (
@@ -216,19 +224,9 @@ export default function MenFunnelPage() {
             </ul>
           </Container>
         </section>
-
-        {/* 6. Final CTA strip */}
-        <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
-          <Container className={styles.closeInner}>
-            <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
-            <Cta id="men_close_cta" location="men_close" label={f.close.cta.label} />
-            <p className={styles.closeFine}>{f.close.micro}</p>
-            <Link href={f.close.plansLink.href} className={styles.secondary}>{f.close.plansLink.label}</Link>
-          </Container>
-        </section>
       </main>
       <SiteFooter />
-      <StickyCta priceLine={fill("{price} · doctor-reviewed")} href={f.hero.primaryCta.href} label="Book now" ctaId="men_sticky" />
+      <StickyCta priceLine={fill("{markers} markers · {price}")} href={f.hero.primaryCta.href} label="Get tested" ctaId="men_sticky" />
       <LandingPageView slug={f.slug} />
     </>
   );

@@ -1,8 +1,9 @@
 /**
- * Funnel page: /men. Built to be read in twenty seconds on a phone: hero,
- * three steps, four-line value, markers collapsed, trust + guarantee, five
- * short FAQs, close. One product, one price, one button. Every word is here
- * so sections can be rewritten and tested without touching JSX.
+ * Funnel page: /men. Built to be read in twenty seconds on a phone, in the
+ * customer's own voice: hero, the offer card, what's checked (tap to expand),
+ * three steps, three "sound familiar" lines, guarantee + trust, close, five
+ * collapsed FAQs. One product, one price, one button. Every word is here so
+ * sections can be rewritten and tested without touching JSX.
  *
  * AHPRA / National Law s133 (advertising a regulated health service):
  *  - No testimonials or reviews about the service. This page offers doctor
@@ -29,7 +30,7 @@ import { retestOffers } from "../retest-offer";
 export interface Claim { text: string; verified: boolean }
 export const menFunnel = {
   slug: "men",
-  seo: { title: "Tired, flat, or not yourself? Find out what your blood is saying | SIGNAL", description: "One comprehensive blood test, {markers} markers, reviewed by an Australian-registered doctor and explained in plain English within 5 days. {price}, no GP referral." },
+  seo: { title: "The blood test for blokes who haven't had one in years | SIGNAL", description: "{markers} markers, one visit, a doctor's plain-English explanation within 5 days. {price}, no GP referral, no lock-in." },
 
   // Header strip
   trustStrip: [
@@ -38,57 +39,36 @@ export const menFunnel = {
     { text: "Accredited Australian laboratories", verified: true },
   ] as Claim[],
 
-  // 1. Hero: callout, value, CTA. No photo: the words are the hero. One line of sub.
+  // 1. Hero: who it's for, what it is, one button
   hero: {
-    eyebrow: "For Australian men 30–60",
-    headline: "Tired, flat, or not yourself? Find out what your blood is saying.",
-    subheadline: ["{markers} markers. A doctor explains them in plain English. Results in 5 days."],
-    primaryCta: { label: "Book your SIGNAL test – {price}", href: "/checkout" },
+    eyebrow: "For Aussie men 30–60",
+    headline: "The blood test for blokes who haven't had one in years.",
+    subheadline: ["{markers} markers. One visit. A doctor explains every result in plain English, within 5 days."],
+    primaryCta: { label: "Get tested – {price}", href: "/checkout" },
     trustLine: [
-      { text: "Clear explanation or your fee back", verified: true },
       { text: "No GP referral", verified: true },
       { text: "No lock-in", verified: true },
+      { text: "Clear explanation or your fee back", verified: true },
     ] as Claim[],
-    // Desktop only: the offer at a glance beside the headline. Facts, no mock results.
-    card: {
-      title: "The SIGNAL Test",
-      rows: [
-        { text: "{markers} markers across {areas} areas of health", verified: true },
-        { text: "Accredited Australian laboratory", verified: true },
-        { text: "Reviewed by an Australian-registered doctor", verified: true },
-        { text: "Written explanation within 5 days", verified: true },
-        { text: "Collection at a centre included", verified: true },
-      ] as Claim[],
-      foot: "Add-ons from {addonsFrom} · No GP referral",
-    },
   },
 
-  // 2. How it works: three steps, one short line each
-  steps: {
-    title: "How it works",
-    items: [
-      { icon: "calendar", title: "Book online", body: "Three minutes. Your request form is emailed straight away." },
-      { icon: "tube", title: "Get your blood drawn", body: "Walk into any 4Cyte or Australian Clinical Labs centre. No appointment." },
-      { icon: "shield", title: "A doctor explains it", body: "A plain-English explanation of every marker, in your inbox within 5 days." },
-    ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
+  // 2. The offer, at a glance. Shown on every screen size straight after the hero.
+  offer: {
+    title: "What you get",
+    rows: [
+      { text: "{markers} blood markers across {areas} areas of health", verified: true },
+      { text: "Walk-in collection at 4Cyte or Clinical Labs. No appointment.", verified: true },
+      { text: "Analysed by an accredited Australian laboratory", verified: true },
+      { text: "A doctor's written explanation of every result, in plain English", verified: true },
+      { text: "Results in your inbox within 5 days", verified: true },
+    ] as Claim[],
+    foot: "One payment. Add-ons from {addonsFrom}. No GP referral, no lock-in.",
   },
 
-  // 3. Value: four lines, no body copy
-  included: {
-    title: "What {price} gets you",
-    bullets: [
-      "{markers} blood markers across {areas} areas of health",
-      "Accredited Australian laboratory",
-      "Written explanation from an Australian-registered doctor",
-      "Results within 5 days. No GP referral.",
-    ],
-    panelLink: "See every marker",
-  },
-
-  // 3b. Panel detail, collapsed by area. Marker names render from biomarkers.ts.
+  // 3. What's checked: areas with marker counts, tap to see the markers. Marker names render from biomarkers.ts.
   panel: {
-    title: "Every marker, by area",
-    intro: "Tap an area to see what's in it. Reviewed by a doctor. Not a diagnosis.",
+    title: "What's checked",
+    intro: "{markers} markers. Tap an area to see them.",
     buckets: [
       { id: "energy", name: "Energy and iron", explanation: "Looks at the cells that carry oxygen and the iron that makes them, the most common place to start when energy is low.", markerIds: ["fbc", "ferritin", "iron", "transferrin", "tsat"] },
       { id: "heart", name: "Heart and cholesterol", explanation: "Looks at the fats in your blood and the particles that carry them.", markerIds: ["tc", "ldl", "hdl", "tg", "non_hdl"] },
@@ -98,7 +78,7 @@ export const menFunnel = {
       { id: "electrolytes", name: "Electrolytes and minerals", explanation: "Looks at the salts and minerals your fluid balance, nerves, muscles and bones depend on.", markerIds: ["sodium", "potassium", "chloride", "bicarbonate", "calcium", "magnesium", "phosphate", "uric_acid"] },
       { id: "inflammation", name: "Inflammation", explanation: "Looks at your general level of inflammation right now, which adds context to the heart and metabolic results.", markerIds: ["hscrp"] },
     ],
-    addonsTitle: "Optional add-ons from {addonsFrom}, same draw",
+    addonsTitle: "Add-ons from {addonsFrom}, same draw",
     addonBuckets: [
       { addonId: "hormones_plus", name: "Hormones and drive", explanation: "Looks at key hormone levels that can influence energy, mood and sex drive, and the signals that regulate them." },
       { addonId: "thyroid_plus", name: "Thyroid in depth", explanation: "Looks at the hormones TSH controls, plus antibody markers that add context TSH alone can't." },
@@ -108,13 +88,34 @@ export const menFunnel = {
     ],
   },
 
-  // 4. Trust, limits and guarantee
+  // 4. How it works: three steps, under ten words each
+  steps: {
+    title: "How it works",
+    items: [
+      { icon: "calendar", title: "Book online", body: "Three minutes. Your request form is emailed straight away." },
+      { icon: "tube", title: "Walk in, get your blood drawn", body: "Any 4Cyte or Clinical Labs centre. No appointment." },
+      { icon: "shield", title: "A doctor explains it", body: "Every result in plain English, within 5 days." },
+    ] as { icon: "calendar" | "tube" | "shield" | "chart"; title: string; body: string }[],
+  },
+
+  // 5. Sound familiar: the avatar's own voice, never diagnostic
+  familiar: {
+    title: "Sound familiar?",
+    items: [
+      "You know your mortgage rate off by heart. Not your cholesterol.",
+      "The car gets serviced every 10,000 km. You haven't been checked since your twenties.",
+      "Flat by 3pm most days, and you've stopped mentioning it.",
+    ],
+    note: "SIGNAL doesn't diagnose anything. It shows you where things sit, and a doctor explains what that means.",
+  },
+
+  // 6. Guarantee and trust in one card
   safety: {
-    title: "Doctor-led. Accredited. Private.",
+    title: "Clear explanation or your fee back.",
     bullets: [
       { text: "Accredited Australian laboratories", verified: true },
       { text: "Australian-registered doctors", verified: true },
-      { text: "Report sent as a secure link, never shared with advertisers", verified: true },
+      { text: "Private. Results never shared with advertisers", verified: true },
       { text: "No medication promised. Any treatment is only ever considered separately, by a doctor", verified: true },
     ] as Claim[],
     disclaimer: "SIGNAL gives general health information from your blood results. It isn't a diagnosis and doesn't replace your GP. If a result warrants follow-up, your report says so.",
@@ -126,7 +127,7 @@ export const menFunnel = {
     },
   },
 
-  // 5. FAQ: five questions, answers of one or two sentences
+  // 7. FAQ: five questions, answers of one or two sentences, collapsed
   faq: {
     title: "Quick questions",
     items: [
@@ -138,11 +139,12 @@ export const menFunnel = {
     ],
   },
 
-  // 6. Final CTA strip
+  // 8. Close
   close: {
-    headline: "For men who'd rather know than wonder.",
-    cta: { label: "Book your SIGNAL test – {price}", href: "/checkout" },
-    micro: "Walk-in collection. Report within 5 days. Clear explanation or your fee back.",
+    headline: "Stop guessing. Get tested.",
+    sub: "{markers} markers. A doctor's plain-English explanation. {price}.",
+    cta: { label: "Get tested – {price}", href: "/checkout" },
+    micro: "Walk-in collection. Results within 5 days. Clear explanation or your fee back.",
     plansLink: { label: "Want to track change over time? See retesting plans", href: "/retesting" },
   },
 };
@@ -154,6 +156,6 @@ export const trackOffer = (id: "retest_6m" | "retest_3m") => retestOffers.find((
 /** Count of lines on the page still marked unverified, for the preview banner and the claims register. */
 export function unverifiedClaimCount(): number {
   const f = menFunnel;
-  const all: Claim[] = [...f.trustStrip, ...f.hero.trustLine, ...f.hero.card.rows, ...f.safety.bullets, { text: f.safety.guarantee.body.join(" "), verified: f.safety.guarantee.verified }];
+  const all: Claim[] = [...f.trustStrip, ...f.hero.trustLine, ...f.offer.rows, ...f.safety.bullets, { text: f.safety.guarantee.body.join(" "), verified: f.safety.guarantee.verified }];
   return all.filter((c) => !c.verified).length;
 }
