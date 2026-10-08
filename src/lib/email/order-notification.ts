@@ -57,7 +57,7 @@ export async function sendOrderNotification(n: OrderNotification): Promise<void>
     await sendEmail({
       to, subject, text,
       html: `<pre style="font-family:ui-monospace,Menlo,monospace;font-size:13px;white-space:pre-wrap;line-height:1.5">${esc(text).replace(/(ACTION:[^\n]*)/g, '<b style="color:#c8102e">$1</b>')}</pre>`,
-      attachments: n.form ? [{ filename: `SIGNAL-request-${n.reference}.pdf`, content: n.form }] : undefined,
+      attachments: n.form ? [{ filename: `SIGNAL-request-${n.reference.replace(/^#/, "")}.pdf`, content: n.form }] : undefined,
     });
   } catch (err) {
     console.error("[order-notification] failed", err);
