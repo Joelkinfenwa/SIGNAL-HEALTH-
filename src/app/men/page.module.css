@@ -193,7 +193,7 @@
 .sectionHead .h2, .sectionHead .intro { margin: 0; }
 .eyebrowLight { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-brand); margin-bottom: var(--s-3); }
 .outcomeGrid { display: grid; gap: var(--s-5); }
-.outcomeItem { display: grid; gap: var(--s-3); align-content: start; min-width: 0; }
+.outcomeItem { display: grid; grid-template-rows: auto auto 1fr; gap: var(--s-3); align-content: start; min-width: 0; }
 .outcomeTitle { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
 .outcomeBody { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; margin-bottom: var(--s-2); min-height: 2.9em; }
 .doctorLine { display: flex; align-items: center; gap: var(--s-3); margin-top: var(--s-6); padding: var(--s-4) var(--s-5); border-radius: var(--r-md); background: var(--c-brand); color: #f6f5f1; font-weight: 600; text-wrap: pretty; }

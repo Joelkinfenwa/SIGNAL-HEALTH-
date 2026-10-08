@@ -3,7 +3,7 @@
 .example::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--c-signal); }
 .exampleDark { color: rgba(246, 245, 241, 0.7); }
 
-.card { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: var(--r-md); background: var(--c-white); color: var(--c-ink); box-shadow: var(--shadow-card); min-width: 0; }
+.card { display: grid; gap: var(--s-4); align-content: start; height: 100%; padding: var(--s-5); border-radius: var(--r-md); background: var(--c-white); color: var(--c-ink); box-shadow: var(--shadow-card); min-width: 0; }
 
 /* Gauge */
 .gauge { display: grid; gap: 3px; padding-top: 2px; }
@@ -44,15 +44,14 @@
 .flip { transform: scaleY(-1); }
 
 /* Body systems */
-.systems { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--s-2); }
-.system { display: grid; gap: 6px; padding: var(--s-3); border-radius: var(--r-sm); background: var(--c-paper); box-shadow: inset 0 0 0 1px var(--line); }
+.systems { display: grid; grid-template-columns: repeat(auto-fill, minmax(6.25rem, 1fr)); gap: var(--s-2); min-width: 0; }
+.system { display: grid; gap: 6px; min-width: 0; padding: var(--s-3); border-radius: var(--r-sm); background: var(--c-paper); box-shadow: inset 0 0 0 1px var(--line); }
 .systemAtt { box-shadow: inset 0 0 0 1.5px #f0cfc4; }
-.sysName { font-weight: 700; font-size: var(--fs-sm); }
+.sysName { font-weight: 700; font-size: var(--fs-sm); overflow-wrap: anywhere; }
 .sysDots { display: flex; flex-wrap: wrap; gap: 3px; }
 .sysDots i { width: 7px; height: 7px; border-radius: 50%; }
 .sdIn { background: #2e8b57; } .sdOut { background: #b4452f; }
 .sysCount { font-size: 0.72rem; color: var(--c-stone); }
-@media (min-width: 40rem) { .systems { grid-template-columns: repeat(5, 1fr); } }
 
 /* Phone */
 .phone { display: grid; gap: var(--s-3); justify-items: center; }
