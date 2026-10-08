@@ -39,17 +39,62 @@ export const menFunnel = {
     { text: "Accredited Australian laboratories", verified: true },
   ] as Claim[],
 
-  // 1. Hero: who it's for, what it is, one button
+  // 1. Hero = the dream outcome: what life looks like after. One button.
   hero: {
     eyebrow: "For Aussie men 30–60",
-    headline: "The blood test for blokes who haven't had one in years.",
-    subheadline: ["{markers} markers. One visit. A doctor explains every result in plain English, within 5 days."],
+    headline: "Know exactly where your body stands.",
+    subheadline: ["{markers} markers from one blood draw. Every result shown on its range, tracked over time, and explained by a doctor in plain English."],
     primaryCta: { label: "Get tested – {price}", href: "/checkout" },
     trustLine: [
       { text: "No GP referral", verified: true },
-      { text: "No lock-in", verified: true },
+      { text: "Results within 5 days", verified: true },
       { text: "Clear explanation or your fee back", verified: true },
     ] as Claim[],
+  },
+
+  // 1b. Dream outcome, shown: the three things you get back, as they actually look.
+  outcome: {
+    eyebrow: "What you get back",
+    title: "Not a lab printout. A picture you can read.",
+    intro: "Every marker on its own range, grouped by what it tells you about, and tracked each time you test. Flagged results come with a doctor's written explanation and whether to follow up with your GP.",
+    cards: [
+      { id: "gauge", title: "See where every result sits", body: "Green is the laboratory's range. Red is outside it. Your result is the dot. No decoding." },
+      { id: "trend", title: "Watch it change over time", body: "Retest and the same marker becomes a line. Back within range, drifting, or steady: you see it." },
+      { id: "systems", title: "Grouped by what it means", body: "Heart, blood, iron, liver, kidneys, thyroid, blood sugar. One glance tells you where to look." },
+    ],
+    doctorLine: { text: "Then an Australian-registered doctor explains it all in plain English, within 5 days.", verified: true },
+  },
+
+  // 2. Likelihood of success: why this will actually work for you. Facts, no testimonials (AHPRA s133).
+  proof: {
+    eyebrow: "Why it works",
+    title: "Built on real pathology, not a wellness app.",
+    tiles: [
+      { icon: "tube", title: "Accredited Australian laboratories", body: "Your blood is analysed by 4Cyte Pathology or Australian Clinical Labs, the same laboratories your GP uses.", verified: true },
+      { icon: "shield", title: "Australian-registered doctors", body: "Every report is read as a whole by a registered doctor before you see it. Nothing is auto-generated.", verified: true },
+      { icon: "home", title: "Powered by Express Pathology", body: "A working pathology collection business, not a start-up renting a lab. Walk in or, in selected areas, we come to you.", verified: true },
+      { icon: "check", title: "Clear explanation or your fee back", body: "If the doctor's explanation isn't clear, email within 7 days of your report and we refund the {price} in full.", verified: true },
+    ] as { icon: "tube" | "shield" | "home" | "check" | "calendar" | "chart"; title: string; body: string; verified: boolean }[],
+  },
+
+  // 3. Speed: how soon you have it in your hands.
+  speed: {
+    eyebrow: "How fast",
+    title: "Booked in three minutes. Answers within 5 days.",
+    steps: [
+      { when: "Right now", title: "Order online", body: "Three minutes. Your pathology request form lands in your inbox straight away.", verified: true },
+      { when: "When it suits you", title: "Walk in, get your blood drawn", body: "Any 4Cyte or Clinical Labs centre. No appointment, no referral.", verified: true },
+      { when: "Within 5 days", title: "Your results and the doctor's explanation", body: "Every marker on its range, every flag explained, in your inbox.", verified: true },
+    ] as { when: string; title: string; body: string; verified: boolean }[],
+  },
+
+  // 4. Effort and sacrifice: what it asks of you, next to what it doesn't.
+  effort: {
+    eyebrow: "What it takes",
+    title: "Three minutes online. One blood draw. That's it.",
+    yours: ["Order online in three minutes", "Walk into a collection centre with your form and photo ID", "Read your results"],
+    notYours: ["No GP appointment to get a referral", "No chasing the lab for a copy", "No decoding a printout", "No lock-in, no subscription unless you want one"],
+    price: { text: "One payment of {price}. Add-ons from {addonsFrom} if you want more depth.", verified: true },
   },
 
   // 2. The offer, at a glance. Shown on every screen size straight after the hero.
@@ -141,7 +186,7 @@ export const menFunnel = {
 
   // 8. Close
   close: {
-    headline: "Stop guessing. Get tested.",
+    headline: "Stop guessing. See where you stand.",
     sub: "{markers} markers. A doctor's plain-English explanation. {price}.",
     cta: { label: "Get tested – {price}", href: "/checkout" },
     micro: "Walk-in collection. Results within 5 days. Clear explanation or your fee back.",

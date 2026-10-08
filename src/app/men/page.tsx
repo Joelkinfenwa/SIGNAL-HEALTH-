@@ -4,6 +4,7 @@ import { Logo } from "@/components/brand/Logo";
 import { StickyCta } from "@/components/home/StickyCta";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
+import { GaugePreview, PhonePreview, SystemsPreview, TrendPreview } from "@/components/preview/ResultsPreview";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -74,18 +75,97 @@ export default function MenFunnelPage() {
       {PREVIEW && unverified > 0 ? <p className={styles.previewNote}>Preview: {unverified} claims on this page are marked unverified (shown with a ?). Clear them in the README claims register before paid traffic.</p> : null}
 
       <main id="main">
-        {/* 1. Hero */}
+        {/* 1. Dream outcome: the headline and the real thing, side by side */}
         <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
-          <Container className={styles.heroInner}>
-            <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
-            <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
-            <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
-            <div className={styles.actions}>
-              <Cta id="men_hero_primary" location="men_hero" full />
+          <Container className={styles.heroGrid}>
+            <div className={styles.heroInner}>
+              <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
+              <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
+              <p className={styles.lede}>{f.hero.subheadline.map((l, i) => <span key={i} className={styles.ledeLine}>{fill(l)}</span>)}</p>
+              <div className={styles.actions}>
+                <Cta id="men_hero_primary" location="men_hero" full />
+              </div>
+              <p className={styles.trustLine}>
+                {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
+              </p>
             </div>
-            <p className={styles.trustLine}>
-              {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
-            </p>
+            <div className={styles.heroPhone}><PhonePreview /></div>
+          </Container>
+        </section>
+
+        {/* 1b. Dream outcome, shown */}
+        <section id="outcome" data-theme="shell" className={styles.section} aria-labelledby="outcome-title">
+          <Container>
+            <div className={styles.sectionHead}>
+              <p className={styles.eyebrowLight}>{f.outcome.eyebrow}</p>
+              <h2 id="outcome-title" className={styles.h2}>{f.outcome.title}</h2>
+              <p className={styles.intro}>{fill(f.outcome.intro)}</p>
+            </div>
+            <div className={styles.outcomeGrid}>
+              {f.outcome.cards.map((c) => (
+                <article key={c.id} className={styles.outcomeItem} aria-labelledby={`oc-${c.id}`}>
+                  <h3 id={`oc-${c.id}`} className={styles.outcomeTitle}>{c.title}</h3>
+                  <p className={styles.outcomeBody}>{fill(c.body)}</p>
+                  {c.id === "gauge" ? <GaugePreview /> : c.id === "trend" ? <TrendPreview /> : <SystemsPreview />}
+                </article>
+              ))}
+            </div>
+            {f.outcome.doctorLine.verified || PREVIEW ? <p className={styles.doctorLine}><Icon name="shield" size={18} /> <ClaimText c={f.outcome.doctorLine} /></p> : null}
+            <div className={styles.sectionCta}><Cta id="men_outcome_cta" location="men_outcome" /></div>
+          </Container>
+        </section>
+
+        {/* 2. Likelihood of success */}
+        <section id="proof" data-theme="light" className={styles.section} aria-labelledby="proof-title">
+          <Container className={styles.narrow}>
+            <p className={styles.eyebrowLight}>{f.proof.eyebrow}</p>
+            <h2 id="proof-title" className={styles.h2}>{f.proof.title}</h2>
+            <ul className={styles.proofGrid}>
+              {f.proof.tiles.filter((t) => t.verified || PREVIEW).map((t) => (
+                <li key={t.title} className={styles.proofTile}>
+                  <span className={styles.proofIcon}><Icon name={t.icon} size={20} /></span>
+                  <span className={styles.proofTitle}>{t.title}{!t.verified && PREVIEW ? <span className={styles.todo}>?</span> : null}</span>
+                  <span className={styles.proofBody}>{fill(t.body)}</span>
+                </li>
+              ))}
+            </ul>
+          </Container>
+        </section>
+
+        {/* 3. Speed */}
+        <section id="speed" data-theme="shell" className={styles.section} aria-labelledby="speed-title">
+          <Container className={styles.narrow}>
+            <p className={styles.eyebrowLight}>{f.speed.eyebrow}</p>
+            <h2 id="speed-title" className={styles.h2}>{f.speed.title}</h2>
+            <ol className={styles.timeline}>
+              {f.speed.steps.filter((st) => st.verified || PREVIEW).map((st, i) => (
+                <li key={st.title} className={styles.tl}>
+                  <span className={styles.tlWhen}>{st.when}</span>
+                  <span className={styles.tlDot} aria-hidden="true"><span className="num">{i + 1}</span></span>
+                  <span className={styles.tlBody}><span className={styles.tlTitle}>{st.title}</span><span className={styles.tlText}>{fill(st.body)}</span></span>
+                </li>
+              ))}
+            </ol>
+            <div className={styles.sectionCta}><Cta id="men_speed_cta" location="men_speed" /></div>
+          </Container>
+        </section>
+
+        {/* 4. Effort and sacrifice */}
+        <section id="effort" data-theme="light" className={styles.section} aria-labelledby="effort-title">
+          <Container className={styles.narrow}>
+            <p className={styles.eyebrowLight}>{f.effort.eyebrow}</p>
+            <h2 id="effort-title" className={styles.h2}>{f.effort.title}</h2>
+            <div className={styles.effortGrid}>
+              <div className={styles.effortCol}>
+                <p className={styles.effortHead}>What you do</p>
+                <ul className={styles.effortList}>{f.effort.yours.map((t) => <li key={t}><span className={styles.tick}><Icon name="check" size={14} /></span>{fill(t)}</li>)}</ul>
+              </div>
+              <div className={cx(styles.effortCol, styles.effortColNot)}>
+                <p className={styles.effortHead}>What you don&apos;t</p>
+                <ul className={styles.effortList}>{f.effort.notYours.map((t) => <li key={t}><span className={styles.cross}><Icon name="close" size={14} /></span>{fill(t)}</li>)}</ul>
+              </div>
+            </div>
+            {f.effort.price.verified || PREVIEW ? <p className={styles.effortPrice}><ClaimText c={f.effort.price} /></p> : null}
           </Container>
         </section>
 
@@ -146,25 +226,6 @@ export default function MenFunnelPage() {
                 </details>
               </li>
             </ul>
-          </Container>
-        </section>
-
-        {/* 4. How it works */}
-        <section data-theme="shell" className={styles.section} aria-labelledby="steps-title">
-          <Container className={styles.narrow}>
-            <h2 id="steps-title" className={styles.h2}>{f.steps.title}</h2>
-            <ol className={styles.steps}>
-              {f.steps.items.map((st, i) => (
-                <li key={st.title} className={styles.step}>
-                  <span className={styles.stepNum}><span className="num">{i + 1}</span></span>
-                  <div>
-                    <h3 className={styles.stepTitle}>{st.title}</h3>
-                    <p className={styles.stepBody}>{fill(st.body)}</p>
-                  </div>
-                </li>
-              ))}
-            </ol>
-            <div className={styles.sectionCta}><Cta id="men_steps_cta" location="men_steps" /></div>
           </Container>
         </section>
 

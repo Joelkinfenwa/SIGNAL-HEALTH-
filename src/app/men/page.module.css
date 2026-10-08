@@ -182,3 +182,46 @@
   .addonBuckets { grid-template-columns: repeat(2, 1fr); }
   .faqInner { grid-template-columns: 1fr 1.6fr; align-items: start; }
 }
+
+/* ---- Value-equation layout: dream outcome, likelihood, speed, effort ---- */
+.heroGrid { display: grid; gap: var(--s-6); align-items: center; }
+.heroGrid .heroInner { text-align: left; justify-items: start; margin-inline: 0; }
+.heroGrid .actions { margin-inline: 0; }
+.heroPhone { display: grid; justify-items: center; }
+@media (min-width: 56rem) { .heroGrid { grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: var(--s-8); } .heroPhone { justify-items: end; } }
+.sectionHead { display: grid; gap: var(--s-3); max-width: 44rem; margin-bottom: var(--s-6); }
+.sectionHead .h2, .sectionHead .intro { margin: 0; }
+.eyebrowLight { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-brand); margin-bottom: var(--s-3); }
+.outcomeGrid { display: grid; gap: var(--s-5); }
+.outcomeItem { display: grid; gap: var(--s-3); align-content: start; min-width: 0; }
+.outcomeTitle { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.outcomeBody { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; margin-bottom: var(--s-2); min-height: 2.9em; }
+.doctorLine { display: flex; align-items: center; gap: var(--s-3); margin-top: var(--s-6); padding: var(--s-4) var(--s-5); border-radius: var(--r-md); background: var(--c-brand); color: #f6f5f1; font-weight: 600; text-wrap: pretty; }
+.doctorLine svg { flex: none; color: #9fe0bb; }
+@media (min-width: 56rem) { .outcomeGrid { grid-template-columns: repeat(3, 1fr); } }
+
+.proofGrid { display: grid; gap: var(--s-3); }
+.proofTile { display: grid; gap: var(--s-2); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
+.proofIcon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: var(--c-brand-soft); color: var(--c-brand); }
+.proofTitle { font-weight: 700; letter-spacing: -0.01em; }
+.proofBody { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+@media (min-width: 40rem) { .proofGrid { grid-template-columns: repeat(2, 1fr); } }
+
+.timeline { display: grid; gap: 0; }
+.tl { position: relative; display: grid; grid-template-columns: 36px 1fr; gap: var(--s-2) var(--s-4); align-items: start; padding-block: var(--s-4); }
+.tlWhen { grid-column: 2; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--c-brand); }
+.tlDot { grid-column: 1; grid-row: 1 / span 2; display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; background: var(--c-brand); color: #fff; font-weight: 800; font-size: var(--fs-sm); z-index: 1; }
+.tl:not(:last-child)::after { content: ""; position: absolute; left: 17px; top: calc(var(--s-4) + 36px); bottom: calc(var(--s-4) * -1); width: 2px; background: var(--line); }
+.tlBody { grid-column: 2; display: grid; gap: 2px; }
+.tlTitle { font-weight: 700; font-size: var(--fs-md); letter-spacing: -0.02em; line-height: 1.2; }
+.tlText { font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+
+.effortGrid { display: grid; gap: var(--s-4); }
+.effortCol { display: grid; gap: var(--s-3); align-content: start; padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-card); }
+.effortColNot { background: var(--panel-soft); box-shadow: inset 0 0 0 1px var(--line); }
+.effortHead { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+.effortList { display: grid; gap: var(--s-3); }
+.effortList li { display: flex; gap: var(--s-3); align-items: flex-start; font-weight: 600; line-height: 1.4; text-wrap: pretty; }
+.cross { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--c-shell); color: var(--muted); margin-top: 1px; }
+.effortPrice { margin-top: var(--s-5); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.01em; }
+@media (min-width: 40rem) { .effortGrid { grid-template-columns: 1fr 1fr; } }
