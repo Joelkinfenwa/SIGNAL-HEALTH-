@@ -6,11 +6,12 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
 import { DoctorNoteMock, LabReportMock } from "@/components/product/ReportMock";
 import { ProductBox } from "@/components/product/ProductBox";
+import { TestsBox } from "@/components/product/TestsBox";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
 import { addonsFromCents, menFunnel as f, trackOffer, unverifiedClaimCount, type Claim } from "@/config/funnel/men";
-import { getAddon, addonNewMarkers } from "@/config/addons";
+
 import { getBiomarker } from "@/config/biomarkers";
 import { getCollectionMethod } from "@/config/collection";
 import { productCategoryCount, productMarkerCount, signalTest } from "@/config/products";
@@ -118,26 +119,24 @@ export default function MenFunnelPage() {
                 </li>
               ))}
             </ul>
-            <h3 className={styles.insideAddonsTitle}>{fill(f.inside.addonsTitle)}</h3>
-            <ul className={styles.addonGrid}>
-              {f.panel.addonBuckets.map((ab) => {
-                const a = getAddon(ab.addonId);
-                if (!a || !a.launchEnabled) return null;
-                return (
-                  <li key={ab.addonId} className={styles.addonCard}>
-                    <span className={styles.addonCardName}>{ab.name}</span>
-                    <span className={styles.addonCardPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span>
-                    <span className={styles.addonCardMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).name).join(", ")}</span>
-                  </li>
-                );
-              })}
-            </ul>
             <div className={styles.sectionCta}><Cta id="men_inside_cta" location="men_inside" /></div>
           </Container>
         </section>
 
+        {/* 1b2. Our tests */}
+        <section id="tests" data-theme="shell" className={styles.section} aria-labelledby="tests-title">
+          <Container>
+            <div className={styles.sectionHead}>
+              <p className={styles.eyebrowLight}>{f.tests.eyebrow}</p>
+              <h2 id="tests-title" className={styles.h2}>{fill(f.tests.title)}</h2>
+              <p className={styles.intro}>{fill(f.tests.intro)}</p>
+            </div>
+            <TestsBox areas={f.panel.buckets.length} />
+          </Container>
+        </section>
+
         {/* 1c. What you receive */}
-        <section id="outcome" data-theme="shell" className={styles.section} aria-labelledby="outcome-title">
+        <section id="outcome" data-theme="light" className={styles.section} aria-labelledby="outcome-title">
           <Container>
             <div className={styles.sectionHead}>
               <p className={styles.eyebrowLight}>{f.outcome.eyebrow}</p>
@@ -159,7 +158,7 @@ export default function MenFunnelPage() {
         </section>
 
         {/* 2. Likelihood of success */}
-        <section id="proof" data-theme="light" className={styles.section} aria-labelledby="proof-title">
+        <section id="proof" data-theme="shell" className={styles.section} aria-labelledby="proof-title">
           <Container className={styles.narrow}>
             <p className={styles.eyebrowLight}>{f.proof.eyebrow}</p>
             <h2 id="proof-title" className={styles.h2}>{f.proof.title}</h2>
@@ -176,7 +175,7 @@ export default function MenFunnelPage() {
         </section>
 
         {/* 3. Speed */}
-        <section id="speed" data-theme="shell" className={styles.section} aria-labelledby="speed-title">
+        <section id="speed" data-theme="light" className={styles.section} aria-labelledby="speed-title">
           <Container className={styles.narrow}>
             <p className={styles.eyebrowLight}>{f.speed.eyebrow}</p>
             <h2 id="speed-title" className={styles.h2}>{f.speed.title}</h2>
@@ -194,7 +193,7 @@ export default function MenFunnelPage() {
         </section>
 
         {/* 4. Effort and sacrifice */}
-        <section id="effort" data-theme="light" className={styles.section} aria-labelledby="effort-title">
+        <section id="effort" data-theme="shell" className={styles.section} aria-labelledby="effort-title">
           <Container className={styles.narrow}>
             <p className={styles.eyebrowLight}>{f.effort.eyebrow}</p>
             <h2 id="effort-title" className={styles.h2}>{f.effort.title}</h2>

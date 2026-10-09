@@ -57,7 +57,13 @@ export const menFunnel = {
     eyebrow: "What's inside",
     title: "{markers} markers. {buckets} areas. Tap any one to see every marker.",
     intro: "Not a random handful of tests. The full picture a doctor would want before saying anything about your health.",
-    addonsTitle: "Want more depth? Add it to the same draw.",
+  },
+
+  // 1b2. Our tests: everything on sale today, as cards. Prices and markers come from products.ts and addons.ts.
+  tests: {
+    eyebrow: "Our tests",
+    title: "One test. Five ways to go deeper.",
+    intro: "Everything we offer today, all from the same blood draw. The SIGNAL Test is the base. Add-ons are optional, priced on top, and chosen at checkout.",
   },
 
   // 1c. What you receive: described as it is. A copy of the laboratory report and the doctor's written explanation.
