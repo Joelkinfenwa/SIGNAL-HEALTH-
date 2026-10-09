@@ -26,7 +26,7 @@
 .sheetLine { display: block; height: 7px; width: 100%; border-radius: 4px; background: var(--c-shell); }
 .sheetForm .sheetLine, .sheetNote .sheetLine { margin-left: auto; }
 .sheetStamp { display: inline-flex; justify-content: flex-end; white-space: nowrap; align-items: center; gap: 5px; margin-top: 2px; font-weight: 700; color: var(--c-sage); }
-.sheetRow { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.78rem; }
+.sheetRow { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 0.66rem; color: var(--c-stone); } .sheetRow b { color: var(--c-ink); }
 .sheetRow small { font-size: 0.65rem; color: var(--c-stone); }
 .sheetForm { right: 0; top: 0; width: 54%; transform: rotate(4deg); z-index: 1; text-align: right; }
 .sheetNote { right: 1%; top: 36%; width: 50%; transform: rotate(-3deg); z-index: 1; text-align: right; }

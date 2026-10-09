@@ -43,7 +43,7 @@ export const menFunnel = {
   hero: {
     eyebrow: "For Aussie men 30–60",
     headline: "Know exactly where your body stands.",
-    subheadline: ["One blood draw. {markers} markers across {buckets} areas of health, every one shown on its range and explained by a doctor in plain English."],
+    subheadline: ["One blood draw. {markers} markers across {buckets} areas of health, with a doctor's written explanation of every result in plain English."],
     primaryCta: { label: "Get tested – {price}", href: "/checkout" },
     trustLine: [
       { text: "No GP referral", verified: true },
@@ -60,17 +60,16 @@ export const menFunnel = {
     addonsTitle: "Want more depth? Add it to the same draw.",
   },
 
-  // 1c. Dream outcome, shown: how results arrive. Only what the secure results link shows today.
+  // 1c. What you receive: described as it is. A copy of the laboratory report and the doctor's written explanation.
   outcome: {
-    eyebrow: "How your results arrive",
-    title: "Not a lab printout. A picture you can read.",
-    intro: "Within 5 days you get a private link, opened with your surname and date of birth. No app to install, nothing to decode: every marker on its own range, grouped by what it tells you about, with the doctor's written note on top.",
-    cards: [
-      { id: "gauge", title: "See where every result sits", body: "Green is the laboratory's range. Red is outside it. Your result is the dot." },
-      { id: "systems", title: "Grouped by what it means", body: "Heart, liver, kidneys, iron, blood sugar, thyroid. One glance tells you where to look." },
-      { id: "trend", title: "Test again and watch it move", body: "From your second test, every marker becomes a line. Back within range, drifting, or steady." },
+    eyebrow: "What you receive",
+    title: "Your laboratory report, and a doctor's explanation of it.",
+    intro: "Within 5 days of collection you receive a copy of your laboratory report, every marker with your result and the laboratory's reference range, together with a doctor's written explanation of what it means for you, in plain English. Yours to keep and take to your GP.",
+    docs: [
+      { id: "report", title: "A copy of your laboratory report", body: "Every marker, your result, the reference range, and anything the laboratory flagged." },
+      { id: "note", title: "The doctor's written explanation", body: "What stands out, what's fine, and whether anything is worth following up with your GP. Written for you, not for another doctor." },
     ],
-    doctorLine: { text: "An Australian-registered doctor reads the whole picture and explains it in plain English, within 5 days.", verified: true },
+    doctorLine: { text: "Read as a whole by an Australian-registered doctor before it reaches you.", verified: true },
   },
 
   // 2. Likelihood of success: why this will actually work for you. Facts, no testimonials (AHPRA s133).

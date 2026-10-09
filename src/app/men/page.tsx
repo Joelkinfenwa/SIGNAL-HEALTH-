@@ -4,7 +4,7 @@ import { Logo } from "@/components/brand/Logo";
 import { StickyCta } from "@/components/home/StickyCta";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
-import { GaugePreview, SystemsPreview, TrendPreview } from "@/components/preview/ResultsPreview";
+import { DoctorNoteMock, LabReportMock } from "@/components/product/ReportMock";
 import { ProductBox } from "@/components/product/ProductBox";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -136,7 +136,7 @@ export default function MenFunnelPage() {
           </Container>
         </section>
 
-        {/* 1c. How results arrive */}
+        {/* 1c. What you receive */}
         <section id="outcome" data-theme="shell" className={styles.section} aria-labelledby="outcome-title">
           <Container>
             <div className={styles.sectionHead}>
@@ -144,12 +144,12 @@ export default function MenFunnelPage() {
               <h2 id="outcome-title" className={styles.h2}>{f.outcome.title}</h2>
               <p className={styles.intro}>{fill(f.outcome.intro)}</p>
             </div>
-            <div className={styles.outcomeGrid}>
-              {f.outcome.cards.map((c) => (
-                <article key={c.id} className={styles.outcomeItem} aria-labelledby={`oc-${c.id}`}>
-                  <h3 id={`oc-${c.id}`} className={styles.outcomeTitle}>{c.title}</h3>
-                  <p className={styles.outcomeBody}>{fill(c.body)}</p>
-                  {c.id === "gauge" ? <GaugePreview /> : c.id === "systems" ? <SystemsPreview /> : <TrendPreview />}
+            <div className={styles.docsGrid}>
+              {f.outcome.docs.map((d) => (
+                <article key={d.id} className={styles.outcomeItem} aria-labelledby={`oc-${d.id}`}>
+                  <h3 id={`oc-${d.id}`} className={styles.outcomeTitle}>{d.title}</h3>
+                  <p className={styles.outcomeBody}>{fill(d.body)}</p>
+                  {d.id === "report" ? <LabReportMock /> : <DoctorNoteMock />}
                 </article>
               ))}
             </div>
