@@ -95,34 +95,6 @@ export default function MenFunnelPage() {
           </Container>
         </section>
 
-        {/* 1b. What's inside: the contents, laid out */}
-        <section id="inside" data-theme="light" className={styles.section} aria-labelledby="inside-title">
-          <Container>
-            <div className={styles.sectionHead}>
-              <p className={styles.eyebrowLight}>{f.inside.eyebrow}</p>
-              <h2 id="inside-title" className={styles.h2}>{fill(f.inside.title)}</h2>
-              <p className={styles.intro}>{fill(f.inside.intro)}</p>
-            </div>
-            <ul className={styles.insideGrid}>
-              {f.panel.buckets.map((b, i) => (
-                <li key={b.id}>
-                  <details className={styles.inside}>
-                    <summary className={styles.insideSummary}>
-                      <span className={styles.insideNum}><span className="num">{String(i + 1).padStart(2, "0")}</span></span>
-                      <span className={styles.insideName}>{b.name}</span>
-                      <span className={styles.insideCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span>
-                      <span className={styles.insideToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
-                    </summary>
-                    <p className={styles.insideWhy}>{b.explanation}</p>
-                    <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
-                  </details>
-                </li>
-              ))}
-            </ul>
-            <div className={styles.sectionCta}><Cta id="men_inside_cta" location="men_inside" /></div>
-          </Container>
-        </section>
-
         {/* 1b2. Our tests */}
         <section id="tests" data-theme="shell" className={styles.section} aria-labelledby="tests-title">
           <Container>
@@ -131,7 +103,7 @@ export default function MenFunnelPage() {
               <h2 id="tests-title" className={styles.h2}>{fill(f.tests.title)}</h2>
               <p className={styles.intro}>{fill(f.tests.intro)}</p>
             </div>
-            <TestsBox areas={f.panel.buckets.length} />
+            <TestsBox areas={f.panel.buckets} />
           </Container>
         </section>
 

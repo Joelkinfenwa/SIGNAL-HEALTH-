@@ -62,8 +62,8 @@ export const menFunnel = {
   // 1b2. Our tests: everything on sale today, as cards. Prices and markers come from products.ts and addons.ts.
   tests: {
     eyebrow: "Our tests",
-    title: "One test. Five ways to go deeper.",
-    intro: "Everything we offer today, all from the same blood draw. The SIGNAL Test is the base. Add-ons are optional, priced on top, and chosen at checkout.",
+    title: "Everything we test. Nothing hidden.",
+    intro: "One blood draw. The SIGNAL Test covers {markers} markers across {buckets} areas of health, every one listed below. Add-ons go deeper where you want, priced on top and chosen at checkout.",
   },
 
   // 1c. What you receive: described as it is. A copy of the laboratory report and the doctor's written explanation.

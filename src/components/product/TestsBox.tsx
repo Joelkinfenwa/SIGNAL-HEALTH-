@@ -14,7 +14,9 @@ import styles from "./TestsBox.module.css";
  * config/products.ts and config/addons.ts, so withdrawing or pricing an
  * add-on changes this box without touching it.
  */
-export function TestsBox({ areas, location = "men_tests" }: { areas: number; location?: string }) {
+export interface TestArea { id: string; name: string; explanation: string; markerIds: string[] }
+
+export function TestsBox({ areas, location = "men_tests" }: { areas: TestArea[]; location?: string }) {
   const price = signalTest.priceCents !== null ? formatAUD(signalTest.priceCents) : "TBC";
   const addons = sellableAddonsFor(signalTest);
   return (
@@ -25,7 +27,16 @@ export function TestsBox({ areas, location = "men_tests" }: { areas: number; loc
           <span className={styles.baseTag}>The base test</span>
         </div>
         <h3 id="test-signal" className={styles.baseTitle}>{signalTest.name}</h3>
-        <p className={styles.baseBody}><span className="num">{productMarkerCount(signalTest)}</span> markers across <span className="num">{areas}</span> areas of health, one blood draw, a doctor&apos;s written explanation of every result.</p>
+        <p className={styles.baseBody}><span className="num">{productMarkerCount(signalTest)}</span> markers across <span className="num">{areas.length}</span> areas of health, one blood draw, a doctor&apos;s written explanation of every result. Here is every one of them.</p>
+        <ul className={styles.areas} aria-label="What the SIGNAL Test measures">
+          {areas.map((b) => (
+            <li key={b.id} className={styles.area}>
+              <span className={styles.areaHead}><span className={styles.areaName}>{b.name}</span><span className={styles.areaCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span></span>
+              <span className={styles.areaWhy}>{b.explanation}</span>
+              <ul className={styles.areaChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
+            </li>
+          ))}
+        </ul>
         <ul className={styles.baseList}>
           <li><Icon name="tube" size={14} /> Walk in to any 4Cyte or Clinical Labs centre</li>
           <li><Icon name="shield" size={14} /> Reviewed by an Australian-registered doctor</li>
