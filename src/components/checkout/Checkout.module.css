@@ -132,3 +132,41 @@
 .legal a { color: var(--fg); font-weight: 600; }
 .afterPay { display: flex; gap: 8px; align-items: flex-start; font-size: var(--fs-xs); color: var(--muted); line-height: 1.5; }
 .afterPay svg { flex: none; color: var(--c-brand); margin-top: 3px; }
+
+/* Reassurance strip under the title */
+.reassure { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: var(--s-4); font-size: var(--fs-xs); font-weight: 700; color: var(--muted); }
+.reassure li { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+.reassure svg { color: var(--c-brand); }
+
+/* The seven areas, inside "What's in your test" */
+.areas { display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px; padding: var(--s-3) 0 var(--s-4); }
+.areas li { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--r-sm); background: var(--panel-soft); font-size: var(--fs-xs); font-weight: 600; }
+.areaCount { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: var(--c-brand-soft); color: var(--c-brand); font-weight: 800; }
+@media (min-width: 40rem) { .areas { grid-template-columns: repeat(3, 1fr); } }
+
+/* Guarantee at the pay button */
+.guarantee { padding: var(--s-3) var(--s-4); border-radius: var(--r-sm); background: var(--c-brand-soft); color: var(--c-ink); font-size: var(--fs-sm); line-height: 1.5; text-wrap: pretty; }
+.guarantee b { color: var(--c-brand); }
+
+/* Value card: the offer restated beside the form, on the product's dark surface */
+.value { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); color: #f6f5f1; background: linear-gradient(160deg, #163f31 0%, #0f2d22 60%, #0b241b 100%); box-shadow: var(--shadow-card); position: relative; overflow: hidden; }
+.value::before { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 10px); pointer-events: none; }
+.value > * { position: relative; }
+.valueHead { display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); }
+.valueMark { display: inline-flex; align-items: center; gap: 6px; font-weight: 800; letter-spacing: 0.16em; font-size: 0.8rem; }
+.valueMarkSvg { width: 20px; height: 15px; }
+.valueTag { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9fe0bb; }
+.valueTitle { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; color: #fff; }
+.valueSub { margin-top: calc(var(--s-2) * -1); font-size: var(--fs-sm); color: rgba(246, 245, 241, 0.75); }
+.valueList { display: grid; gap: 8px; padding: var(--s-3) 0; border-top: 1px solid rgba(255, 255, 255, 0.14); border-bottom: 1px solid rgba(255, 255, 255, 0.14); font-size: var(--fs-sm); font-weight: 600; color: rgba(246, 245, 241, 0.92); }
+.valueList li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+.valueList svg { flex: none; color: #9fe0bb; margin-top: 3px; }
+.value .payLines { color: rgba(246, 245, 241, 0.85); }
+.value .total { border-top-color: rgba(255, 255, 255, 0.14); color: #fff; }
+.valueButton { background: #f6f5f1; color: #123227; }
+.valueButton[data-ready="false"] { background: rgba(246, 245, 241, 0.9); color: #123227; }
+.valueButton:hover { background: #ffffff; }
+.valueNote { font-size: var(--fs-xs); color: rgba(246, 245, 241, 0.7); text-align: center; }
+.valueGuarantee { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-xs); font-weight: 600; color: rgba(246, 245, 241, 0.85); line-height: 1.45; }
+.valueGuarantee svg { flex: none; color: #9fe0bb; margin-top: 2px; }
+@media (min-width: 64rem) { .value { position: sticky; top: var(--s-5); } }

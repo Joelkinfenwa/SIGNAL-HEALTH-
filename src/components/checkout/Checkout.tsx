@@ -8,6 +8,8 @@ import { Icon } from "@/components/ui/Icon";
 import { addonNewMarkers, sellableAddonsFor } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { MIN_AGE_YEARS } from "@/config/checkout-fields";
+import { guarantee, included, panelAreas } from "@/config/panel";
+import { SignalMark } from "@/components/brand/Logo";
 import { collectionMethods, type CollectionMethodId } from "@/config/collection";
 import { signalTest } from "@/config/products";
 import { retestOffers, formatDiscount, type RetestOffer } from "@/config/retest-offer";
@@ -157,12 +159,21 @@ export function Checkout() {
         By paying you agree to the <Link href="/legal/terms">Terms of Service</Link> and <Link href="/legal/privacy">Privacy Policy</Link>, and to your details being shared with the laboratory and collection team to carry out your test. You need to be {MIN_AGE_YEARS} or over to order.
       </p>
       <p className={styles.afterPay}><Icon name="check" size={14} /> After payment we ask for the details the laboratory needs (name, date of birth, sex, address), then email your request form.</p>
+      <p className={styles.guarantee}><b>{guarantee.title}</b> {guarantee.body}</p>
     </section>
   );
 
   const summary = (
-    <aside className={styles.pay} aria-labelledby="pay-title">
-      <p id="pay-title" className={styles.payTitle}>Order total</p>
+    <aside className={styles.value} aria-labelledby="pay-title">
+      <div className={styles.valueHead}>
+        <span className={styles.valueMark}><SignalMark className={styles.valueMarkSvg} /> SIGNAL</span>
+        <span className={styles.valueTag}>Your order</span>
+      </div>
+      <p id="pay-title" className={styles.valueTitle}>The SIGNAL Test</p>
+      <p className={styles.valueSub}><span className="num">{quote.markerCount}</span> markers · <span className="num">{panelAreas.length}</span> areas of health · one blood draw</p>
+      <ul className={styles.valueList}>
+        {included.map((i) => <li key={i.text}><Icon name={i.icon} size={14} /> {i.text}</li>)}
+      </ul>
       <ul className={styles.payLines}>
         {quote.lines.map((l) => (
           <li key={l.id}><span>{l.label}</span><span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span></li>
@@ -170,15 +181,10 @@ export function Checkout() {
       </ul>
       <div className={styles.total}><span>Total</span><span className={cx(styles.totalValue, "num")}>{total}</span></div>
       <div className={styles.payAction}>
-        <a className={styles.payButton} data-ready={cfg.collectionMethodId ? "true" : "false"} href="#pay-form">Pay now <Icon name="arrow" size={18} /></a>
-        <p className={styles.payNote}>Email, then card. Two minutes.</p>
+        <a className={cx(styles.payButton, styles.valueButton)} data-ready={cfg.collectionMethodId ? "true" : "false"} href="#pay-form">Pay {quote.pricingComplete ? total : "now"} <Icon name="arrow" size={18} /></a>
+        <p className={styles.valueNote}>Email, then card. Two minutes. Secured by Stripe.</p>
       </div>
-      {trust.length ? (
-        <ul className={styles.trust}>
-          {trust.map((c) => <li key={c.id}><Icon name={c.icon} size={14} /> {c.text}</li>)}
-        </ul>
-      ) : null}
-      <p className={styles.fine}>Your confirmation and pathology request form are emailed once your details are in. Prices in AUD.</p>
+      <p className={styles.valueGuarantee}><Icon name="check" size={14} /> {guarantee.title} 7 days from your report.</p>
     </aside>
   );
 
@@ -187,6 +193,12 @@ export function Checkout() {
       <header className={styles.header}>
         <h1 className={styles.title}>Your SIGNAL Test.</h1>
         <p className={styles.intro}>Check what&apos;s included, choose how you&apos;d like to be collected, and pay. The laboratory details come after.</p>
+        <ul className={styles.reassure} aria-label="What you get">
+          <li><Icon name="tube" size={14} /> Walk in, no appointment</li>
+          <li><Icon name="shield" size={14} /> Doctor-reviewed</li>
+          <li><Icon name="calendar" size={14} /> Results within 5 days</li>
+          <li><Icon name="check" size={14} /> Clear explanation or your fee back</li>
+        </ul>
       </header>
 
       <div className={styles.main}>
@@ -205,6 +217,9 @@ export function Checkout() {
                 </span>
               </li>
             ))}
+          </ul>
+          <ul className={styles.areas} aria-label="Areas covered by the SIGNAL Test">
+            {panelAreas.map((a) => <li key={a.id}><span className={styles.areaName}>{a.name}</span><span className={cx(styles.areaCount, "num")}>{a.markerIds.length}</span></li>)}
           </ul>
           <details className={styles.addons} open={addonsOpen} onToggle={(e) => setAddonsOpen((e.currentTarget as HTMLDetailsElement).open)}>
             <summary className={styles.addonsSummary}>

@@ -77,3 +77,11 @@ test("landing pages only recommend or preselect sellable add-ons", () => {
     }
   }
 });
+
+test("the seven panel areas cover exactly the SIGNAL Test markers, once each", async () => {
+  const { panelAreas } = await import("../src/config/panel");
+  const { signalTest } = await import("../src/config/products");
+  const ids = panelAreas.flatMap((a) => a.markerIds);
+  assert.equal(ids.length, new Set(ids).size, "no marker appears in two areas");
+  assert.deepEqual([...ids].sort(), [...signalTest.markerIds].sort(), "areas and product list the same markers");
+});
