@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { NextSteps } from "@/components/journey/NextSteps";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { OrderDetailsStep } from "@/components/order/OrderDetailsStep";
 import { RetestOffer } from "@/components/order/RetestOffer";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -31,6 +32,35 @@ export default async function OrderPage({ params, searchParams }: { params: Prom
   const preselectOfferId = typeof sp.plan === "string" ? sp.plan : undefined;
   if (!order) notFound();
   const collection = order.configuration.collectionMethodId ? getCollectionMethod(order.configuration.collectionMethodId) : null;
+
+  // Pay-first checkout: the laboratory details come here, after payment, before anything else on this page.
+  if (!order.detailsComplete) {
+    return (
+      <>
+        <SiteHeader />
+        <main id="main" className={styles.main}>
+          <Container>
+            <div className={styles.grid}>
+              <div className={styles.primary}>
+                <OrderDetailsStep orderId={order.id} token={order.token} email={order.email} reference={order.reference} />
+              </div>
+              <aside className={styles.summary} aria-labelledby="order-title">
+                <p id="order-title" className={styles.summaryTitle}>Your order</p>
+                <ul className={styles.lines}>
+                  {order.lines.map((l) => (
+                    <li key={l.id}><span>{l.label}</span><span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span></li>
+                  ))}
+                </ul>
+                <p className={styles.total}><span>Paid</span><span className="num">{formatAUD(order.amountCents)}</span></p>
+                <p className={styles.meta}>{formatDate(order.paidAt)} · {order.reference}</p>
+              </aside>
+            </div>
+          </Container>
+        </main>
+        <SiteFooter />
+      </>
+    );
+  }
 
   return (
     <>

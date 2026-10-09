@@ -77,3 +77,16 @@ export function customerParams(c: NormalisedCustomer) {
     },
   };
 }
+
+/**
+ * Pay-first checkout: the Customer is created with an email only and the
+ * laboratory details come after payment. `details_status` on the Customer
+ * records that; orders made before this flag existed count as complete when
+ * the identity fields are present.
+ */
+export function detailsComplete(customer: { metadata?: Record<string, string> | null } | null | undefined): boolean {
+  const m = customer?.metadata ?? {};
+  if (m.details_status === "complete") return true;
+  if (m.details_status === "pending") return false;
+  return Boolean(m.first_name && m.last_name && m.dob && m.sex);
+}

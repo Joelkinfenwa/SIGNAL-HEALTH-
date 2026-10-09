@@ -91,6 +91,10 @@ docs/ARCHITECTURE.md   Architecture, routes, design system, data model, Stripe, 
 
 Slots with an empty `src` are placeholders with a shot `brief`; the `Photo` component renders a warm colour panel until photography exists. Currently: `nurseArrival` (postcode checker), `collectionCentre`, `chooseTest`.
 
+## Checkout: pay first, details after
+
+One screen: what's in the test, collection choice, email, card (Apple Pay and Google Pay included). Paying accepts the terms shown beside the button; the version and time are recorded on the Stripe Customer. The laboratory details (name as on ID, date of birth, sex, mobile, address) are asked on the order page straight after payment, because the pathology request form is issued then, not before. Until they are in, the order carries `request_form: held:details_pending`, the customer gets a "complete your details" email, and an hourly cron (`/api/cron/details-reminders`, authorised by `CRON_SECRET`) sends one reminder after 24 hours. Fulfilment (request form, confirmation email, ops copy) lives in `lib/orders/fulfil.ts` and runs from the webhook or from the details step, whichever comes second.
+
 ## Connecting Stripe
 
 Orders get a sequential number (#2050 onwards) from a small Postgres table (`DATABASE_URL`, Neon via Vercel Storage) the moment they are paid; it is written back to the PaymentIntent as `order_number` and used on the form, the emails and the order page. Stripe remains the order store: the PaymentIntent carries the configuration, snapshotted line prices and attribution; the Customer carries contact and identity details. Confirmation links are `/order/<payment_intent_id>?t=<signed token>`; the id alone never opens an order.

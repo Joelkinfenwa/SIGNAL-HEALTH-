@@ -3,7 +3,7 @@ import "server-only";
 import { getAddon } from "@/config/addons";
 import { getCollectionMethod } from "@/config/collection";
 import { getProduct, signalTest } from "@/config/products";
-import { decodeOrderMetadata } from "@/lib/orders/metadata";
+import { decodeOrderMetadata, detailsComplete } from "@/lib/orders/metadata";
 import { orderTokenSecret, verifyOrderToken } from "@/lib/orders/token";
 import { quoteConfiguration, parseConfiguration, type Configuration, type QuoteLine } from "@/lib/pricing";
 import { getStripe } from "@/lib/stripe/server";
@@ -31,6 +31,10 @@ export interface OrderView {
   paidAt: Date;
   firstName?: string;
   emailMasked?: string;
+  /** Pay-first checkout: false until the laboratory details have been given on this page. */
+  detailsComplete: boolean;
+  /** Contact email, for pre-filling the details step. Only reachable with the signed token. */
+  email?: string;
   /** Set once Automatic Retesting has been accepted for this order. */
   retest?: { offerId: string; nextTestDate: Date; refundCents: number };
   /** Preview-only illustrative order. */
@@ -61,7 +65,7 @@ export async function getOrderForPage(orderId: string, searchParams: Record<stri
     return {
       id: "demo", token: "demo", reference: "#2050", status: "paid", configuration: cfg, lines,
       amountCents: lines.reduce((n, l) => n + (l.priceCents ?? 0), 0), currency: "AUD", paidAt: new Date(),
-      firstName: "Sam", emailMasked: "s•••@example.com", demo: true,
+      firstName: "Sam", emailMasked: "s•••@example.com", email: "sam@example.com", detailsComplete: searchParams.details !== "pending", demo: true,
     };
   }
 
@@ -101,6 +105,8 @@ export async function getOrderForPage(orderId: string, searchParams: Record<stri
     paidAt: new Date(pi.created * 1000),
     firstName: customer?.metadata?.first_name || customer?.name?.split(" ")[0] || undefined,
     emailMasked: maskEmail(customer?.email ?? pi.receipt_email),
+    email: customer?.email ?? pi.receipt_email ?? undefined,
+    detailsComplete: detailsComplete(customer),
     retest,
     demo: false,
   };
