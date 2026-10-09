@@ -225,3 +225,26 @@
 .cross { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--c-shell); color: var(--muted); margin-top: 1px; }
 .effortPrice { margin-top: var(--s-5); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.01em; }
 @media (min-width: 40rem) { .effortGrid { grid-template-columns: 1fr 1fr; } }
+
+/* ---- What's inside ---- */
+.insideGrid { display: grid; gap: var(--s-3); }
+.inside { border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-soft); }
+.inside[open] { box-shadow: inset 0 0 0 1.5px var(--c-brand), var(--shadow-soft); }
+.insideSummary { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "num name toggle" "num count toggle"; align-items: center; column-gap: var(--s-3); min-height: 64px; padding: var(--s-4) var(--s-4); cursor: pointer; list-style: none; }
+.insideSummary::-webkit-details-marker { display: none; }
+.insideNum { grid-area: num; font-size: var(--fs-xs); font-weight: 800; letter-spacing: 0.06em; color: var(--c-brand); align-self: start; padding-top: 3px; }
+.insideName { grid-area: name; font-weight: 700; font-size: var(--fs-md); letter-spacing: -0.02em; line-height: 1.15; }
+.insideCount { grid-area: count; font-size: var(--fs-xs); font-weight: 600; color: var(--muted); }
+.insideToggle { grid-area: toggle; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--panel-soft); color: var(--accent); }
+.inside[open] .plus { display: none; } .inside[open] .minus { display: block; }
+.insideWhy { padding: 0 var(--s-4) var(--s-3); font-size: var(--fs-sm); color: var(--muted); text-wrap: pretty; }
+.inside .markerChips { padding: 0 var(--s-4) var(--s-4); }
+.insideAddonsTitle { margin-top: var(--s-6); margin-bottom: var(--s-3); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
+.addonGrid { display: grid; gap: var(--s-2); }
+.addonCard { display: grid; gap: 2px; padding: var(--s-4); border-radius: var(--r-sm); background: var(--panel-soft); box-shadow: inset 0 0 0 1px var(--line); }
+.addonCardName { font-weight: 700; }
+.addonCardPrice { font-size: var(--fs-sm); font-weight: 700; color: var(--c-brand); }
+.addonCardMarkers { font-size: var(--fs-xs); color: var(--muted); }
+@media (min-width: 40rem) { .insideGrid { grid-template-columns: repeat(2, 1fr); } .addonGrid { grid-template-columns: repeat(2, 1fr); } }
+@media (min-width: 64rem) { .insideGrid { grid-template-columns: repeat(3, 1fr); } .addonGrid { grid-template-columns: repeat(3, 1fr); } }
+.insideGrid details { height: 100%; }

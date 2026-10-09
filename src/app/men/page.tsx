@@ -4,7 +4,8 @@ import { Logo } from "@/components/brand/Logo";
 import { StickyCta } from "@/components/home/StickyCta";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
-import { GaugePreview, PhonePreview, SystemsPreview, TrendPreview } from "@/components/preview/ResultsPreview";
+import { GaugePreview, SystemsPreview, TrendPreview } from "@/components/preview/ResultsPreview";
+import { ProductBox } from "@/components/product/ProductBox";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -89,11 +90,53 @@ export default function MenFunnelPage() {
                 {visible(f.hero.trustLine).map((c, i) => <span key={i}>{i > 0 ? <span className={styles.dot} aria-hidden="true"> · </span> : null}<ClaimText c={c} /></span>)}
               </p>
             </div>
-            <div className={styles.heroPhone}><PhonePreview /></div>
+            <div className={styles.heroPhone}><ProductBox areas={f.panel.buckets.length} /></div>
           </Container>
         </section>
 
-        {/* 1b. Dream outcome, shown */}
+        {/* 1b. What's inside: the contents, laid out */}
+        <section id="inside" data-theme="light" className={styles.section} aria-labelledby="inside-title">
+          <Container>
+            <div className={styles.sectionHead}>
+              <p className={styles.eyebrowLight}>{f.inside.eyebrow}</p>
+              <h2 id="inside-title" className={styles.h2}>{fill(f.inside.title)}</h2>
+              <p className={styles.intro}>{fill(f.inside.intro)}</p>
+            </div>
+            <ul className={styles.insideGrid}>
+              {f.panel.buckets.map((b, i) => (
+                <li key={b.id}>
+                  <details className={styles.inside}>
+                    <summary className={styles.insideSummary}>
+                      <span className={styles.insideNum}><span className="num">{String(i + 1).padStart(2, "0")}</span></span>
+                      <span className={styles.insideName}>{b.name}</span>
+                      <span className={styles.insideCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span>
+                      <span className={styles.insideToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
+                    </summary>
+                    <p className={styles.insideWhy}>{b.explanation}</p>
+                    <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
+                  </details>
+                </li>
+              ))}
+            </ul>
+            <h3 className={styles.insideAddonsTitle}>{fill(f.inside.addonsTitle)}</h3>
+            <ul className={styles.addonGrid}>
+              {f.panel.addonBuckets.map((ab) => {
+                const a = getAddon(ab.addonId);
+                if (!a || !a.launchEnabled) return null;
+                return (
+                  <li key={ab.addonId} className={styles.addonCard}>
+                    <span className={styles.addonCardName}>{ab.name}</span>
+                    <span className={styles.addonCardPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span>
+                    <span className={styles.addonCardMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).name).join(", ")}</span>
+                  </li>
+                );
+              })}
+            </ul>
+            <div className={styles.sectionCta}><Cta id="men_inside_cta" location="men_inside" /></div>
+          </Container>
+        </section>
+
+        {/* 1c. How results arrive */}
         <section id="outcome" data-theme="shell" className={styles.section} aria-labelledby="outcome-title">
           <Container>
             <div className={styles.sectionHead}>
@@ -106,7 +149,7 @@ export default function MenFunnelPage() {
                 <article key={c.id} className={styles.outcomeItem} aria-labelledby={`oc-${c.id}`}>
                   <h3 id={`oc-${c.id}`} className={styles.outcomeTitle}>{c.title}</h3>
                   <p className={styles.outcomeBody}>{fill(c.body)}</p>
-                  {c.id === "gauge" ? <GaugePreview /> : c.id === "trend" ? <TrendPreview /> : <SystemsPreview />}
+                  {c.id === "gauge" ? <GaugePreview /> : c.id === "systems" ? <SystemsPreview /> : <TrendPreview />}
                 </article>
               ))}
             </div>
@@ -183,49 +226,6 @@ export default function MenFunnelPage() {
               <p className={styles.offerFoot}>{fill(f.offer.foot)}</p>
               <Cta id="men_offer_cta" location="men_offer" full />
             </div>
-          </Container>
-        </section>
-
-        {/* 3. What's checked */}
-        <section id="panel" data-theme="light" className={styles.section} aria-labelledby="panel-title">
-          <Container className={styles.narrow}>
-            <h2 id="panel-title" className={styles.h2}>{f.panel.title}</h2>
-            <p className={styles.intro}>{fill(f.panel.intro)}</p>
-            <ul className={styles.areas}>
-              {f.panel.buckets.map((b) => (
-                <li key={b.id}>
-                  <details className={styles.area}>
-                    <summary className={styles.areaSummary}>
-                      <span className={styles.areaName}>{b.name}</span>
-                      <span className={styles.areaCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span>
-                      <span className={styles.areaToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
-                    </summary>
-                    <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
-                  </details>
-                </li>
-              ))}
-              <li className={styles.areaWide}>
-                <details className={styles.area}>
-                  <summary className={styles.areaSummary}>
-                    <span className={styles.areaName}>{fill(f.panel.addonsTitle)}</span>
-                    <span className={styles.areaCount}>Optional</span>
-                    <span className={styles.areaToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
-                  </summary>
-                  <ul className={styles.addonList}>
-                    {f.panel.addonBuckets.map((ab) => {
-                      const a = getAddon(ab.addonId);
-                      if (!a || !a.launchEnabled) return null;
-                      return (
-                        <li key={ab.addonId}>
-                          <span className={styles.addonName}>{ab.name} <span className={styles.addonPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span></span>
-                          <span className={styles.addonMarkers}>{addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).name).join(", ")}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </details>
-              </li>
-            </ul>
           </Container>
         </section>
 

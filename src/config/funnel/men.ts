@@ -43,7 +43,7 @@ export const menFunnel = {
   hero: {
     eyebrow: "For Aussie men 30–60",
     headline: "Know exactly where your body stands.",
-    subheadline: ["{markers} markers from one blood draw. Every result shown on its range, tracked over time, and explained by a doctor in plain English."],
+    subheadline: ["One blood draw. {markers} markers across {buckets} areas of health, every one shown on its range and explained by a doctor in plain English."],
     primaryCta: { label: "Get tested – {price}", href: "/checkout" },
     trustLine: [
       { text: "No GP referral", verified: true },
@@ -52,17 +52,25 @@ export const menFunnel = {
     ] as Claim[],
   },
 
-  // 1b. Dream outcome, shown: the three things you get back, as they actually look.
+  // 1b. What's inside: the product laid out like contents. Buckets come from panel.buckets below.
+  inside: {
+    eyebrow: "What's inside",
+    title: "{markers} markers. {buckets} areas. Tap any one to see every marker.",
+    intro: "Not a random handful of tests. The full picture a doctor would want before saying anything about your health.",
+    addonsTitle: "Want more depth? Add it to the same draw.",
+  },
+
+  // 1c. Dream outcome, shown: how results arrive. Only what the secure results link shows today.
   outcome: {
-    eyebrow: "What you get back",
+    eyebrow: "How your results arrive",
     title: "Not a lab printout. A picture you can read.",
-    intro: "Every marker on its own range, grouped by what it tells you about, and tracked each time you test. Flagged results come with a doctor's written explanation and whether to follow up with your GP.",
+    intro: "Within 5 days you get a private link, opened with your surname and date of birth. No app to install, nothing to decode: every marker on its own range, grouped by what it tells you about, with the doctor's written note on top.",
     cards: [
-      { id: "gauge", title: "See where every result sits", body: "Green is the laboratory's range. Red is outside it. Your result is the dot. No decoding." },
-      { id: "trend", title: "Watch it change over time", body: "Retest and the same marker becomes a line. Back within range, drifting, or steady: you see it." },
-      { id: "systems", title: "Grouped by what it means", body: "Heart, blood, iron, liver, kidneys, thyroid, blood sugar. One glance tells you where to look." },
+      { id: "gauge", title: "See where every result sits", body: "Green is the laboratory's range. Red is outside it. Your result is the dot." },
+      { id: "systems", title: "Grouped by what it means", body: "Heart, liver, kidneys, iron, blood sugar, thyroid. One glance tells you where to look." },
+      { id: "trend", title: "Test again and watch it move", body: "From your second test, every marker becomes a line. Back within range, drifting, or steady." },
     ],
-    doctorLine: { text: "Then an Australian-registered doctor explains it all in plain English, within 5 days.", verified: true },
+    doctorLine: { text: "An Australian-registered doctor reads the whole picture and explains it in plain English, within 5 days.", verified: true },
   },
 
   // 2. Likelihood of success: why this will actually work for you. Facts, no testimonials (AHPRA s133).
