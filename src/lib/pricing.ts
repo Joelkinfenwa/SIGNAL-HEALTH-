@@ -78,6 +78,7 @@ export function quoteConfiguration(cfg: Configuration): Quote {
  */
 export function serializeConfiguration(cfg: Configuration, opts: { recommendedAddonIds?: string[] } = {}): string {
   const p = new URLSearchParams();
+  if (cfg.productId !== signalTest.id) p.set("product", cfg.productId);
   if (cfg.addonIds.length) p.set("addons", cfg.addonIds.join(","));
   if (cfg.collectionMethodId) p.set("collection", cfg.collectionMethodId);
   const rec = (opts.recommendedAddonIds ?? []).filter((id) => !cfg.addonIds.includes(id));
@@ -97,8 +98,10 @@ export function parseRecommended(params: URLSearchParams, product: Product = sig
   return Array.from(new Set(ids));
 }
 
-export function parseConfiguration(params: URLSearchParams | Record<string, string | string[] | undefined>, product: Product = signalTest): Configuration {
+export function parseConfiguration(params: URLSearchParams | Record<string, string | string[] | undefined>, fallback: Product = signalTest): Configuration {
   const get = (k: string) => (params instanceof URLSearchParams ? params.get(k) : (Array.isArray(params[k]) ? params[k]![0] : params[k])) ?? "";
+  // ?product= selects an offer (e.g. signal_women); anything unknown falls back to the flagship.
+  const product = getProduct(get("product")) ?? fallback;
   const addonIds = get("addons").split(",").map((s) => s.trim()).filter(sellableFor(product));
   const collection = get("collection");
   return {

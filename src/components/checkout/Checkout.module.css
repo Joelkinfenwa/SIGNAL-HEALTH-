@@ -170,3 +170,5 @@
 .valueGuarantee { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-xs); font-weight: 600; color: rgba(246, 245, 241, 0.85); line-height: 1.45; }
 .valueGuarantee svg { flex: none; color: #9fe0bb; margin-top: 2px; }
 @media (min-width: 64rem) { .value { position: sticky; top: var(--s-5); } }
+
+.compare { margin-right: 6px; color: var(--muted); text-decoration: line-through; font-weight: 500; }

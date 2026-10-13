@@ -18,7 +18,7 @@ import { resolvePrice } from "./pricing";
  * TODO-VERIFY analyte availability with the laboratory partner.
  * TODO(pricing): prices null until set.
  */
-export type ProductId = "signal";
+export type ProductId = "signal" | "signal_women";
 
 export interface Product {
   id: ProductId;
@@ -93,8 +93,25 @@ export const signalTest: Product = {
   enabled: true,
 };
 
-/** All products (one today). Kept as a list so a second product never means a refactor. */
-export const products: Product[] = [signalTest];
+/**
+ * THE SIGNAL TEST, women's offer. Same markers, same laboratory, same doctor
+ * review; a lower entry price (a deliberate loss leader) with add-ons and
+ * retesting plans carrying the margin. Sold only from /women and links that
+ * carry ?product=signal_women. Add-on order leads with what women ask for.
+ */
+export const signalWomen: Product = {
+  ...signalTest,
+  id: "signal_women",
+  sku: "SIGNAL-TEST-W",
+  slug: "women",
+  priceCents: 17900, // AUD, set 13 Oct 2026 (Director): women's offer
+  compareAtPriceCents: 29900,
+  addonIds: ["nutrients_plus", "thyroid_plus", "hormones_plus", "heart_plus", "performance_plus"],
+  highlights: ["iron", "thyroid", "metabolic", "heart", "liver", "blood"],
+};
+
+/** All products. Kept as a list so another product never means a refactor. */
+export const products: Product[] = [signalTest, signalWomen];
 export const getProduct = (id: string) => products.find((p) => p.id === id && p.enabled);
 
 export const productCategories = (p: Product = signalTest) => groupByCategory(p.markerIds).map((g) => g.category);
