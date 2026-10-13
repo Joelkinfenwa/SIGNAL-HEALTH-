@@ -71,6 +71,23 @@
 .tick { flex: none; display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--c-brand-soft); color: var(--c-brand); margin-top: 1px; }
 .offerFoot { font-size: var(--fs-sm); color: var(--c-stone); }
 
+/* 3. what's checked: area tiles */
+.areaTiles { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-2); }
+.areaTile { display: grid; gap: 4px; align-content: start; padding: var(--s-3) var(--s-4); border-radius: var(--r-sm); background: var(--panel); box-shadow: var(--shadow-soft); }
+.areaTileHead { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-2); }
+.areaTileName { font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; line-height: 1.15; }
+.areaTileCount { display: inline-flex; align-items: center; gap: 3px; font-size: var(--fs-xs); font-weight: 700; color: var(--c-brand); white-space: nowrap; }
+.areaTileLine { font-size: var(--fs-xs); color: var(--muted); line-height: 1.35; text-wrap: pretty; }
+.areaTileAddon { background: transparent; box-shadow: inset 0 0 0 1.5px var(--line); border: 0; }
+.areaTileAddon .areaTileName { color: var(--muted); font-size: var(--fs-base); }
+.areaTileAddon .areaTileName::before { content: "+ "; color: var(--c-brand); }
+.markersAll { margin-top: var(--s-4); border-top: 1px solid var(--line); }
+.markersAllSummary { display: flex; align-items: center; justify-content: space-between; gap: var(--s-4); min-height: 56px; padding: var(--s-3) 0; font-weight: 700; cursor: pointer; list-style: none; }
+.markersAllSummary::-webkit-details-marker { display: none; }
+.markersAll[open] .plus { display: none; }
+.markersAll[open] .minus { display: block; }
+.markersAll .panelGroups { padding-bottom: var(--s-4); }
+
 /* 3. every test, listed */
 .panelCard { display: grid; gap: var(--s-4); padding: var(--s-4); border-radius: var(--r-md); background: var(--c-paper); color: var(--c-ink); box-shadow: var(--shadow-card); }
 .panelHead { display: flex; justify-content: space-between; align-items: baseline; gap: var(--s-3); padding-bottom: var(--s-2); border-bottom: 1px solid var(--line); font-weight: 700; letter-spacing: -0.01em; }
@@ -212,6 +229,7 @@
   .familiar { grid-template-columns: repeat(3, 1fr); }
   .areas { grid-template-columns: 1fr 1fr; }
   .panelCard { padding: var(--s-6); }
+  .areaTiles { grid-template-columns: repeat(3, 1fr); gap: var(--s-3); }
   .panelGroups { grid-template-columns: 1fr 1fr; gap: var(--s-4) var(--s-6); }
   .addonCards { grid-template-columns: repeat(3, 1fr); }
   .areaWide { grid-column: 1 / -1; }
