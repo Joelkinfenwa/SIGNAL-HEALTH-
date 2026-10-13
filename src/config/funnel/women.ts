@@ -74,8 +74,29 @@ export const womenFunnel = {
 
   // 4. What's checked. Marker names render from biomarkers.ts.
   panel: {
-    title: "Every test, listed",
-    intro: "All {markers} markers in the base test, grouped by what they tell you. Add-ons underneath.",
+    title: "What's checked",
+    intro: "{areas} areas of your health. {markers} markers. One blood draw.",
+    /* One plain line per area, keyed by biomarker category id. Counts come from the product. */
+    areaLines: {
+      iron: "Iron stores and how well it's carried",
+      thyroid: "The gland that sets your metabolic pace",
+      heart: "Cholesterol and the fats in your blood",
+      metabolic: "Blood sugar today and over three months",
+      liver: "How your liver is working",
+      kidney: "How well your kidneys are filtering",
+      inflammation: "Your general level of inflammation",
+      electrolytes: "Fluid, nerve and muscle balance",
+      minerals: "Calcium, magnesium and more",
+      blood: "Red cells, white cells, platelets",
+    } as Record<string, string>,
+    areaNames: { metabolic: "Blood sugar", blood: "Blood count" } as Record<string, string>,
+    addonTiles: [
+      { addonId: "hormones_plus", name: "Hormones", line: "Oestradiol, FSH, LH and more" },
+      { addonId: "thyroid_plus", name: "Full thyroid", line: "Free T4, Free T3, antibodies" },
+      { addonId: "nutrients_plus", name: "Vitamins", line: "Vitamin D, B12, folate" },
+      { addonId: "heart_plus", name: "Heart in depth", line: "ApoB, Lp(a) and more" },
+    ],
+    markersToggle: "See every marker",
     buckets: [
       { id: "energy", name: "Energy and iron", explanation: "Looks at the cells that carry oxygen and the iron that makes them, the most common place to start when energy is low.", markerIds: ["fbc", "ferritin", "iron", "transferrin", "tsat"] },
       { id: "heart", name: "Heart and cholesterol", explanation: "Looks at the fats in your blood and the particles that carry them.", markerIds: ["tc", "ldl", "hdl", "tg", "non_hdl"] },
