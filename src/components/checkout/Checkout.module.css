@@ -111,8 +111,6 @@
   .wrap { grid-template-columns: 1fr 22rem; gap: var(--s-6) var(--s-8); }
   .pay { position: sticky; top: var(--s-5); }
   .bar { display: none; }
-  .primaryRow { display: none; }
-  .payAction { display: grid; }
 }
 
 .plan { display: grid; gap: var(--s-2); padding: var(--s-4); border-radius: var(--r-sm); background: var(--c-brand-soft); }
@@ -172,3 +170,35 @@
 @media (min-width: 64rem) { .value { position: sticky; top: var(--s-5); } }
 
 .compare { margin-right: 6px; color: var(--muted); text-decoration: line-through; font-weight: 500; }
+
+/* Checkout stage: deep page, paper cards */
+.wrap { padding-top: var(--s-5); }
+.header { display: grid; gap: var(--s-3); }
+.card { display: grid; gap: var(--s-4); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); color: var(--fg); box-shadow: var(--shadow-card); scroll-margin-top: var(--s-5); }
+.cardTitle { display: flex; align-items: center; gap: var(--s-3); font-size: var(--fs-md); font-weight: 700; letter-spacing: -0.02em; }
+.privacy { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-xs); color: var(--muted); line-height: 1.5; }
+.privacy svg { flex: none; color: var(--c-brand); margin-top: 2px; }
+.order { display: grid; gap: var(--s-3); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); color: var(--fg); box-shadow: var(--shadow-card); }
+.orderHead { display: flex; justify-content: space-between; align-items: center; gap: var(--s-2); }
+.orderTag { font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-brand); }
+.change { display: inline-flex; align-items: center; min-height: 32px; font-size: var(--fs-xs); font-weight: 700; color: var(--muted); text-underline-offset: 3px; }
+.change:hover { color: var(--fg); }
+.orderTitle { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.03em; line-height: 1.1; }
+.orderLines { display: grid; gap: var(--s-2); padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-sm); }
+.orderLines li { display: flex; justify-content: space-between; gap: var(--s-3); }
+.orderMethod { display: flex; align-items: flex-start; gap: 6px; font-size: var(--fs-xs); color: var(--muted); line-height: 1.45; }
+.orderMethod svg { flex: none; color: var(--c-brand); margin-top: 2px; }
+.orderIncluded { display: grid; gap: 8px; padding-top: var(--s-3); border-top: 1px solid var(--line); font-size: var(--fs-xs); font-weight: 600; color: var(--fg); }
+.orderIncluded li { display: flex; align-items: flex-start; gap: 8px; line-height: 1.4; }
+.orderIncluded svg { flex: none; color: var(--c-brand); margin-top: 2px; }
+.orderGuarantee { display: flex; align-items: flex-start; gap: 8px; font-size: var(--fs-xs); font-weight: 700; color: var(--c-brand); line-height: 1.45; }
+.orderGuarantee svg { flex: none; margin-top: 2px; }
+@media (min-width: 64rem) { .order { position: sticky; top: var(--s-5); } }
+/* Phone: the order summary sits above the form, compact. Desktop: beside it. */
+.order { order: -1; }
+.orderIncluded { display: none; }
+.barButton { text-decoration: none; }
+@media (min-width: 64rem) { .order { order: 0; } .orderIncluded { display: grid; } }
+.header { order: -2; }
+.orderTitle { display: none; }
+@media (min-width: 64rem) { .orderTitle { display: block; } }

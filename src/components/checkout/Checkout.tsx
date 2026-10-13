@@ -2,107 +2,109 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { CheckoutHeader } from "@/components/checkout/CheckoutHeader";
+import { CustomerDetails } from "@/components/checkout/CustomerDetails";
 import { PaymentPanel } from "@/components/checkout/PaymentPanel";
+import { Steps } from "@/components/checkout/Steps";
 import { Icon } from "@/components/ui/Icon";
-import { addonNewMarkers, sellableAddonsFor } from "@/config/addons";
-import { getBiomarker } from "@/config/biomarkers";
-import { MIN_AGE_YEARS } from "@/config/checkout-fields";
-import { guarantee, included, panelAreas } from "@/config/panel";
-import { SignalMark } from "@/components/brand/Logo";
-import { collectionMethods, type CollectionMethodId } from "@/config/collection";
+import { detailsCopy, MIN_AGE_YEARS } from "@/config/checkout-fields";
+import { getCollectionMethod } from "@/config/collection";
+import { guarantee, included } from "@/config/panel";
 import { getProduct, signalTest } from "@/config/products";
 import { retestOffers, formatDiscount, type RetestOffer } from "@/config/retest-offer";
-import { quoteRetestForOrder } from "@/lib/retest/offer";
-import { visibleTrustClaims } from "@/config/trust";
 import { track } from "@/lib/analytics/track";
-import { startPayment } from "@/lib/checkout/create-order";
+import { createOrder } from "@/lib/checkout/create-order";
+import { emptyCustomer, validateCustomer, type CustomerDetails as Details, type CustomerField } from "@/lib/checkout/customer";
 import { cx } from "@/lib/cx";
 import { formatAUD } from "@/lib/money";
-import { defaultConfiguration, displayTotal, parseConfiguration, quoteConfiguration, serializeConfiguration, toggleAddon, type Configuration } from "@/lib/pricing";
+import { defaultConfiguration, displayTotal, parseConfiguration, quoteConfiguration, serializeConfiguration, type Configuration } from "@/lib/pricing";
+import { quoteRetestForOrder } from "@/lib/retest/offer";
 import styles from "./Checkout.module.css";
 
-const EMAIL_KEY = "sig_checkout_email";
-const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+const CUSTOMER_KEY = "sig_checkout_customer";
+const LEGACY_EMAIL_KEY = "sig_checkout_email";
+const ALL_FIELDS = Object.keys(emptyCustomer()) as CustomerField[];
 
 /**
- * Pay-first checkout, one screen: what you're buying (summary, add-ons,
- * collection), then an email address and the card form. Nothing else before
- * payment. The laboratory details (name, date of birth, sex, address) are
- * collected on the order page straight after payment, because the request
- * form is issued then, not before.
+ * Checkout stage, steps two and three on one screen: the details the
+ * laboratory needs, then payment. Everything is collected before the card so
+ * the request form is issued the moment payment succeeds. The configuration
+ * (product, add-ons, collection) arrives in the URL from the build step.
  *
- * The email persists in sessionStorage only (tab-scoped). It never enters an
- * analytics event.
+ * What is typed persists in sessionStorage only (tab-scoped), so a reload or
+ * a trip back to the build step keeps it. It never enters an analytics event.
  */
 export function Checkout() {
-  const [cfg, setCfg] = useState<Configuration>(() => defaultConfiguration(signalTest));
+  const [cfg, setCfg] = useState<Configuration>(() => ({ ...defaultConfiguration(signalTest), collectionMethodId: "centre" }));
+  const [plan, setPlan] = useState<RetestOffer | null>(null);
   const [hydrated, setHydrated] = useState(false);
-  const [addonsOpen, setAddonsOpen] = useState(false);
-  const [email, setEmail] = useState("");
-  const [emailTouched, setEmailTouched] = useState(false);
+  const [customer, setCustomer] = useState<Details>(() => ({ ...emptyCustomer(), acceptsTerms: true }));
+  const [touched, setTouched] = useState<Partial<Record<CustomerField, boolean>>>({});
   const [payMessage, setPayMessage] = useState<string | null>(null);
   const [payment, setPayment] = useState<{ orderId: string; clientSecret: string; amountCents: number; token: string } | null>(null);
-  const [plan, setPlan] = useState<RetestOffer | null>(null);
   const [starting, setStarting] = useState(false);
+  const formRef = useRef<HTMLElement>(null);
   const router = useRouter();
   const product = getProduct(cfg.productId) ?? signalTest;
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const planQuote = useMemo(() => (plan && quote.pricingComplete ? quoteRetestForOrder(quote.lines, plan) : null), [plan, quote]);
-  const methods = collectionMethods.filter((m) => product.collectionMethodIds.includes(m.id));
-  const options = sellableAddonsFor(product);
-  const trust = visibleTrustClaims().filter((c) => c.status === "verified").slice(0, 3);
+  const errors = useMemo(() => validateCustomer(customer, { requiresAddress: true }, detailsCopy.errors), [customer]);
+  const errorCount = Object.keys(errors).length;
   const paymentsLive = Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
-  const emailValid = EMAIL.test(email.trim());
+  const total = displayTotal(quote, formatAUD, "Pricing coming soon");
+  const method = cfg.collectionMethodId ? getCollectionMethod(cfg.collectionMethodId) : null;
+  const buildHref = `/checkout${serializeConfiguration(cfg)}${plan ? `${serializeConfiguration(cfg) ? "&" : "?"}plan=${plan.id}` : ""}`;
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const parsed = parseConfiguration(params, signalTest);
-    setCfg(parsed);
+    setCfg({ ...parsed, collectionMethodId: parsed.collectionMethodId ?? "centre" });
     setPlan(retestOffers.find((o) => o.active && o.id === params.get("plan")) ?? null);
-    setAddonsOpen(parsed.addonIds.length === 0);
-    try { const saved = sessionStorage.getItem(EMAIL_KEY); if (saved) setEmail(saved); } catch { /* blocked storage: the field still works */ }
+    try {
+      const saved = sessionStorage.getItem(CUSTOMER_KEY);
+      if (saved) setCustomer((c) => ({ ...c, ...(JSON.parse(saved) as Partial<Details>), acceptsTerms: true }));
+      else { const email = sessionStorage.getItem(LEGACY_EMAIL_KEY); if (email) setCustomer((c) => ({ ...c, email })); }
+    } catch { /* blocked storage: the form still works */ }
     setHydrated(true);
-    track({ name: "checkout_started", props: { product_id: parsed.productId, addon_ids: parsed.addonIds } });
+    track({ name: "payment_step_viewed", props: { product_id: parsed.productId, addon_ids: parsed.addonIds } });
   }, []);
 
-  useEffect(() => { if (hydrated) { try { sessionStorage.setItem(EMAIL_KEY, email); } catch { /* ignore */ } } }, [email, hydrated]);
+  useEffect(() => { if (hydrated) { try { sessionStorage.setItem(CUSTOMER_KEY, JSON.stringify(customer)); } catch { /* ignore */ } } }, [customer, hydrated]);
 
-  // Any change to what's being bought or who's paying invalidates a started payment.
-  useEffect(() => { setPayment(null); }, [cfg, email]);
+  // Any change to who is paying invalidates a started payment.
+  useEffect(() => { setPayment(null); }, [customer]);
 
-  useEffect(() => {
-    if (!hydrated) return;
-    const base = serializeConfiguration(cfg);
-    window.history.replaceState(window.history.state, "", `${window.location.pathname}${base}${plan ? `${base ? "&" : "?"}plan=${plan.id}` : ""}`);
-  }, [cfg, plan, hydrated]);
-
-  function toggle(id: string) {
-    const has = cfg.addonIds.includes(id);
-    track({ name: has ? "addon_removed" : "addon_selected", props: { addon_id: id } });
-    setCfg(toggleAddon(cfg, id));
-  }
-  function chooseCollection(id: CollectionMethodId) {
-    setCfg({ ...cfg, collectionMethodId: id });
-    track({ name: "collection_method_selected", props: { product_id: cfg.productId, method: id } });
+  function focusFirstError() {
+    requestAnimationFrame(() => {
+      const first = formRef.current?.querySelector<HTMLElement>("[aria-invalid='true'], [role='alert']");
+      first?.scrollIntoView({ behavior: "smooth", block: "center" });
+      (formRef.current?.querySelector<HTMLElement>("[aria-invalid='true']") ?? first)?.focus?.();
+    });
   }
 
   async function attemptPay() {
     if (payment) return;
-    setEmailTouched(true);
-    if (!cfg.collectionMethodId) { setPayMessage("Choose a collection option first."); document.getElementById("collection-title")?.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
-    if (!emailValid) { setPayMessage("Enter a valid email address so we can send your confirmation and request form."); document.getElementById("pay-email")?.focus(); return; }
+    if (errorCount) {
+      setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
+      setPayMessage(detailsCopy.summaryError(errorCount));
+      track({ name: "checkout_details_invalid", props: { field_count: errorCount } });
+      focusFirstError();
+      return;
+    }
     if (!paymentsLive) { setPayMessage("Payments open at launch."); return; }
     if (!quote.pricingComplete) { setPayMessage(quote.unpricedCount ? "An add-on in your order isn't priced yet, so payment can't start." : "Pricing isn't set yet, so payment can't start."); return; }
     setStarting(true); setPayMessage(null);
     try {
-      const res = await startPayment(cfg, email.trim());
+      const res = await createOrder(cfg, { ...customer, acceptsTerms: true });
       if (res.status === "ready") {
         setPayment({ orderId: res.orderId, clientSecret: res.clientSecret, amountCents: res.amountCents, token: res.token });
-        track({ name: "payment_step_viewed", props: { product_id: cfg.productId, addon_ids: cfg.addonIds } });
+        track({ name: "checkout_details_completed", props: { product_id: cfg.productId } });
         requestAnimationFrame(() => document.getElementById("pay-form")?.scrollIntoView({ behavior: "smooth", block: "start" }));
       } else if (res.status === "invalid") {
+        setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
         setPayMessage(Object.values(res.errors)[0] ?? "Check your details.");
+        focusFirstError();
       } else {
         setPayMessage(res.reason);
       }
@@ -119,179 +121,106 @@ export function Checkout() {
       { name: "purchase_completed", props: { order_id: paymentIntentId, product_id: cfg.productId, addon_ids: cfg.addonIds, value: payment.amountCents / 100, currency: "AUD" } },
       { eventId: paymentIntentId },
     );
-    try { sessionStorage.removeItem(EMAIL_KEY); } catch { /* ignore */ }
+    try { sessionStorage.removeItem(CUSTOMER_KEY); sessionStorage.removeItem(LEGACY_EMAIL_KEY); } catch { /* ignore */ }
     router.push(`/order/${paymentIntentId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`);
   }
 
-  const canPay = paymentsLive && quote.pricingComplete && Boolean(cfg.collectionMethodId) && emailValid;
-  const total = displayTotal(quote, formatAUD, "Pricing coming soon");
-
-  const payBlock = (
-    <section id="pay-form" className={cx(styles.block, styles.payBlock)} aria-labelledby="pay-block-title">
-      <h2 id="pay-block-title" className={styles.blockTitle}><span className={styles.n}>3</span> Pay {quote.pricingComplete ? <span className="num">{total}</span> : null}</h2>
-      <div className={styles.emailRow}>
-        <label htmlFor="pay-email" className={styles.label}>Email</label>
-        <input
-          id="pay-email" type="email" inputMode="email" autoComplete="email" autoCapitalize="none" spellCheck={false}
-          className={cx(styles.input, emailTouched && !emailValid && styles.inputError)}
-          value={email} onChange={(e) => { setEmail(e.target.value); setPayMessage(null); }} onBlur={() => setEmailTouched(true)}
-          aria-invalid={emailTouched && !emailValid ? true : undefined} aria-describedby="pay-email-help" placeholder="you@example.com" disabled={Boolean(payment)}
-        />
-        <p id="pay-email-help" className={styles.help}>Your receipt, confirmation and pathology request form go here.</p>
-      </div>
-      {payment ? (
-        <PaymentPanel
-          key={payment.clientSecret}
-          clientSecret={payment.clientSecret}
-          amountCents={payment.amountCents}
-          billing={{ email: email.trim() }}
-          returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`}
-          onSuccess={onPaid}
-        />
-      ) : (
-        <div className={styles.primaryRow} style={{ display: "grid" }}>
-          <button type="button" className={styles.payButton} data-ready={canPay ? "true" : "false"} onClick={attemptPay} disabled={starting}>
-            {starting ? "Starting payment…" : paymentsLive ? "Continue to payment" : "Payments open at launch"} <Icon name="arrow" size={18} />
-          </button>
-          <p className={styles.payNote} aria-live="polite">{payMessage ?? (paymentsLive ? "Card, Apple Pay or Google Pay. Secured by Stripe." : "Card, Apple Pay and Google Pay will be available here.")}</p>
-        </div>
-      )}
-      <p className={styles.legal}>
-        By paying you agree to the <Link href="/legal/terms">Terms of Service</Link> and <Link href="/legal/privacy">Privacy Policy</Link>, and to your details being shared with the laboratory and collection team to carry out your test. You need to be {MIN_AGE_YEARS} or over to order.
-      </p>
-      <p className={styles.afterPay}><Icon name="check" size={14} /> After payment we ask for the details the laboratory needs (name, date of birth, sex, address), then email your request form.</p>
-      <p className={styles.guarantee}><b>{guarantee.title}</b> {guarantee.body}</p>
-    </section>
-  );
-
   const summary = (
-    <aside className={styles.value} aria-labelledby="pay-title">
-      <div className={styles.valueHead}>
-        <span className={styles.valueMark}><SignalMark className={styles.valueMarkSvg} /> SIGNAL</span>
-        <span className={styles.valueTag}>Your order</span>
+    <aside className={styles.order} data-theme="light" aria-labelledby="order-title">
+      <div className={styles.orderHead}>
+        <p id="order-title" className={styles.orderTag}>Your order</p>
+        <Link href={buildHref} className={styles.change}>Change</Link>
       </div>
-      <p id="pay-title" className={styles.valueTitle}>The SIGNAL Test</p>
-      <p className={styles.valueSub}><span className="num">{quote.markerCount}</span> markers · <span className="num">{panelAreas.length}</span> areas of health · one blood draw</p>
-      <ul className={styles.valueList}>
-        {included.map((i) => <li key={i.text}><Icon name={i.icon} size={14} /> {i.text}</li>)}
-      </ul>
-      <ul className={styles.payLines}>
+      <p className={styles.orderTitle}>The SIGNAL Test</p>
+      <ul className={styles.orderLines}>
         {quote.lines.map((l) => (
-          <li key={l.id}><span>{l.label}</span><span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span></li>
+          <li key={l.id}><span>{l.label}</span><span className="num">{l.priceCents === null ? "TBC" : l.priceCents === 0 ? "Included" : formatAUD(l.priceCents)}</span></li>
         ))}
       </ul>
+      {method ? <p className={styles.orderMethod}><Icon name={method.id === "mobile" ? "home" : "pin"} size={14} /> {method.name}: {method.description}</p> : null}
       <div className={styles.total}><span>Total</span><span className={cx(styles.totalValue, "num")}>{total}</span></div>
-      <div className={styles.payAction}>
-        <a className={cx(styles.payButton, styles.valueButton)} data-ready={cfg.collectionMethodId ? "true" : "false"} href="#pay-form">Pay {quote.pricingComplete ? total : "now"} <Icon name="arrow" size={18} /></a>
-        <p className={styles.valueNote}>Email, then card. Two minutes. Secured by Stripe.</p>
-      </div>
-      <p className={styles.valueGuarantee}><Icon name="check" size={14} /> {guarantee.title} 7 days from your report.</p>
+      <ul className={styles.orderIncluded}>
+        {included.slice(0, 3).map((i) => <li key={i.text}><Icon name={i.icon} size={14} /> {i.text}</li>)}
+      </ul>
+      <p className={styles.orderGuarantee}><Icon name="check" size={14} /> {guarantee.title}</p>
     </aside>
   );
 
   return (
-    <div className={styles.wrap}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>Your SIGNAL Test.</h1>
-        <p className={styles.intro}>Check what&apos;s included, choose how you&apos;d like to be collected, and pay. The laboratory details come after.</p>
-        <ul className={styles.reassure} aria-label="What you get">
-          <li><Icon name="tube" size={14} /> Walk in, no appointment</li>
-          <li><Icon name="shield" size={14} /> Doctor-reviewed</li>
-          <li><Icon name="calendar" size={14} /> Results within 5 days</li>
-          <li><Icon name="check" size={14} /> Clear explanation or your fee back</li>
-        </ul>
-      </header>
+    <>
+      <CheckoutHeader backHref={buildHref} backLabel="Back to your test" />
+      <div className={styles.wrap}>
+        <header className={styles.header}>
+          <Steps current={payment ? 3 : 2} />
+          <h1 className={styles.title}>{payment ? "Pay." : "Your details."}</h1>
+          <p className={styles.intro}>{payment ? "Card, Apple Pay or Google Pay. Secured by Stripe." : "What the laboratory needs to issue your request form. Use the name on your photo ID: the collector checks it."}</p>
+        </header>
 
-      <div className={styles.main}>
-        <section className={styles.block} aria-labelledby="summary-title">
-          <h2 id="summary-title" className={styles.blockTitle}><span className={styles.n}>1</span> What&apos;s in your test</h2>
-          <ul className={styles.lines}>
-            {quote.lines.filter((l) => l.kind !== "collection").map((l) => (
-              <li key={l.id} className={styles.line}>
-                <span className={styles.lineText}>
-                  <span className={styles.lineLabel}>{l.label}</span>
-                  {l.kind === "product" ? <span className={styles.lineSub}><span className="num">{quote.markerCount}</span> markers across the major areas of health, every one explained</span> : null}
-                </span>
-                <span className={styles.lineRight}>
-                  {l.kind === "product" && product.compareAtPriceCents !== null && l.priceCents !== null && product.compareAtPriceCents > l.priceCents ? <span className={cx(styles.compare, "num")}>{formatAUD(product.compareAtPriceCents)}</span> : null}
-                  <span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span>
-                  {l.kind === "addon" ? <button type="button" className={styles.remove} onClick={() => toggle(l.id)}>Remove</button> : null}
-                </span>
-              </li>
-            ))}
-          </ul>
-          <ul className={styles.areas} aria-label="Areas covered by the SIGNAL Test">
-            {panelAreas.map((a) => <li key={a.id}><span className={styles.areaName}>{a.name}</span><span className={cx(styles.areaCount, "num")}>{a.markerIds.length}</span></li>)}
-          </ul>
-          <details className={styles.addons} open={addonsOpen} onToggle={(e) => setAddonsOpen((e.currentTarget as HTMLDetailsElement).open)}>
-            <summary className={styles.addonsSummary}>
-              <span>{cfg.addonIds.length ? "Add more depth" : "Go deeper where it matters to you"} <span className={styles.optional}>optional</span></span>
-              <span className={styles.toggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
-            </summary>
-            <ul className={styles.addonList}>
-              {options.map((a) => {
-                const on = cfg.addonIds.includes(a.id);
-                return (
-                  <li key={a.id} className={cx(styles.addonRow, on && styles.addonRowOn)}>
-                    <span className={styles.addonText}>
-                      <span className={styles.addonName}>{a.name} <span className={styles.addonPrice}>{a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "Price TBC"}</span></span>
-                      <span className={styles.addonFor}>{a.shortDescription}</span>
-                      <span className={styles.addonMarkers}><span className="num">+{addonNewMarkers(a, product).length}</span> · {addonNewMarkers(a, product).map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
-                    </span>
-                    <button type="button" className={cx(styles.addBtn, on && styles.addBtnOn)} aria-pressed={on} onClick={() => toggle(a.id)}>
-                      {on ? <><Icon name="check" size={16} /> Added</> : <><Icon name="plus" size={16} /> Add</>}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </details>
-          {plan ? (
-            <div className={styles.plan}>
-              <p className={styles.planTitle}><Icon name="refresh" size={16} /> Automatic Retesting · {plan.cadence.toLowerCase()}</p>
-              <p className={styles.planBody}>
-                Pay for today&apos;s test now. Straight after payment you confirm the plan and we refund {formatDiscount(plan.discountBps)}{planQuote ? ` (${formatAUD(planQuote.refundTodayCents)})` : ""} of today&apos;s order to your card, then every retest is {formatDiscount(plan.discountBps)} off. Recurring billing, cancel any time.
-              </p>
-              <button type="button" className={styles.remove} onClick={() => setPlan(null)}>Remove plan</button>
-            </div>
-          ) : null}
-        </section>
+        <div className={styles.main}>
+          <section ref={formRef} className={styles.card} data-theme="light" aria-labelledby="details-title">
+            <h2 id="details-title" className={styles.cardTitle}><span className={styles.n}>2</span> Your details</h2>
+            <CustomerDetails
+              value={customer}
+              errors={errors}
+              touched={touched}
+              requiresAddress
+              hideTerms
+              onChange={(patch) => { setCustomer((c) => ({ ...c, ...patch, acceptsTerms: true })); setPayMessage(null); }}
+              onBlur={(f) => setTouched((t) => (t[f] ? t : { ...t, [f]: true }))}
+            />
+            <p className={styles.privacy}><Icon name="shield" size={14} /> Shared with the laboratory and collection team only. Never with advertisers.</p>
+          </section>
 
-        <section className={styles.block} aria-labelledby="collection-title">
-          <h2 id="collection-title" className={styles.blockTitle}><span className={styles.n}>2</span> How would you like to be collected?</h2>
-          <div className={styles.methods} role="radiogroup" aria-labelledby="collection-title">
-            {methods.map((m) => {
-              const on = cfg.collectionMethodId === m.id;
-              return (
-                <button key={m.id} type="button" role="radio" aria-checked={on} className={cx(styles.method, on && styles.methodOn)} onClick={() => chooseCollection(m.id)}>
-                  <span className={styles.radio} aria-hidden="true" />
-                  <span className={styles.methodText}>
-                    <span className={styles.methodName}>{m.name}</span>
-                    <span className={styles.methodBody}>{m.description} {m.availabilityNote}</span>
-                  </span>
-                  <span className={styles.methodPrice}>{m.priceDeltaCents === null ? "Price TBC" : m.priceDeltaCents === 0 ? "Included" : `+${formatAUD(m.priceDeltaCents)}`}</span>
+          <section id="pay-form" className={styles.card} data-theme="light" aria-labelledby="pay-title">
+            <h2 id="pay-title" className={styles.cardTitle}><span className={styles.n}>3</span> Pay {quote.pricingComplete ? <span className="num">{total}</span> : null}</h2>
+            {plan ? (
+              <div className={styles.plan}>
+                <p className={styles.planTitle}><Icon name="refresh" size={16} /> Automatic Retesting · {plan.cadence.toLowerCase()}</p>
+                <p className={styles.planBody}>
+                  Pay for today&apos;s test now. Straight after payment you confirm the plan and we refund {formatDiscount(plan.discountBps)}{planQuote ? ` (${formatAUD(planQuote.refundTodayCents)})` : ""} of today&apos;s order to your card, then every retest is {formatDiscount(plan.discountBps)} off. Recurring billing, cancel any time.
+                </p>
+                <button type="button" className={styles.remove} onClick={() => setPlan(null)}>Remove plan</button>
+              </div>
+            ) : null}
+            {payment ? (
+              <PaymentPanel
+                key={payment.clientSecret}
+                clientSecret={payment.clientSecret}
+                amountCents={payment.amountCents}
+                billing={{ email: customer.email.trim(), name: `${customer.firstName.trim()} ${customer.lastName.trim()}`.trim() }}
+                returnUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/order/${payment.orderId}?t=${encodeURIComponent(payment.token)}${plan ? `&plan=${plan.id}` : ""}`}
+                onSuccess={onPaid}
+              />
+            ) : (
+              <div className={styles.primaryRow}>
+                <button type="button" className={styles.payButton} data-ready={errorCount === 0 ? "true" : "false"} onClick={attemptPay} disabled={starting}>
+                  {starting ? "Starting payment…" : paymentsLive ? `Continue to payment${quote.pricingComplete ? ` · ${total}` : ""}` : "Payments open at launch"} <Icon name="arrow" size={18} />
                 </button>
-              );
-            })}
-          </div>
-        </section>
-
-        {payBlock}
-      </div>
-
-      {summary}
-
-      {!payment ? (
-        <div className={styles.bar} data-theme="light">
-          <div className={styles.barInner}>
-            <span className={styles.barText}>
-              <span className={styles.barLabel}>Total</span>
-              <span className={cx(styles.barPrice, "num")}>{total}</span>
-            </span>
-            <a className={cx(styles.payButton, styles.barButton)} data-ready={cfg.collectionMethodId ? "true" : "false"} href="#pay-form">Pay now</a>
-          </div>
+                <p className={styles.payNote} aria-live="polite">{payMessage ?? (paymentsLive ? "Card, Apple Pay or Google Pay. Secured by Stripe." : "Card, Apple Pay and Google Pay will be available here.")}</p>
+              </div>
+            )}
+            <p className={styles.legal}>
+              By paying you agree to the <Link href="/legal/terms">Terms of Service</Link> and <Link href="/legal/privacy">Privacy Policy</Link>, and to your details being shared with the laboratory and collection team to carry out your test. You need to be {MIN_AGE_YEARS} or over to order.
+            </p>
+            <p className={styles.afterPay}><Icon name="check" size={14} /> Your pathology request form is emailed the moment payment goes through.</p>
+            <p className={styles.guarantee}><b>{guarantee.title}</b> {guarantee.body}</p>
+          </section>
         </div>
-      ) : null}
-    </div>
+
+        {summary}
+
+        {!payment ? (
+          <div className={styles.bar} data-theme="light">
+            <div className={styles.barInner}>
+              <span className={styles.barText}>
+                <span className={styles.barLabel}>Total</span>
+                <span className={cx(styles.barPrice, "num")}>{total}</span>
+              </span>
+              <a className={cx(styles.payButton, styles.barButton)} data-ready={errorCount === 0 ? "true" : "false"} href="#pay-form">Pay</a>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 }

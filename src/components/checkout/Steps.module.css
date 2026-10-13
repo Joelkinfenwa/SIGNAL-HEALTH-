@@ -1,0 +1,9 @@
+.steps { display: flex; align-items: center; gap: var(--s-2); font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); }
+.step { display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; }
+.step + .step::before { content: ""; width: 20px; height: 1px; background: var(--line); margin-right: var(--s-2); }
+.num { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--panel-soft); color: var(--muted); font-size: 0.72rem; letter-spacing: 0; flex: none; }
+.current { color: var(--fg); }
+.current .num { background: var(--accent); color: var(--on-accent); }
+.done .num { background: var(--c-brand); color: #fff; }
+[data-theme="checkout"] .done .num { background: rgba(246, 245, 241, 0.22); color: #fff; }
+@media (max-width: 30rem) { .step:not(.current) .label { display: none; } .step + .step::before { width: 12px; } }

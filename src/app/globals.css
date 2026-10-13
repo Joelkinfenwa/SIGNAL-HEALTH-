@@ -129,3 +129,20 @@ button, input { font: inherit; }
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
 }
+
+/*
+ * Checkout stage. Deliberately a different colour from the rest of the site:
+ * deep evergreen page, paper cards, coral progress marks. People know they
+ * have left the shop floor and are at the till.
+ */
+[data-theme="checkout"] {
+  --bg: #0e2a20;
+  --fg: #f6f5f1;
+  --muted: rgba(246, 245, 241, 0.72);
+  --line: rgba(246, 245, 241, 0.18);
+  --accent: var(--c-signal);
+  --on-accent: var(--c-ink);
+  --panel: var(--c-brand-deep);
+  --panel-soft: rgba(255, 255, 255, 0.08);
+  --focus: var(--c-signal);
+}
