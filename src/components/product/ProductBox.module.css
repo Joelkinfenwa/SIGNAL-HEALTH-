@@ -11,7 +11,7 @@
 .markSvg { width: 22px; height: 16px; color: #f6f5f1; }
 .by { font-size: 0.6rem; font-weight: 600; letter-spacing: 0.04em; color: rgba(246, 245, 241, 0.6); white-space: nowrap; }
 .cardMid { display: grid; align-content: center; gap: 2px; position: relative; }
-.big { font-size: clamp(3.4rem, 2rem + 6vw, 5.2rem); font-weight: 800; letter-spacing: -0.05em; line-height: 0.9; color: #fff; }
+.big { font-size: clamp(3.4rem, 2rem + 6vw, 5.2rem); line-height: 0.9; color: #fff; font-family: var(--font-display); font-weight: 700; letter-spacing: -0.03em; }
 .bigLbl { font-size: 0.95rem; font-weight: 600; line-height: 1.25; color: rgba(246, 245, 241, 0.85); }
 .cardList { display: grid; gap: 6px; font-size: 0.78rem; font-weight: 600; color: rgba(246, 245, 241, 0.85); position: relative; }
 .cardList li { display: flex; align-items: center; gap: 8px; }

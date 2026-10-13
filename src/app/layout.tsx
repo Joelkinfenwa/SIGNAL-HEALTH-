@@ -22,6 +22,18 @@ const figtree = localFont({
   variable: "--font-figtree",
 });
 
+/**
+ * Schibsted Grotesk, a newspaper-style grotesk, for headlines and big
+ * figures. Variable, latin subset, OFL licence, bundled like Figtree.
+ */
+const schibsted = localFont({
+  src: "./fonts/schibsted-grotesk-latin.woff2",
+  weight: "400 900",
+  style: "normal",
+  display: "swap",
+  variable: "--font-schibsted",
+});
+
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
   // Meta Business domain verification for signaltest.com.au (Business Settings → Domains).
@@ -44,7 +56,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en-AU" className={figtree.variable}>
+    <html lang="en-AU" className={`${figtree.variable} ${schibsted.variable}`}>
       <body>
         <a className="skip-link" href="#main">Skip to content</a>
         <AttributionCapture />
