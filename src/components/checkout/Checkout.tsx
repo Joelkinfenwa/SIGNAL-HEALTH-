@@ -11,7 +11,7 @@ import { addonNewMarkers, sellableAddonsFor } from "@/config/addons";
 import { detailsCopy } from "@/config/checkout-fields";
 import { getBiomarker } from "@/config/biomarkers";
 import { collectionMethods, type CollectionMethodId } from "@/config/collection";
-import { signalTest } from "@/config/products";
+import { getProduct, signalTest } from "@/config/products";
 import { retestOffers, formatDiscount, type RetestOffer } from "@/config/retest-offer";
 import { quoteRetestForOrder } from "@/lib/retest/offer";
 import { visibleTrustClaims } from "@/config/trust";
@@ -52,10 +52,11 @@ export function Checkout() {
   const detailsRef = useRef<HTMLElement>(null);
   const detailsDone = useRef(false);
   const router = useRouter();
+  const product = getProduct(cfg.productId) ?? signalTest;
   const quote = useMemo(() => quoteConfiguration(cfg), [cfg]);
   const planQuote = useMemo(() => (plan && quote.pricingComplete ? quoteRetestForOrder(quote.lines, plan) : null), [plan, quote]);
-  const methods = collectionMethods.filter((m) => signalTest.collectionMethodIds.includes(m.id));
-  const options = sellableAddonsFor(signalTest);
+  const methods = collectionMethods.filter((m) => product.collectionMethodIds.includes(m.id));
+  const options = sellableAddonsFor(product);
   const trust = visibleTrustClaims().filter((c) => c.status === "verified").slice(0, 3);
   const paymentsLive = Boolean(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 
@@ -72,7 +73,7 @@ export function Checkout() {
     const restored = (window.history.state as { step?: string } | null)?.step;
     if (restored === "details" || restored === "pay") setStep("details");
     setHydrated(true);
-    track({ name: "checkout_started", props: { product_id: signalTest.id, addon_ids: parsed.addonIds } });
+    track({ name: "checkout_started", props: { product_id: parsed.productId, addon_ids: parsed.addonIds } });
   }, []);
 
   useEffect(() => {
@@ -120,7 +121,7 @@ export function Checkout() {
   useEffect(() => {
     if (detailsValid && hydrated && !detailsDone.current) {
       detailsDone.current = true;
-      track({ name: "checkout_details_completed", props: { product_id: signalTest.id } });
+      track({ name: "checkout_details_completed", props: { product_id: cfg.productId } });
     }
   }, [detailsValid, hydrated]);
 
@@ -148,7 +149,7 @@ export function Checkout() {
         setPayment({ orderId: res.orderId, clientSecret: res.clientSecret, amountCents: res.amountCents, token: res.token });
         window.history.pushState({ step: "pay" }, "");
         window.scrollTo({ top: 0, behavior: "instant" as ScrollBehavior });
-        track({ name: "payment_step_viewed", props: { product_id: signalTest.id, addon_ids: cfg.addonIds } });
+        track({ name: "payment_step_viewed", props: { product_id: cfg.productId, addon_ids: cfg.addonIds } });
       } else if (res.status === "invalid") {
         setTouched(Object.fromEntries(ALL_FIELDS.map((f) => [f, true])));
         setPayMessage(Object.values(res.errors)[0] ?? "Check your details.");
@@ -165,7 +166,7 @@ export function Checkout() {
   function onPaid(paymentIntentId: string) {
     if (!payment) return;
     track(
-      { name: "purchase_completed", props: { order_id: paymentIntentId, product_id: signalTest.id, addon_ids: cfg.addonIds, value: payment.amountCents / 100, currency: "AUD" } },
+      { name: "purchase_completed", props: { order_id: paymentIntentId, product_id: cfg.productId, addon_ids: cfg.addonIds, value: payment.amountCents / 100, currency: "AUD" } },
       { eventId: paymentIntentId },
     );
     try { sessionStorage.removeItem(DETAILS_KEY); } catch { /* ignore */ }
@@ -186,7 +187,7 @@ export function Checkout() {
 
   function chooseCollection(id: CollectionMethodId) {
     setCfg({ ...cfg, collectionMethodId: id });
-    track({ name: "collection_method_selected", props: { product_id: signalTest.id, method: id } });
+    track({ name: "collection_method_selected", props: { product_id: cfg.productId, method: id } });
   }
 
   const canPay = paymentsLive && quote.pricingComplete && Boolean(cfg.collectionMethodId) && detailsValid;
@@ -310,6 +311,7 @@ export function Checkout() {
                       {l.kind === "product" ? <span className={styles.lineSub}><span className="num">{quote.categoryCount}</span> areas of health · <span className="num">{quote.markerCount}</span> markers, every one explained</span> : null}
                     </span>
                     <span className={styles.lineRight}>
+                      {l.kind === "product" && product.compareAtPriceCents !== null && l.priceCents !== null && product.compareAtPriceCents > l.priceCents ? <span className={cx(styles.compare, "num")}>{formatAUD(product.compareAtPriceCents)}</span> : null}
                       <span className="num">{l.priceCents !== null ? formatAUD(l.priceCents) : "TBC"}</span>
                       {l.kind === "addon" ? <button type="button" className={styles.remove} onClick={() => toggle(l.id)}>Remove</button> : null}
                     </span>
@@ -329,7 +331,7 @@ export function Checkout() {
                         <span className={styles.addonText}>
                           <span className={styles.addonName}>{a.name} <span className={styles.addonPrice}>{a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "Price TBC"}</span></span>
                           <span className={styles.addonFor}>{a.shortDescription}</span>
-                          <span className={styles.addonMarkers}><span className="num">+{addonNewMarkers(a, signalTest).length}</span> · {addonNewMarkers(a, signalTest).map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
+                          <span className={styles.addonMarkers}><span className="num">+{addonNewMarkers(a, product).length}</span> · {addonNewMarkers(a, product).map((id) => getBiomarker(id).short ?? getBiomarker(id).name).join(" · ")}</span>
                         </span>
                         <button type="button" className={cx(styles.addBtn, on && styles.addBtnOn)} aria-pressed={on} onClick={() => toggle(a.id)}>
                           {on ? <><Icon name="check" size={16} /> Added</> : <><Icon name="plus" size={16} /> Add</>}

@@ -2,6 +2,7 @@
  * Marketing and acquisition types. These describe content and attribution,
  * never clinical data.
  */
+import type { ProductId } from "@/config/products";
 import type { InterestId } from "@/config/interests";
 import type { MediaAsset, VideoAsset } from "@/config/media";
 
@@ -21,7 +22,7 @@ export interface LandingPage {
   subheadline: string;
   heroMedia: MediaAsset | VideoAsset;
   cta: { primary: { label: string; href: string }; secondary?: { label: string; href: string } };
-  productId: "signal";
+  productId: ProductId;
   recommendedAddonIds: string[];
   preselectedAddonIds: string[];
   benefitsTitle?: string;
