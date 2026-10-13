@@ -140,46 +140,35 @@ export default function WomenFunnelPage() {
           </Container>
         </section>
 
-        {/* 4. What's checked */}
+        {/* 4. What's checked: every marker, visible, grouped by area */}
         <section id="panel" data-theme="shell" className={styles.section} aria-labelledby="panel-title">
           <Container className={styles.narrow}>
             <h2 id="panel-title" className={styles.h2}>{f.panel.title}</h2>
             <p className={styles.intro}>{fill(f.panel.intro)}</p>
-            <ul className={styles.areas}>
-              {f.panel.buckets.map((b) => (
-                <li key={b.id}>
-                  <details className={styles.area}>
-                    <summary className={styles.areaSummary}>
-                      <span className={styles.areaName}>{b.name}</span>
-                      <span className={styles.areaCount}><span className="num">{b.markerIds.length}</span> {b.markerIds.length === 1 ? "marker" : "markers"}</span>
-                      <span className={styles.areaToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
-                    </summary>
+            <div className={styles.panelCard}>
+              <div className={styles.panelHead}><span>The SIGNAL Test</span><span className="num">{fill("{markers}")} markers · {fill("{price}")}</span></div>
+              <ul className={styles.panelGroups}>
+                {f.panel.buckets.map((b) => (
+                  <li key={b.id} className={styles.panelGroup}>
+                    <span className={styles.panelGroupName}><Icon name="check" size={14} /> {b.name} <span className={styles.panelCount}><span className="num">{b.markerIds.length}</span></span></span>
                     <ul className={styles.markerChips}>{b.markerIds.map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
-                  </details>
-                </li>
-              ))}
-              <li className={styles.areaWide}>
-                <details className={styles.area}>
-                  <summary className={styles.areaSummary}>
-                    <span className={styles.areaName}>{fill(f.panel.addonsTitle)}</span>
-                    <span className={styles.areaCount}>Optional</span>
-                    <span className={styles.areaToggle} aria-hidden="true"><Icon name="plus" size={16} className={styles.plus} /><Icon name="minus" size={16} className={styles.minus} /></span>
-                  </summary>
-                  <ul className={styles.addonList}>
-                    {f.panel.addonBuckets.map((ab) => {
-                      const a = getAddon(ab.addonId);
-                      if (!a || !a.launchEnabled) return null;
-                      return (
-                        <li key={ab.addonId}>
-                          <span className={styles.addonName}>{ab.name} <span className={styles.addonPrice}>{a.name} · {a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span></span>
-                          <span className={styles.addonMarkers}>{addonNewMarkers(a, product).map((id) => getBiomarker(id).name).join(", ")}</span>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </details>
-              </li>
-            </ul>
+                  </li>
+                ))}
+              </ul>
+              <div className={cx(styles.panelHead, styles.panelHeadAddons)}><span>Optional add-ons, same draw</span><span>from {fill("{addonsFrom}")}</span></div>
+              <ul className={styles.panelGroups}>
+                {f.panel.addonBuckets.map((ab) => {
+                  const a = getAddon(ab.addonId);
+                  if (!a || !a.launchEnabled || !product.addonIds.includes(a.id)) return null;
+                  return (
+                    <li key={ab.addonId} className={cx(styles.panelGroup, styles.panelGroupAddon)}>
+                      <span className={styles.panelGroupName}><Icon name="plus" size={14} /> {a.name} <span className={styles.panelCount}>{a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span></span>
+                      <ul className={styles.markerChips}>{addonNewMarkers(a, product).map((id) => <li key={id}>{getBiomarker(id).name}</li>)}</ul>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
           </Container>
         </section>
 
