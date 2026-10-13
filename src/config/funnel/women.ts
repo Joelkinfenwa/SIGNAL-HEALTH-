@@ -75,8 +75,8 @@ export const womenFunnel = {
 
   // 4. What's checked. Marker names render from biomarkers.ts.
   panel: {
-    title: "What's checked",
-    intro: "{markers} markers in the base test. Tap an area to see them.",
+    title: "Every test, listed",
+    intro: "All {markers} markers in the base test, grouped by what they tell you. Add-ons underneath.",
     buckets: [
       { id: "energy", name: "Energy and iron", explanation: "Looks at the cells that carry oxygen and the iron that makes them, the most common place to start when energy is low.", markerIds: ["fbc", "ferritin", "iron", "transferrin", "tsat"] },
       { id: "heart", name: "Heart and cholesterol", explanation: "Looks at the fats in your blood and the particles that carry them.", markerIds: ["tc", "ldl", "hdl", "tg", "non_hdl"] },
