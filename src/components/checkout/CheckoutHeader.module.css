@@ -1,0 +1,8 @@
+.header { padding-block: var(--s-3); border-bottom: 1px solid var(--line); }
+.inner { display: flex; align-items: center; justify-content: space-between; gap: var(--s-3); }
+.secure { display: none; align-items: center; gap: 6px; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.secure svg { color: var(--accent); }
+.back { display: inline-flex; align-items: center; gap: 6px; min-height: 44px; font-size: var(--fs-sm); font-weight: 700; color: var(--fg); text-decoration: none; }
+.back:hover { text-decoration: underline; text-underline-offset: 3px; }
+.backIcon { transform: rotate(180deg); }
+@media (min-width: 40rem) { .secure { display: inline-flex; position: absolute; left: 50%; transform: translateX(-50%); } .inner { position: relative; } }

@@ -25,7 +25,6 @@ const nextConfig: NextConfig = {
       { source: "/tests", destination: "/signal", permanent: true },
       { source: "/tests/:slug", destination: "/signal", permanent: true },
       { source: "/find-my-test", destination: "/find-my-signal", permanent: true },
-      { source: "/checkout/:slug", destination: "/checkout", permanent: false },
     ];
   },
 };

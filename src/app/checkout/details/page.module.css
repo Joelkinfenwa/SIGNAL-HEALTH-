@@ -1,0 +1,3 @@
+.stage { min-height: 100dvh; background: var(--bg); color: var(--fg); }
+.main { padding-block: 0 var(--section-pad); padding-bottom: calc(var(--section-pad) + 5rem); }
+@media (min-width: 64rem) { .main { padding-bottom: var(--section-pad); } }

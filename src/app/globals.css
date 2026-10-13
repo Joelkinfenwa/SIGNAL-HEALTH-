@@ -19,6 +19,7 @@
   --c-sage: #1f6f48;         /* positive change text */
 
   --font-sans: var(--font-figtree), "Figtree", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-schibsted), "Schibsted Grotesk", var(--font-sans);
   --fs-xs: 0.8125rem;
   --fs-sm: 0.9375rem;
   --fs-base: 1.0625rem;
@@ -98,6 +99,12 @@ body {
   padding-bottom: var(--sticky-cta-height);
 }
 h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
+/*
+ * Headlines set in the display face. Page modules still size, weight and
+ * colour their headings; only the face is fixed here so every page reads the
+ * same. !important beats any per-module font-family.
+ */
+h1, h2, h3 { font-family: var(--font-display) !important; }
 ul, ol { padding: 0; list-style: none; }
 a { color: inherit; }
 img, svg { display: block; max-width: 100%; }
@@ -121,4 +128,21 @@ button, input { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/*
+ * Checkout stage. Deliberately a different colour from the rest of the site:
+ * deep evergreen page, paper cards, coral progress marks. People know they
+ * have left the shop floor and are at the till.
+ */
+[data-theme="checkout"] {
+  --bg: #0e2a20;
+  --fg: #f6f5f1;
+  --muted: rgba(246, 245, 241, 0.72);
+  --line: rgba(246, 245, 241, 0.18);
+  --accent: var(--c-signal);
+  --on-accent: var(--c-ink);
+  --panel: var(--c-brand-deep);
+  --panel-soft: rgba(255, 255, 255, 0.08);
+  --focus: var(--c-signal);
 }
