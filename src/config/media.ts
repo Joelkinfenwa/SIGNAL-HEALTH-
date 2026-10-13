@@ -172,3 +172,12 @@ export const menMediaPolished = {
   },
   close: { src: `${HF2}943ef0dd-448a-4564-a8d6-b50e83f3d27a.png`, alt: "A lone runner at a coastal lookout at dawn above an empty road" },
 } as const satisfies Record<string, MediaAsset | Record<string, MediaAsset>>;
+
+/** Women's funnel set (/women). Documentary style, generated 13 Oct 2026: natural light, ordinary people, slight grain, no text. */
+const HFW = `${CDN2}/hf_20261013_0238`;
+export const womenMedia = {
+  hero: { src: `${CDN2}/hf_20261013_024126_9412038e-e75e-4a6c-9ec9-c00482d4644b.png`, alt: "A woman in her late thirties on her back verandah in the early morning, holding a mug of tea" },
+  collection: { src: `${HFW}00_f1f82b33-5753-4634-a987-c15c9ee25db6.png`, alt: "A collector's gloved hands pressing a cotton pad to a woman's arm after a blood collection" },
+  reading: { src: `${HFW}00_bbea5f2d-744a-467f-bbeb-844fac2345d8.png`, alt: "A woman in her forties at a kitchen table reading a printed report with a cup of tea" },
+  close: { src: `${HFW}00_d6d72cca-a7bb-4ebd-b85c-ec3aca645d33.png`, alt: "Two women walking along a coastal path in early morning light" },
+} as const satisfies Record<string, MediaAsset>;

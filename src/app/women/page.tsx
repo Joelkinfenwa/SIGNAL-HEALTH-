@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { Logo } from "@/components/brand/Logo";
-import { StickyCta } from "@/components/home/StickyCta";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { LandingPageView } from "@/components/lp/LandingPageView";
+import { OfferBuilder } from "@/components/women/OfferBuilder";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { Icon } from "@/components/ui/Icon";
@@ -12,6 +13,7 @@ import { womenAddonsFromCents, womenFunnel as f, womenTrackOffer, womenUnverifie
 import { getAddon, addonNewMarkers } from "@/config/addons";
 import { getBiomarker } from "@/config/biomarkers";
 import { getCollectionMethod } from "@/config/collection";
+import { womenMedia } from "@/config/media";
 import { productCategoryCount, productMarkerCount } from "@/config/products";
 import { formatDiscount } from "@/config/retest-offer";
 import { cx } from "@/lib/cx";
@@ -75,7 +77,11 @@ export default function WomenFunnelPage() {
 
       <main id="main">
         {/* 1. Hero */}
-        <section id="hero" data-theme="dark" className={styles.hero} aria-labelledby="hero-title">
+        <section id="hero" data-theme="dark" className={cx(styles.hero, styles.heroPhoto)} aria-labelledby="hero-title">
+          <div className={styles.heroMedia} aria-hidden="true">
+            <Image src={womenMedia.hero.src} alt="" fill priority sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 30%" }} />
+            <div className={styles.heroShade} />
+          </div>
           <Container className={styles.heroInner}>
             <p className={styles.eyebrow}>{f.hero.eyebrow}</p>
             <h1 id="hero-title" className={styles.title}>{f.hero.headline}</h1>
@@ -110,30 +116,27 @@ export default function WomenFunnelPage() {
           </Container>
         </section>
 
-        {/* 3. Add what matters: upsell */}
+        {/* 2b. Photo band */}
+        <figure className={styles.band} aria-label={womenMedia.collection.alt}>
+          <Image src={womenMedia.collection.src} alt={womenMedia.collection.alt} fill sizes="100vw" style={{ objectFit: "cover" }} />
+          <figcaption className={styles.bandCaption}><span>Walk in. No appointment. About five minutes.</span></figcaption>
+        </figure>
+
+        {/* 3. Add what matters: the upsell, built on the page */}
         <section id="addons" data-theme="light" className={styles.section} aria-labelledby="upsell-title">
           <Container className={styles.narrow}>
             <h2 id="upsell-title" className={styles.h2}>{f.upsell.title}</h2>
             <p className={styles.intro}>{fill(f.upsell.intro)}</p>
-            <ul className={styles.addonCards}>
-              {f.upsell.addonIds.map((id) => {
-                const a = getAddon(id);
-                if (!a || !a.launchEnabled || !product.addonIds.includes(id)) return null;
-                const markers = addonNewMarkers(a, product);
-                return (
-                  <li key={id} className={styles.addonCard}>
-                    <div className={styles.addonCardHead}>
-                      <span className={styles.addonCardName}>{a.name}</span>
-                      <span className={cx(styles.addonCardPrice, "num")}>{a.priceCents !== null ? `+${formatAUD(a.priceCents)}` : "TBC"}</span>
-                    </div>
-                    <p className={styles.addonCardBody}>{a.shortDescription}</p>
-                    <p className={styles.addonCardMarkers}><span className="num">{markers.length}</span> markers: {markers.map((m) => getBiomarker(m).name).join(", ")}</p>
-                    <Button href={`${f.checkoutHref}&addons=${id}`} variant="outline" full ctaId={`women_addon_${id}`} location="women_addons">{f.upsell.cta} <Icon name="plus" size={16} /></Button>
-                  </li>
-                );
-              })}
-            </ul>
-            <p className={styles.familiarNote}>{f.upsell.more}</p>
+            <OfferBuilder
+              productId={product.id}
+              priceCents={product.priceCents ?? 0}
+              compareAtCents={product.compareAtPriceCents}
+              addons={f.upsell.addonIds.map((id) => getAddon(id)).filter((a): a is NonNullable<typeof a> => Boolean(a && a.launchEnabled && product.addonIds.includes(a.id) && a.priceCents !== null)).map((a) => ({ id: a.id, name: a.name, priceCents: a.priceCents!, body: a.shortDescription, markers: addonNewMarkers(a, product).map((m) => getBiomarker(m).name) }))}
+              ctaLabel="Get tested"
+              stickyLine="Your test"
+              cardTitle="Your test"
+              more={f.upsell.more}
+            />
           </Container>
         </section>
 
@@ -199,6 +202,12 @@ export default function WomenFunnelPage() {
           </Container>
         </section>
 
+        {/* 5b. Photo band */}
+        <figure className={styles.band} aria-label={womenMedia.reading.alt}>
+          <Image src={womenMedia.reading.src} alt={womenMedia.reading.alt} fill sizes="100vw" style={{ objectFit: "cover" }} />
+          <figcaption className={styles.bandCaption}><span>Every result explained in plain English. Yours to keep.</span></figcaption>
+        </figure>
+
         {/* 6. Sound familiar */}
         <section data-theme="shell" className={styles.section} aria-labelledby="familiar-title">
           <Container className={styles.narrow}>
@@ -249,7 +258,11 @@ export default function WomenFunnelPage() {
         ) : null}
 
         {/* 9. Close */}
-        <section data-theme="dark" className={styles.close} aria-labelledby="close-title">
+        <section data-theme="dark" className={cx(styles.close, styles.closePhoto)} aria-labelledby="close-title">
+          <div className={styles.heroMedia} aria-hidden="true">
+            <Image src={womenMedia.close.src} alt="" fill sizes="100vw" style={{ objectFit: "cover", objectPosition: "center 40%" }} />
+            <div className={styles.closeShade} />
+          </div>
           <Container className={styles.closeInner}>
             <h2 id="close-title" className={styles.closeTitle}>{f.close.headline}</h2>
             <p className={styles.closeSub}>{fill(f.close.sub)}</p>
@@ -276,7 +289,6 @@ export default function WomenFunnelPage() {
         </section>
       </main>
       <SiteFooter />
-      <StickyCta priceLine={fill("{markers} markers · {price}")} href={f.hero.primaryCta.href} label="Get tested" ctaId="women_sticky" />
       <LandingPageView slug={f.slug} />
     </>
   );

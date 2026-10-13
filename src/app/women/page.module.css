@@ -29,6 +29,17 @@
 .narrow.narrow { max-width: 44rem; margin-inline: auto; }
 .sectionCta { display: grid; gap: var(--s-3); margin-top: var(--s-5); max-width: 24rem; }
 
+/* women: photography */
+.heroPhoto { position: relative; isolation: isolate; overflow: hidden; min-height: 88svh; display: flex; align-items: flex-end; background: var(--c-brand-deep, #1d4a3a); }
+.heroMedia { position: absolute; inset: 0; z-index: -1; }
+.heroShade { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(10, 22, 16, 0.35) 0%, rgba(10, 22, 16, 0.05) 30%), linear-gradient(to top, rgba(10, 22, 16, 0.94) 0%, rgba(10, 22, 16, 0.72) 45%, rgba(10, 22, 16, 0.2) 100%); }
+.heroPhoto .title { text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35); }
+.heroPhoto .lede, .heroPhoto .trustLine, .heroPhoto .priceNote { color: rgba(255, 255, 255, 0.86); }
+.band { position: relative; height: 56vw; max-height: 32rem; min-height: 14rem; overflow: hidden; }
+.bandCaption { position: absolute; left: 0; right: 0; bottom: 0; padding: var(--s-6) var(--gutter) var(--s-4); background: linear-gradient(to top, rgba(10, 22, 16, 0.75), rgba(10, 22, 16, 0)); color: #fff; font-weight: 700; font-size: var(--fs-md); letter-spacing: -0.01em; }
+.closePhoto { position: relative; isolation: isolate; overflow: hidden; }
+.closeShade { position: absolute; inset: 0; background: linear-gradient(to right, rgba(10, 22, 16, 0.92) 0%, rgba(10, 22, 16, 0.78) 55%, rgba(10, 22, 16, 0.45) 100%); }
+
 /* women: price comparison, add-on cards */
 .priceNote { margin-top: 2px; font-size: var(--fs-sm); font-weight: 600; color: var(--muted); text-align: center; }
 .priceNote s { color: var(--muted); }
@@ -188,6 +199,9 @@
 @media (min-width: 64rem) {
   .hero { padding-block: var(--s-9, 6rem) var(--s-9, 6rem); }
   .heroInner { max-width: 46rem; margin-inline: auto; justify-items: center; text-align: center; }
+  .heroPhoto { min-height: 82vh; align-items: center; }
+  .heroShade { background: linear-gradient(to bottom, rgba(10, 22, 16, 0.4) 0%, rgba(10, 22, 16, 0.15) 30%), linear-gradient(to top, rgba(10, 22, 16, 0.9) 0%, rgba(10, 22, 16, 0.6) 50%, rgba(10, 22, 16, 0.3) 100%); }
+  .band { height: 38vw; }
   .title { max-width: 20ch; }
   .lede { max-width: 36rem; }
   .actions { width: 100%; max-width: 22rem; }
