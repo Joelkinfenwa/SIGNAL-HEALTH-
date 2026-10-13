@@ -1,0 +1,10 @@
+.wrap { display: grid; gap: var(--s-5); padding: var(--s-5); border-radius: var(--r-md); background: var(--panel); box-shadow: var(--shadow-card); }
+.head { display: grid; gap: var(--s-2); max-width: 40rem; }
+.eyebrow { display: inline-flex; align-items: center; gap: 6px; font-size: var(--fs-xs); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--c-brand); }
+.title { font-size: var(--fs-lg); font-weight: 700; letter-spacing: -0.03em; line-height: 1.15; }
+.intro { color: var(--muted); text-wrap: pretty; }
+.actions { display: grid; gap: var(--s-2); }
+.button { display: inline-flex; align-items: center; justify-content: center; gap: var(--s-2); min-height: 54px; width: 100%; padding: 0 var(--s-5); border: 0; border-radius: var(--r-pill); background: var(--accent); color: var(--on-accent); font-weight: 700; font: inherit; font-weight: 700; cursor: pointer; }
+.button:disabled { opacity: 0.7; cursor: default; }
+.note { font-size: var(--fs-xs); color: var(--muted); text-align: center; }
+@media (min-width: 40rem) { .button { width: auto; justify-self: start; } .note { text-align: left; } }

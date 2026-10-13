@@ -1,21 +1,9 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { getAddon } from "@/config/addons";
-import { getCollectionMethod } from "@/config/collection";
-import { getProduct } from "@/config/products";
-import { postPurchaseOffer } from "@/config/retest-offer";
 import { recordServerEvent } from "@/lib/analytics/server";
-import { orderConfirmationEmail } from "@/lib/email/order-confirmation";
-import { sendEmail } from "@/lib/email/send";
 import { decodeOrderMetadata } from "@/lib/orders/metadata";
-import { orderTokenSecret, signOrderToken } from "@/lib/orders/token";
-import { pathologyConfig } from "@/config/pathology";
-import { orderReferenceSlug, requestFormForIntent } from "@/lib/pathology/order-request";
 import { ensureOrderReference } from "@/lib/orders/number";
-import { opsAlert } from "@/lib/email/ops-alert";
-import { sendOrderNotification } from "@/lib/email/order-notification";
-import { dobForForm, phoneForForm, SEX_LABEL } from "@/lib/pathology/intent-input";
-import { offerDeadline } from "@/lib/retest/offer";
+import { fulfilOrder } from "@/lib/orders/fulfil";
 import { getStripe } from "@/lib/stripe/server";
 
 /**
@@ -60,58 +48,9 @@ export async function POST(req: Request) {
         email: cust?.email ?? pi.receipt_email, fbp: pi.metadata.fbp, fbc: pi.metadata.fbc, gaClientId: pi.metadata.ga_cid,
         clientIp: cust?.metadata?.order_ip, userAgent: cust?.metadata?.order_ua,
       });
-      // Confirmation email with the request form, where to get collected, and the time-limited retesting offer.
-      const to = cust?.email ?? pi.receipt_email;
-      if (to && !pi.metadata.confirmation_sent) {
-        const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-        const token = encodeURIComponent(signOrderToken(pi.id, orderTokenSecret()));
-        const orderUrl = `${site}/order/${pi.id}?t=${token}`;
-        const formUrl = `${site}/api/orders/${pi.id}/request-form?t=${token}`;
-        // Request form: issued at payment under the practice protocol ("auto"); in "review" mode it is sent after approval.
-        // The form is only attached when every identity field the laboratory needs is present and well formed.
-        // Anything else is held, recorded on the order (request_form) and raised with operations: never a blank form.
-        let form: Uint8Array | null = null;
-        let formStatus = "held:review_mode";
-        if (pathologyConfig.issue === "auto") {
-          try {
-            const r = await requestFormForIntent({ ...pi, customer: cust });
-            if (r.ok) { form = r.pdf; formStatus = "attached"; }
-            else { formStatus = `held:${r.missing.join("+")}`; await opsAlert(`Request form held for ${reference}`, `Order ${pi.id} paid but the pathology request form could not be generated. Missing or invalid: ${r.missing.join(", ")}. Fix the Stripe Customer (${cust?.id ?? "unknown"}) and the customer can download the form from their order page, or send it manually.`); }
-          } catch (err) {
-            formStatus = "held:error";
-            console.warn("[request-form] generation failed", err);
-            await opsAlert(`Request form failed for ${reference}`, `Order ${pi.id}: ${(err as Error).message}`);
-          }
-        }
-        await stripe.paymentIntents.update(pi.id, { metadata: { request_form: formStatus.slice(0, 120) } }).catch(() => undefined);
-        const label = (kind: string, id: string) => kind === "product" ? getProduct(id)?.name ?? "The SIGNAL Test" : kind === "addon" ? getAddon(id)?.name ?? id : id === "centre" || id === "mobile" ? getCollectionMethod(id).name : id;
-        const mail = orderConfirmationEmail({
-          firstName: cust?.metadata?.first_name || undefined,
-          reference,
-          orderUrl, orderId: pi.id, formAttached: Boolean(form), formUrl: form ? formUrl : undefined,
-          lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
-          amountCents: pi.amount_received,
-          collectionMethodId: order.configuration.collectionMethodId,
-          offerDeadline: offerDeadline(new Date(pi.created * 1000), postPurchaseOffer.windowHours),
-          phone: phoneForForm(cust?.phone) || undefined,
-          address: cust?.address ? [cust.address.line1, cust.address.line2, cust.address.city, cust.address.state, cust.address.postal_code].filter(Boolean).join(", ") : undefined,
-        });
-        const sent = await sendEmail({ to, ...mail, attachments: form ? [{ filename: `SIGNAL-request-${orderReferenceSlug(pi)}.pdf`, content: form }] : undefined });
-        if (sent.sent) await stripe.paymentIntents.update(pi.id, { metadata: { confirmation_sent: sent.id ?? "1" } }).catch(() => undefined);
-        // Internal copy for the operations inbox: the order record until a dashboard exists.
-        const cm = cust?.metadata ?? {};
-        const addr = cust?.address ? [cust.address.line1, cust.address.line2, cust.address.city, cust.address.state, cust.address.postal_code].filter(Boolean).join(", ") : "-";
-        await sendOrderNotification({
-          reference, orderId: pi.id,
-          stripeUrl: `https://dashboard.stripe.com/${pi.livemode ? "" : "test/"}payments/${pi.id}`,
-          paidAt: new Date(pi.created * 1000), amountCents: pi.amount_received,
-          lines: order.lines.map((l) => ({ label: label(l.kind, l.id), priceCents: l.priceCents })),
-          collectionLabel: order.configuration.collectionMethodId ? getCollectionMethod(order.configuration.collectionMethodId).name : "-",
-          isMobile: order.configuration.collectionMethodId === "mobile",
-          patient: { name: cust?.name ?? "-", email: to, phone: phoneForForm(cust?.phone) || "-", dob: dobForForm(cm.dob) ?? cm.dob ?? "-", sex: SEX_LABEL[cm.sex ?? ""] ?? cm.sex ?? "-", address: addr },
-          formStatus, form,
-        });
-      }
+      // Request form, confirmation email and ops copy. Held (with a "complete your details" email instead) until the
+      // laboratory details exist: pay-first checkout collects them on the order page after payment.
+      await fulfilOrder(stripe, pi, cust);
       break;
     }
     case "payment_intent.payment_failed": {

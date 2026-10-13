@@ -15,6 +15,8 @@ interface Props {
   requiresAddress: boolean;
   onChange: (patch: Partial<Details>) => void;
   onBlur: (field: CustomerField) => void;
+  /** Pay-first checkout: terms were accepted at payment, so the box is not shown again. */
+  hideTerms?: boolean;
 }
 
 /**
@@ -23,7 +25,7 @@ interface Props {
  * appear per field after blur, or all at once when Pay is attempted.
  * Nothing typed here is ever sent to analytics.
  */
-export function CustomerDetails({ value, errors, touched, requiresAddress, onChange, onBlur }: Props) {
+export function CustomerDetails({ value, errors, touched, requiresAddress, onChange, onBlur, hideTerms }: Props) {
   const uid = useId();
   const id = (f: string) => `${uid}-${f}`;
   const show = (f: CustomerField) => (touched[f] ? errors[f] : undefined);
@@ -149,13 +151,13 @@ export function CustomerDetails({ value, errors, touched, requiresAddress, onCha
       )}
 
       <div className={styles.consents}>
-        <label className={cx(styles.checkbox, termsErr && styles.fieldError)}>
+        {hideTerms ? null : <label className={cx(styles.checkbox, termsErr && styles.fieldError)}>
           <input type="checkbox" checked={value.acceptsTerms} onChange={(e) => { onChange({ acceptsTerms: e.target.checked }); onBlur("acceptsTerms"); }} aria-invalid={termsErr ? true : undefined} aria-describedby={termsErr ? id("terms-err") : undefined} />
           <span>
             I agree to the <Link href="/legal/terms">Terms of Service</Link> and <Link href="/legal/privacy">Privacy Policy</Link>, and to my details being shared with the laboratory and collection team to carry out my test.
           </span>
-        </label>
-        {termsErr ? <p id={id("terms-err")} className={styles.error} role="alert">{termsErr}</p> : null}
+        </label>}
+        {termsErr && !hideTerms ? <p id={id("terms-err")} className={styles.error} role="alert">{termsErr}</p> : null}
         <label className={styles.checkbox}>
           <input type="checkbox" checked={value.marketingOptIn} onChange={(e) => onChange({ marketingOptIn: e.target.checked })} />
           <span>{copy.consent.marketing}</span>

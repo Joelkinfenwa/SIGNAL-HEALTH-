@@ -28,8 +28,8 @@ interface Props {
   clientSecret: string;
   amountCents: number;
   returnUrl: string;
-  /** Already collected in "Your details"; passed to Stripe so the card form doesn't ask again. */
-  billing: { name: string; email: string; phone: string };
+  /** What we already know. Email is always collected before payment; name and phone only in the legacy flow. The card form asks for whatever is missing. */
+  billing: { email: string; name?: string; phone?: string };
   onSuccess: (paymentIntentId: string) => void;
 }
 
@@ -58,7 +58,7 @@ function PaymentForm({ amountCents, returnUrl, billing, onSuccess }: Props) {
     if (submitError) { setError(submitError.message ?? "Check your payment details."); setBusy(false); return; }
     const { error: confirmError, paymentIntent } = await stripe.confirmPayment({
       elements,
-      confirmParams: { return_url: returnUrl, payment_method_data: { billing_details: { name: billing.name, email: billing.email, phone: billing.phone } } },
+      confirmParams: { return_url: returnUrl, payment_method_data: { billing_details: { email: billing.email, ...(billing.name ? { name: billing.name } : {}), ...(billing.phone ? { phone: billing.phone } : {}) } } },
       redirect: "if_required",
     });
     if (confirmError) { setError(confirmError.message ?? "Payment didn't go through. Nothing was charged."); setBusy(false); return; }
@@ -70,7 +70,7 @@ function PaymentForm({ amountCents, returnUrl, billing, onSuccess }: Props) {
     <div className={styles.panel}>
       <ExpressCheckoutElement onConfirm={confirm} options={{ buttonHeight: 48, layout: { maxColumns: 1, overflow: "never" } }} />
       <p className={styles.or}><span>or pay by card</span></p>
-      <PaymentElement onReady={() => setReady(true)} options={{ layout: "tabs", fields: { billingDetails: { email: "never", phone: "never", name: "never" } } }} />
+      <PaymentElement onReady={() => setReady(true)} options={{ layout: "tabs", fields: { billingDetails: { email: "never", phone: "never", name: billing.name ? "never" : "auto" } } }} />
       {error ? <p className={styles.error} role="alert">{error}</p> : null}
       <button type="button" className={styles.pay} onClick={confirm} disabled={!stripe || !elements || !ready || busy}>
         {busy ? "Processing…" : <>Pay <span className="num">{formatAUD(amountCents)}</span></>} <Icon name="arrow" size={18} />
