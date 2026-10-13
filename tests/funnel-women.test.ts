@@ -21,7 +21,8 @@ test("women's offer: same markers as the flagship, lower price, compare-at set, 
 test("women's funnel is short and every link carries the women's product", () => {
   const f = womenFunnel;
   assert.equal(f.hero.subheadline.length, 1);
-  assert.equal(f.offer.rows.length, 5);
+  assert.equal(f.offer.tiles.length, 4);
+  for (const tile of f.offer.tiles) assert.ok(tile.label.split(" ").length <= 4, `tile label stays short: ${tile.label}`);
   assert.equal(f.upsell.addonIds.length, 3);
   for (const id of f.upsell.addonIds) assert.ok(signalWomen.addonIds.includes(id) && getAddon(id)?.launchEnabled, id);
   assert.equal(f.steps.items.length, 3);

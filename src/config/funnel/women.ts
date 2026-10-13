@@ -51,17 +51,16 @@ export const womenFunnel = {
     ] as Claim[],
   },
 
-  // 2. The offer
+  // 2. The offer: four tiles, a figure and a few words each. No sentences.
   offer: {
     title: "What you get",
-    rows: [
-      { text: "{markers} blood markers: iron, thyroid, blood sugar, cholesterol, liver, kidneys, full blood count and more", verified: true },
-      { text: "Walk-in collection at 4Cyte or Clinical Labs. No appointment.", verified: true },
-      { text: "Analysed by an accredited Australian laboratory", verified: true },
-      { text: "A doctor's written explanation of every result, in plain English", verified: true },
-      { text: "Results in your inbox within 5 days", verified: true },
-    ] as Claim[],
-    foot: "One payment of {price}, normally {compareAt}. No GP referral, no lock-in.",
+    tiles: [
+      { icon: "chart", figure: "{markers}", label: "blood markers", verified: true },
+      { icon: "pin", figure: "1 visit", label: "walk in, no appointment", verified: true },
+      { icon: "chat", figure: "Doctor", label: "explains every result", verified: true },
+      { icon: "calendar", figure: "5 days", label: "results in your inbox", verified: true },
+    ] as { icon: "chart" | "pin" | "chat" | "calendar"; figure: string; label: string; verified: boolean }[],
+    foot: "No GP referral · No lock-in · Clear explanation or your fee back",
   },
 
   // 3. Add what matters: the upsell, same draw
@@ -175,6 +174,6 @@ export const womenTrackOffer = (id: "retest_6m" | "retest_3m") => retestOffers.f
 /** Count of lines still marked unverified, for the preview banner and the claims register. */
 export function womenUnverifiedClaimCount(): number {
   const f = womenFunnel;
-  const all: Claim[] = [...f.trustStrip, ...f.hero.trustLine, ...f.offer.rows, ...f.safety.bullets, { text: f.safety.guarantee.body.join(" "), verified: f.safety.guarantee.verified }];
+  const all: Claim[] = [...f.trustStrip, ...f.hero.trustLine, ...f.offer.tiles.map((t) => ({ text: `${t.figure} ${t.label}`, verified: t.verified })), ...f.safety.bullets, { text: f.safety.guarantee.body.join(" "), verified: f.safety.guarantee.verified }];
   return all.filter((c) => !c.verified).length;
 }
