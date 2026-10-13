@@ -107,8 +107,14 @@ export default function WomenFunnelPage() {
                   <span className={cx(styles.offerPrice, "num")}>{fill("{price}")}</span>
                 </span>
               </div>
-              <ul className={styles.offerRows}>
-                {visible(f.offer.rows).map((c, i) => <li key={i}><span className={styles.tick}><Icon name="check" size={14} /></span><span><ClaimText c={c} /></span></li>)}
+              <ul className={styles.offerTiles}>
+                {f.offer.tiles.filter((t) => t.verified || PREVIEW).map((t) => (
+                  <li key={t.label} className={styles.offerTile}>
+                    <span className={styles.offerTileIcon}><Icon name={t.icon} size={18} /></span>
+                    <span className={cx(styles.offerTileFigure, "num")}>{fill(t.figure)}</span>
+                    <span className={styles.offerTileLabel}>{t.label}</span>
+                  </li>
+                ))}
               </ul>
               <p className={styles.offerFoot}>{fill(f.offer.foot)}</p>
               <Cta id="women_offer_cta" location="women_offer" full />
